@@ -67,3 +67,9 @@ MEDIA_URL = 'https://s3.amazonaws.com/se2reversi/static/'
 ########## END STATIC FILE CONFIGURATION
 
 LOGGING["loggers"]["main"]["level"] = "INFO"
+
+
+ALLOWED_HOSTS = [
+    "reversi.ca-net.org",
+    "http://still-dusk-5467.herokuapp.com",
+]
