@@ -3,3 +3,4 @@
 -r base.txt
 psycopg2==2.4.6
 gunicorn==0.17.2
+django-storages==1.1.7

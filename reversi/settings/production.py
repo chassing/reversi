@@ -19,7 +19,10 @@ def get_env_setting(setting):
         error_msg = "Set the %s env variable" % setting
         raise ImproperlyConfigured(error_msg)
 
-INSTALLED_APPS += ('gunicorn',)
+INSTALLED_APPS += (
+    'gunicorn',
+    'storages',
+)
 
 ########## EMAIL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
@@ -52,3 +55,13 @@ SERVER_EMAIL = EMAIL_HOST_USER
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = get_env_setting('SECRET_KEY')
 ########## END SECRET CONFIGURATION
+
+
+########## STATIC FILE CONFIGURATION
+# Production storage using s3.
+DEFAULT_FILE_STORAGE = 's3storages.MediaStorage'
+STATICFILES_STORAGE = 's3storages.StaticStorage'
+STATIC_URL = 'https://s3.amazonaws.com/yourbucket/assets'
+ADMIN_MEDIA_PREFIX = 'https://s3.amazonaws.com/yourbucket/assets/admin/'
+MEDIA_URL = 'https://s3.amazonaws.com/yourbucket/static/'
+########## END STATIC FILE CONFIGURATION
