@@ -65,3 +65,5 @@ STATIC_URL = 'https://s3.amazonaws.com/se2reversi/assets/'
 ADMIN_MEDIA_PREFIX = 'https://s3.amazonaws.com/se2reversi/assets/admin/'
 MEDIA_URL = 'https://s3.amazonaws.com/se2reversi/static/'
 ########## END STATIC FILE CONFIGURATION
+
+LOGGING["loggers"]["main"]["level"] = "INFO"
