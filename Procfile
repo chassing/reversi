@@ -1,4 +1,4 @@
-web: python manage.py collectstatic --noinput; gunicorn reversi.wsgi
+web: python manage.py collectstatic --noinput; python manage.py runserver_socketio
 
 # heroku labs:enable user-env-compile
 # heroku config:set DJANGO_SETTINGS_MODULE=reversi.settings.production

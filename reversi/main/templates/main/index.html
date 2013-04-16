@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block extra_js %}
+<script type="text/javascript">
+    window.game = "1";
+</script>
+{% endblock extra_js %}
+
 {% block content %}
- 	{{ var1 }} {% now "jS F Y H:i" %}
+ 	{% verbatim %}
+        Anzahl Spieler: {{ number_of_gamers }}
+    {% endverbatim %}
 {% endblock content %}

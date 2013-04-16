@@ -1,0 +1,39 @@
+/*! project specific CSS goes here. */
+@field_size: 8;
+
+@border_color: #CCC;
+@radius: 4px;
+
+@cell_width: 80px;
+@cell_heigth: @cell_width;
+@cell_margin: 2px;
+@cell_border_size: 2px;
+
+
+.field-row {
+    width: (@cell_width + @cell_margin * 2) * @field_size + @cell_border_size * 2 * @field_size;
+}
+
+.field-cell {
+    width: @cell_width;
+    height: @cell_heigth;
+    float: left;
+
+    border: @cell_border_size solid @border_color;
+    -webkit-border-radius: @radius;
+    -moz-border-radius: @radius;
+    border-radius: @radius;
+
+    margin: @cell_margin;
+
+
+}
+.field-cell-valid {
+    background-color: #CCC;
+}
+.field-cell-player1 {
+    background: #ffffff url("/static/img/player1.png") no-repeat center center;
+}
+.field-cell-player2 {
+    background: #ffffff url("/static/img/player2.png") no-repeat center center;
+}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    window.game_id = {{ game.pk }};
+</script>
+{% endblock extra_js %}
+
+{% block content %}
+    {% for row in field_size %}
+        <div id="row_{{ row }}" class="field-row">
+            {% for col in field_size %}
+                <div id="cell_{{ row }}_{{ col }}" class="field-cell">
+
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    <button ng:click="update()">update</button>
+    {% verbatim %}
+        Anzahl Spieler: {{ connected_players }}
+    {% endverbatim %}
+{% endblock content %}
