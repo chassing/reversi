@@ -61,7 +61,7 @@ SECRET_KEY = get_env_setting('SECRET_KEY')
 # Production storage using s3.
 DEFAULT_FILE_STORAGE = 's3storages.MediaStorage'
 STATICFILES_STORAGE = 's3storages.StaticStorage'
-STATIC_URL = 'https://se2reversi.s3.amazonaws.com/assets'
+STATIC_URL = 'https://se2reversi.s3.amazonaws.com/assets/'
 ADMIN_MEDIA_PREFIX = 'https://se2reversi.s3.amazonaws.com/assets/admin/'
 MEDIA_URL = 'https://se2reversi.s3.amazonaws.com/media/'
 ########## END STATIC FILE CONFIGURATION
