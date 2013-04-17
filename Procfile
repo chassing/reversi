@@ -1,4 +1,5 @@
-web: python manage.py run_gunicorn -c gunicorn -b 0.0.0.0:$PORT -w 9 -k gevent --max-requests 250
+web: python manage.py runserver_socketio 0.0.0.0:$PORT
+#web: python manage.py run_gunicorn -c gunicorn -b 0.0.0.0:$PORT -w 9 -k gevent --max-requests 250
 
 
 # heroku labs:enable user-env-compile
