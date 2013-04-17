@@ -30,31 +30,13 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         player.save()
         self.socket.session['user'] = self.request.user
         self.broadcast_connected_players()
+        self.broadcast_grid()
 
-    def on_update(self, data):
+    def on_hit(self, data):
         """ helper
         """
-        import random
-        field = {}
-        for row in xrange(0, 8):
-            for col in xrange(0, 8):
-                r = random.randint(0, 2)
-                if r == 0:
-                    player1 = True
-                    player2 = False
-                elif r == 1:
-                    player1 = False
-                    player2 = True
-                else:
-                    player1 = False
-                    player2 = False
-
-                field["cell_{0}_{1}".format(row, col)] = {
-                    "player1": player1,
-                    "player2": player2,
-                    "valid": False if not random.randint(0, 1) else True,
-                }
-        self.emit("update_field", field)
+        print data
+        self.broadcast_grid()
 
     def recv_disconnect(self):
         """ browser disconnect
@@ -76,6 +58,23 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             connected_players += p.sockets.count()
         self.log("connected players: {0}".format(connected_players), level=logging.DEBUG)
         self.broadcast_event('connected_players', {"value": connected_players})
+
+    def broadcast_grid(self):
+        def _generate_row(row_nr):
+            import random
+            row = []
+            for col in xrange(0, 8):
+                row.append({
+                    "state": random.randint(0, 3),
+                    "row": row_nr,
+                    "col": col,
+                })
+            return row
+
+        grid = []
+        for row in xrange(0, 8):
+            grid.append(_generate_row(row))
+        self.broadcast_event("update_field", grid)
 
     def _removed_staled_sessions(self):
         """ clean staled sockets

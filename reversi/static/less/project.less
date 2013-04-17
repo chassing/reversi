@@ -10,10 +10,6 @@
 @cell_border_size: 2px;
 
 
-.field-row {
-    width: (@cell_width + @cell_margin * 2) * @field_size + @cell_border_size * 2 * @field_size;
-}
-
 .field-cell {
     width: @cell_width;
     height: @cell_heigth;
@@ -25,15 +21,21 @@
     border-radius: @radius;
 
     margin: @cell_margin;
-
-
 }
-.field-cell-valid {
-    background-color: #CCC;
+.field-cell-state-0 {
+    // valid field
+    background: #CCC;
+    cursor: pointer;
 }
-.field-cell-player1 {
+.field-cell-state-1 {
+    // field for player 1
     background: #ffffff url("/static/img/player1.png") no-repeat center center;
 }
-.field-cell-player2 {
+.field-cell-state-2 {
+    // field for player 2
     background: #ffffff url("/static/img/player2.png") no-repeat center center;
+}
+.field-cell-state-3 {
+    // empty field
+    background: #ffffff url("/static/img/blubb.png") no-repeat center center;
 }

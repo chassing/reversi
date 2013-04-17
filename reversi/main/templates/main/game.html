@@ -7,17 +7,14 @@
 {% endblock extra_js %}
 
 {% block content %}
-    {% for row in field_size %}
-        <div id="row_{{ row }}" class="field-row">
-            {% for col in field_size %}
-                <div id="cell_{{ row }}_{{ col }}" class="field-cell">
+    <table>
+        <tr ng-repeat="row in grid">
+            <td ng-repeat="tile in row" ng-click="hit(tile)">
+                <reversi-field tile="tile"></reversi-field>
+            </td>
+        </tr>
+    </table>
 
-                </div>
-            {% endfor %}
-        </div>
-    {% endfor %}
-
-    <button ng:click="update()">update</button>
     {% verbatim %}
         Anzahl Spieler: {{ connected_players }}
     {% endverbatim %}
