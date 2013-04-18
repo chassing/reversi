@@ -1,13 +1,10 @@
 {% extends "base.html" %}
 
-{% block extra_js %}
-<script type="text/javascript">
-    window.game = "1";
-</script>
-{% endblock extra_js %}
-
 {% block content %}
- 	{% verbatim %}
-        Anzahl Spieler: {{ number_of_gamers }}
-    {% endverbatim %}
+    <ul>
+     	{% for game in games %}
+            <li><a href="{% url 'main:game' id=game.pk %}">{{ game }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'main:new-game' %}" class="btn">New Game</a></li>
 {% endblock content %}

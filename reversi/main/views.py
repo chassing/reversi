@@ -15,7 +15,7 @@ class IndexView(TemplateView):
     @method_decorator(login_required)
     def get(self, request):
         tmpl = RequestContext(request)
-        tmpl["var1"] = "Hello World"
+        tmpl["games"] = Game.objects.filter(players=self.request.user)
         return self.render_to_response(tmpl)
 
 
@@ -27,6 +27,16 @@ class GameView(TemplateView):
         tmpl = RequestContext(request)
         tmpl["game"] = get_object_or_404(Game, pk=id)
         tmpl["field_size"] = xrange(0, 8)
+        return self.render_to_response(tmpl)
+
+
+class NewGameView(TemplateView):
+    template_name = "main/new-game.html"
+
+    @method_decorator(login_required)
+    def get(self, request):
+        tmpl = RequestContext(request)
+        # todo game form
         return self.render_to_response(tmpl)
 
 
