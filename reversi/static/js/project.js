@@ -2,7 +2,7 @@
 
 var reversiApp = angular.module('reversiApp', []);
 
-reversiApp.controller("ReversiCtrl", function($scope, $gameserver) {
+reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
     $scope.connected_players = 0;
     $scope.grid = [];
 
@@ -16,7 +16,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $gameserver) {
     };
 
     $scope.hit = function(tile) {
-        console.log(tile);
+        $log.info(tile);
         $gameserver.emit("hit", tile);
     };
 
@@ -25,12 +25,12 @@ reversiApp.controller("ReversiCtrl", function($scope, $gameserver) {
     });
 
     $gameserver.on('connected_players', function(data) {
-        console.log("connected_players", data);
+        $log.info("connected_players", data);
         $scope.connected_players = data.value;
     });
 
     $gameserver.on('update_field', function(data) {
-        console.log("update_field", data);
+        $log.info("update_field", data);
         $scope.grid = data;
     });
 
