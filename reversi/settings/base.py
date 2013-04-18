@@ -241,7 +241,7 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'DEBUG',
         },
-        'socketio': {
+        'sockets': {
             'handlers': ['console'],
             'propagate': True,
             'level': 'DEBUG',

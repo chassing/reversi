@@ -38,6 +38,10 @@ class Game(models.Model):
         # who is the next player
         next = player2 if last_move.player == player1 else player1
         return next
+
+    def last_move(self):
+        return self.moves.reverse()[0]
+
     def __unicode__(self):
         return "{0.pk}".format(self)
 
@@ -54,7 +58,7 @@ class Player(models.Model):
 class Move(models.Model):
     field = models.TextField()
     player = models.ForeignKey(Player, related_name="moves")
-    game = models.ForeignKey(Game)
+    game = models.ForeignKey(Game, related_name="moves")
     date = models.DateTimeField(auto_now=True, auto_now_add=True)
 
     class Meta:
@@ -88,8 +92,6 @@ class Move(models.Model):
         """ place a 'tile'
         """
         field_list = list(self.field.split(","))
-        log.debug(field_list)
-        log.debug(row*self.game.size+col)
         field_list[row*self.game.size+col] = tile
         self.field = ",".join(field_list)
 
@@ -98,9 +100,14 @@ class Move(models.Model):
         """
         return self.field.split(",")[row*self.game.size+col]
 
+    def compute(self):
+        """ calculate the next field state
+        """
+        pass
+
     def save(self, *args, **kwargs):
         if not self.field:
-            # compute start constallation
+            # start constellation
             self.field = ",".join([CELL_EMPTY] * self.game.size**2)
             # place player1
             self.set_cell(row=(self.game.size/2)-1, col=(self.game.size/2)-1, tile=self.game.players.all()[0].color.name)
@@ -109,6 +116,10 @@ class Move(models.Model):
             self.set_cell(row=(self.game.size/2)-1, col=self.game.size/2, tile=self.game.players.all()[1].color.name)
             self.set_cell(row=self.game.size/2, col=(self.game.size/2)-1, tile=self.game.players.all()[1].color.name)
 
+        # calculate all field updates
+        self.compute()
+
+        # save
         super(Move, self).save(*args, **kwargs)
 
     def __unicode__(self):

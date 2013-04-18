@@ -25,6 +25,9 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
             alert("Du bist nicht dran!");
             return;
         }
+/*        if (tile.state !== "valid") {
+            return;
+        }*/
         $gameserver.emit("hit", tile);
     };
 

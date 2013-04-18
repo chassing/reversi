@@ -26,9 +26,11 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         """
         self.game = Game.objects.get(pk=data["id"], players=self.request.user)
         self.log("{0.request.user.username} is joining the game {0.game.pk}".format(self))
-        player = Player.objects.get(game=self.game, user=self.request.user)
-        player.sockets.add(Socket(session=self.socket.sessid))
-        player.save()
+
+        self.player = Player.objects.get(game=self.game, user=self.request.user)
+        self.player.sockets.add(Socket(session=self.socket.sessid))
+        self.player.save()
+
         self.socket.session['user'] = self.request.user
         self.broadcast_connected_players()
         self.broadcast_grid()
@@ -36,12 +38,20 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
     def on_hit(self, data):
         """ helper
         """
-        player = Player.objects.get(game=self.game, user=self.request.user)
-        move = Move(game=self.game, player=player)
-        last_move = Move.objects.filter(game=self.game).reverse()[0]
-        move.field = last_move.field
-        move.set_cell(row=data['row'], col=data['col'], tile=player.color.name)
+        self.log("{0.request.user.username} hits {1}".format(self, data))
+
+        if self.game.next_player() != self.player:
+            self.log("{0.request.user.username} is a cheater".format(self))
+            # someone tries to cheat :(
+            self.emit("cheater", {})
+            return
+
+        # create new move
+        move = Move(game=self.game, player=self.player)
+        move.field = self.game.last_move().field
+        move.set_cell(row=data['row'], col=data['col'], tile=self.player.color.name)
         move.save()
+
         self.broadcast_grid()
 
     def recv_disconnect(self):
@@ -60,7 +70,7 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
     def broadcast_connected_players(self):
         self._removed_staled_sessions()
         connected_players = 0
-        for p in Player.objects.filter(game=self.game):
+        for p in self.game.players.all():
             connected_players += p.sockets.count()
         self.log("connected players: {0}".format(connected_players), level=logging.DEBUG)
         self.broadcast_event('connected_players', {"value": connected_players})
@@ -68,10 +78,9 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
     def broadcast_grid(self):
         try:
             # get the last move
-            move = Move.objects.filter(game=self.game).reverse()[0]
+            move = self.game.last_move()
         except IndexError:
-            player = Player.objects.get(game=self.game, user=self.request.user)
-            move = Move(game=self.game, player=player)
+            move = Move(game=self.game, player=self.player)
             move.save()
         self.broadcast_event("update_field", move.grid())
 

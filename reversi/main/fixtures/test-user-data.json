@@ -1,0 +1,79 @@
+[
+    {
+        "fields": {
+            "date_joined": "2013-04-18T15:22:00.477Z",
+            "email": "admin@admin.org",
+            "first_name": "",
+            "groups": [],
+            "is_active": true,
+            "is_staff": true,
+            "is_superuser": true,
+            "last_login": "2013-04-18T15:22:37.498Z",
+            "last_name": "",
+            "nickname": "super admin",
+            "password": "pbkdf2_sha256$10000$Awwz3YMgQH3e$yn9Nk64p88s/zXV49XkDP251eMx3qAR0/obi1DZLGn0=",
+            "user_permissions": [],
+            "username": "admin"
+        },
+        "model": "main.reversiuser",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "date_joined": "2013-04-18T15:22:21.909Z",
+            "email": "admin2@admin.org",
+            "first_name": "",
+            "groups": [],
+            "is_active": true,
+            "is_staff": true,
+            "is_superuser": true,
+            "last_login": "2013-04-18T15:22:21.909Z",
+            "last_name": "",
+            "nickname": "super admin2",
+            "password": "pbkdf2_sha256$10000$jaz4wu9cqo4f$ZB6ZO+j5FJisGSIcTnKeO3FED9mUrpf6LeENLbh9j7Y=",
+            "user_permissions": [],
+            "username": "admin2"
+        },
+        "model": "main.reversiuser",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "name": "black"
+        },
+        "model": "main.tilecolor",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "name": "white"
+        },
+        "model": "main.tilecolor",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "size": 8
+        },
+        "model": "main.game",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "color": 1,
+            "game": 1,
+            "user": 1
+        },
+        "model": "main.player",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "color": 2,
+            "game": 1,
+            "user": 2
+        },
+        "model": "main.player",
+        "pk": 2
+    }
+]
