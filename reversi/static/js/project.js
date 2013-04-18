@@ -41,6 +41,9 @@ reversiApp.controller("ReversiCtrl", function($scope, $gameserver) {
 });
 
 reversiApp.factory('$gameserver', function ($rootScope) {
+    if (window.client_socketio === "disabled")
+        return {};
+
     var socket = io.connect("/game");
     return {
         on: function (eventName, callback) {
