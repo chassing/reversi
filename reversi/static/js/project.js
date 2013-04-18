@@ -4,6 +4,10 @@ var reversiApp = angular.module('reversiApp', []);
 
 reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
     $scope.connected_players = 0;
+    $scope.current_player = {
+        nickname: null,
+        id: null
+    };
     $scope.grid = [];
 
 /*        $scope.is_valid_cell = function($event) {
@@ -17,6 +21,10 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
 
     $scope.hit = function(tile) {
         $log.info(tile);
+        if ($scope.current_player.id !== window.user_id) {
+            alert("Du bist nicht dran!");
+            return;
+        }
         $gameserver.emit("hit", tile);
     };
 
@@ -29,9 +37,19 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
         $scope.connected_players = data.value;
     });
 
+    $gameserver.on('current_player', function(data) {
+        $log.info("current_player", data);
+        $scope.current_player = data;
+    });
+
     $gameserver.on('update_field', function(data) {
         $log.info("update_field", data);
         $scope.grid = data;
+    });
+
+    $gameserver.on('cheater', function(data) {
+        $log.info("cheater", data);
+        alert("Aber aber aber, das will ich nicht nochmal sehen!");
     });
 
     //$scope.speed = 1;

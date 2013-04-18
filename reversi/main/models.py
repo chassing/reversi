@@ -25,6 +25,19 @@ class Game(models.Model):
     #players = models.ManyToManyField(ReversiUser, through='Player')
     size = models.IntegerField(default=8)
 
+    def next_player(self):
+        players = self.players.all()
+        player1 = players[0]
+        player2 = players[1]
+
+        try:
+            last_move = self.last_move()
+        except IndexError:
+            return player1
+
+        # who is the next player
+        next = player2 if last_move.player == player1 else player1
+        return next
     def __unicode__(self):
         return "{0.pk}".format(self)
 

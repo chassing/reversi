@@ -26,6 +26,7 @@ class GameView(TemplateView):
     def get(self, request, id):
         tmpl = RequestContext(request)
         tmpl["game"] = get_object_or_404(Game, pk=id)
+        tmpl["user"] = request.user
         tmpl["field_size"] = xrange(0, 8)
         return self.render_to_response(tmpl)
 

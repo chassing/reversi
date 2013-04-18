@@ -75,6 +75,12 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             move.save()
         self.broadcast_event("update_field", move.grid())
 
+        next = self.game.next_player()
+        self.broadcast_event("current_player", {
+            "nickname": next.user.nickname,
+            "id": next.user.pk
+        })
+
     def _removed_staled_sessions(self):
         """ clean staled sockets
         """

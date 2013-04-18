@@ -3,6 +3,7 @@
 {% block extra_js %}
 <script type="text/javascript">
     window.game_id = {{ game.pk }};
+    window.user_id = {{ user.pk }};
 </script>
 {% endblock extra_js %}
 
@@ -16,6 +17,7 @@
     </table>
 
     {% verbatim %}
-        Anzahl Spieler: {{ connected_players }}
+        Anzahl Spieler: {{ connected_players }} <br/>
+        Am Zug: {{ current_player.nickname }} <br/>
     {% endverbatim %}
 {% endblock content %}
