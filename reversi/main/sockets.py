@@ -7,6 +7,7 @@ from socketio.sdjango import namespace
 logger = logging.getLogger("sockets.game")
 
 from .models import Game
+from .models import Move
 from .models import Player
 from .models import Socket
 
@@ -35,7 +36,12 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
     def on_hit(self, data):
         """ helper
         """
-        print data
+        player = Player.objects.get(game=self.game, user=self.request.user)
+        move = Move(game=self.game, player=player)
+        last_move = Move.objects.filter(game=self.game).reverse()[0]
+        move.field = last_move.field
+        move.set_cell(row=data['row'], col=data['col'], tile=player.color.name)
+        move.save()
         self.broadcast_grid()
 
     def recv_disconnect(self):
@@ -60,21 +66,14 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         self.broadcast_event('connected_players', {"value": connected_players})
 
     def broadcast_grid(self):
-        def _generate_row(row_nr):
-            import random
-            row = []
-            for col in xrange(0, 8):
-                row.append({
-                    "state": random.randint(0, 3),
-                    "row": row_nr,
-                    "col": col,
-                })
-            return row
-
-        grid = []
-        for row in xrange(0, 8):
-            grid.append(_generate_row(row))
-        self.broadcast_event("update_field", grid)
+        try:
+            # get the last move
+            move = Move.objects.filter(game=self.game).reverse()[0]
+        except IndexError:
+            player = Player.objects.get(game=self.game, user=self.request.user)
+            move = Move(game=self.game, player=player)
+            move.save()
+        self.broadcast_event("update_field", move.grid())
 
     def _removed_staled_sessions(self):
         """ clean staled sockets
