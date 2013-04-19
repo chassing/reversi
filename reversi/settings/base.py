@@ -153,6 +153,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django_mobile.middleware.MobileDetectionMiddleware',
     'django_mobile.middleware.SetFlavourMiddleware',
+    'site_basics.middleware.UpdatedLocaleMiddleware',
 )
 ########## END MIDDLEWARE CONFIGURATION
 
@@ -185,6 +186,8 @@ THIRD_PARTY_APPS = (
     'south',
     # mobile
     'django_mobile',
+    # favicon, robots, 404, 500
+    'site_basics',
 )
 
 # Apps specific for this project go here.
@@ -263,3 +266,6 @@ WSGI_APPLICATION = 'wsgi.application'
 
 
 AUTH_USER_MODEL = 'main.ReversiUser'
+
+# django-site-basics
+ERROR_PAGE_THEME = 'robotik'
