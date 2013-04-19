@@ -67,7 +67,7 @@ MEDIA_URL = 'https://se2reversi.s3.amazonaws.com/media/'
 ########## END STATIC FILE CONFIGURATION
 
 LOGGING["loggers"]["main"]["level"] = "INFO"
-LOGGING["loggers"]["socketio"]["level"] = "INFO"
+LOGGING["loggers"]["sockets"]["level"] = "INFO"
 
 
 ALLOWED_HOSTS = [
