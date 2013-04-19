@@ -18,6 +18,9 @@ build
 *.log
 
 # virtualenv:
+.env
+
+# virtualenv on windows (?)
 env
 
 
