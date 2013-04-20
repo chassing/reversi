@@ -8,13 +8,21 @@
 {% endblock extra_js %}
 
 {% block content %}
-    <table>
+    <table id="field">
         <tr ng-repeat="row in grid">
             <td ng-repeat="tile in row" ng-click="hit(tile)">
                 <reversi-field tile="tile"></reversi-field>
             </td>
         </tr>
     </table>
+
+ <!--   <div id="field">
+        <div ng-repeat="row in grid" class="row">
+            <div ng-repeat="tile in row" ng-click="hit(tile)" class="span1">
+                <reversi-field tile="tile"></reversi-field>
+            </div>
+        </div>
+    </div>-->
 
     {% verbatim %}
         Anzahl Spieler: {{ connected_players }} <br/>
