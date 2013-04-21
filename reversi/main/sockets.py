@@ -54,6 +54,23 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             move.save()
             self.broadcast_grid()
 
+    def on_pass(self, data):
+        """ now valid cells available so the player passes
+        """
+        self.log("{0.request.user.username} pass".format(self))
+
+        if self.game.next_player() != self.player:
+            self.log("{0.request.user.username} is a cheater".format(self))
+            # someone tries to cheat or duplicated socket.io requests :(
+            return
+
+        # create new move
+        move = Move(game=self.game, player=self.player, passed=True)
+        move.field = self.game.last_move().field
+        # save changes
+        move.save()
+        self.broadcast_grid()
+
     def recv_disconnect(self):
         """ browser disconnect
         """

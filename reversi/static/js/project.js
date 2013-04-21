@@ -3,7 +3,7 @@
 var reversiApp = angular.module('reversiApp', []);
 
 reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
-    $scope.connected_players = 0;
+    $scope.dynamic_buttons = null;
     $scope.players = null;
     $scope.current_player = {
         nickname: null,
@@ -27,6 +27,33 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
         if (id == $scope.current_player.id)
             return "info";
     };
+
+    $scope.set_dynamic_buttons = function() {
+        $scope.dynamic_buttons = [];
+        // valid moves available
+        pass = false;
+        for (var i=0; i < $scope.grid.length; i++) {
+            for (var j=0; j < $scope.grid[i].length; j++) {
+                if ($scope.grid[i][j].state === 'valid') {
+                    pass = true;
+                    break;
+                }
+            }
+        }
+        if (pass === false && $scope.current_player.id == window.user_id) {
+            $log.info("add 'pass' button");
+            $scope.dynamic_buttons.push({
+                name: 'Passen',
+                target: 'pass'
+            });
+        }
+    };
+
+    $scope.button_handler = function(target) {
+        $log.info("button:" + target);
+        $gameserver.emit(target, {});
+    };
+
     $gameserver.on('connect', function(data) {
         $gameserver.emit("join", {id: window.game_id});
     });
@@ -49,6 +76,8 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
     $gameserver.on('grid', function(data) {
         $log.info("grid", data);
         $scope.grid = data;
+
+        $scope.set_dynamic_buttons();
     });
 
     $gameserver.on('cheater', function(data) {

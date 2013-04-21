@@ -17,6 +17,12 @@
     </table>
 
     {% verbatim %}
+        <ul>
+            <li ng-repeat="dyn_btn in dynamic_buttons">
+                <button class="btn" ng-click="button_handler(dyn_btn.target)">{{ dyn_btn.name }}</button>
+            </li>
+        </ul>
+
         <table id="statistics" class="table table-striped">
             <tr>
                 <th></th>
