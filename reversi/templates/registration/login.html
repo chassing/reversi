@@ -21,7 +21,7 @@
 
     <form method="post" action="{% url 'auth:login' %}" class="form-stacked">{% csrf_token %}
       <div class="clearfix">
-        <label for="id_username">{% trans 'Email Address' %}</label>
+        <label for="id_username">{% trans 'Username' %}</label>
         <input type="text" class="span3" name="username" id="id_username" />
       </div>
 

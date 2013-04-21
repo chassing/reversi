@@ -24,7 +24,9 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
     def on_join(self, data):
         """ user is joining a game
         """
-        self.game = Game.objects.get(pk=data["id"], players=self.request.user)
+        # does not work :(
+        #self.game = Game.objects.get(pk=data["id"], players=self.request.user)
+        self.game = Game.objects.get(pk=data["id"])
         self.log("{0.request.user.username} is joining the game {0.game.pk}".format(self))
 
         self.player = Player.objects.get(game=self.game, user=self.request.user)
