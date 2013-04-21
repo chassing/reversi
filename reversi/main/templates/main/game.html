@@ -16,16 +16,24 @@
         </tr>
     </table>
 
- <!--   <div id="field">
-        <div ng-repeat="row in grid" class="row">
-            <div ng-repeat="tile in row" ng-click="hit(tile)" class="span1">
-                <reversi-field tile="tile"></reversi-field>
-            </div>
-        </div>
-    </div>-->
-
     {% verbatim %}
-        Anzahl Spieler: {{ connected_players }} <br/>
+        <table id="statistics" class="table table-striped">
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Farbe</th>
+                <th>Anzahl gesetzter Stein</th>
+                <th>Anzahl Steine</th>
+            </tr>
+            <tr ng-repeat="player in players" ng-class="is_current_player(player.id)">
+                <td>Spieler {{ $index }}</td>
+                <td>{{ player.name }}</td>
+                <td class="stat-cell field-cell-state-{{ player.color }}"></td>
+                <td>{{ stats[player.id].tiles_set }}</td>
+                <td>{{ stats[player.id].tiles }}</td>
+            </tr>
+        </table>
+
         Am Zug: {{ current_player.nickname }} <br/>
     {% endverbatim %}
 {% endblock content %}

@@ -4,20 +4,12 @@ var reversiApp = angular.module('reversiApp', []);
 
 reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
     $scope.connected_players = 0;
+    $scope.players = null;
     $scope.current_player = {
         nickname: null,
         id: null
     };
     $scope.grid = [];
-
-/*        $scope.is_valid_cell = function($event) {
-        console.log($event.target.id);
-        $game.emit("is_valid_cell", {id: $event.target.id});
-    };*/
-
-    $scope.update = function() {
-        $gameserver.emit("update", {});
-    };
 
     $scope.hit = function(tile) {
         $log.info(tile);
@@ -25,19 +17,28 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
             alert("Du bist nicht dran!");
             return;
         }
-/*        if (tile.state !== "valid") {
+        if (tile.state !== "valid") {
             return;
-        }*/
+        }
         $gameserver.emit("hit", tile);
     };
 
+    $scope.is_current_player = function(id) {
+        if (id == $scope.current_player.id)
+            return "info";
+    };
     $gameserver.on('connect', function(data) {
         $gameserver.emit("join", {id: window.game_id});
     });
 
-    $gameserver.on('connected_players', function(data) {
-        $log.info("connected_players", data);
-        $scope.connected_players = data.value;
+    $gameserver.on('players', function(data) {
+        $log.info("players", data);
+        $scope.players = data;
+    });
+
+    $gameserver.on('statistics', function(data) {
+        $log.info("statistics", data);
+        $scope.stats = data;
     });
 
     $gameserver.on('current_player', function(data) {
@@ -45,8 +46,8 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
         $scope.current_player = data;
     });
 
-    $gameserver.on('update_field', function(data) {
-        $log.info("update_field", data);
+    $gameserver.on('grid', function(data) {
+        $log.info("grid", data);
         $scope.grid = data;
     });
 
@@ -54,11 +55,6 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
         $log.info("cheater", data);
         alert("Aber aber aber, das will ich nicht nochmal sehen!");
     });
-
-    //$scope.speed = 1;
-    //$scope.$watch('speed', function(newVal) {
-    //    $socketio.emit("new_speed", parseFloat(newVal));
-    //});
 });
 
 reversiApp.factory('$gameserver', function ($rootScope) {

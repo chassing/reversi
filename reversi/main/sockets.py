@@ -36,7 +36,7 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         self.broadcast_grid()
 
     def on_hit(self, data):
-        """ helper
+        """ player hits a valid cell
         """
         self.log("{0.request.user.username} hits {1}".format(self, data))
 
@@ -80,15 +80,42 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             # get the last move
             move = self.game.last_move()
         except IndexError:
-            move = Move(game=self.game, player=self.player)
+            move = Move(game=self.game)
             move.save()
-        self.broadcast_event("update_field", move.grid())
-
+        # set current player
         next = self.game.next_player()
         self.broadcast_event("current_player", {
             "nickname": next.user.nickname,
             "id": next.user.pk
         })
+        # update players
+        self.broadcast_event("players", [
+            {
+                'id': self.game.player1.pk,
+                'name': self.game.player1.user.nickname,
+                'color': self.game.player1.color.name,
+            },
+            {
+                'id': self.game.player2.pk,
+                'name': self.game.player2.user.nickname,
+                'color': self.game.player2.color.name,
+            },
+        ])
+        # update stats
+        self.broadcast_event("statistics", {
+            self.game.player1.pk: {
+                'tiles': move.tiles_count(color=self.game.player1.color.name),
+                'tiles_set': self.game.moves.filter(player=self.game.player1, passed=False).count(),
+            },
+            self.game.player2.pk: {
+                'tiles': move.tiles_count(color=self.game.player2.color.name),
+                'tiles_set': self.game.moves.filter(player=self.game.player2, passed=False).count(),
+
+            },
+            'move_count': self.game.moves.count()
+        })
+        # update the grid as last event
+        self.broadcast_event("grid", move.grid())
 
     def _removed_staled_sessions(self):
         """ clean staled sockets

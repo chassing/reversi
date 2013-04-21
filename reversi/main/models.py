@@ -26,25 +26,29 @@ class Game(models.Model):
     size = models.IntegerField(default=8)
 
     def next_player(self):
-        players = self.players.all()
-        player1 = players[0]
-        player2 = players[1]
-
         if self.moves.count() == 1:
             # player 1 is the first on
-            return player1
+            return self.player1
 
         try:
             last_move = self.last_move()
         except IndexError:
-            return player1
+            return self.player1
 
         # who is the next player
-        next = player2 if last_move.player == player1 else player1
+        next = self.player2 if last_move.player == self.player1 else self.player1
         return next
 
     def last_move(self):
         return self.moves.reverse()[0]
+
+    @property
+    def player1(self):
+        return self.players.all()[0]
+
+    @property
+    def player2(self):
+        return self.players.all()[1]
 
     def __unicode__(self):
         return "{0.pk}".format(self)
@@ -61,20 +65,13 @@ class Player(models.Model):
 
 class Move(models.Model):
     field = models.TextField()
-    player = models.ForeignKey(Player, related_name="moves")
+    player = models.ForeignKey(Player, related_name="moves", null=True)
     game = models.ForeignKey(Game, related_name="moves")
     date = models.DateTimeField(auto_now=True, auto_now_add=True)
+    passed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('date',)
-
-    @property
-    def player1(self):
-        return self.game.players.all()[0]
-
-    @property
-    def player2(self):
-        return self.game.players.all()[1]
 
     def grid(self):
         """ get grid representation for the next player
@@ -212,23 +209,26 @@ class Move(models.Model):
                 # another enemy tile found, go further
         return False
 
+    def tiles_count(self, color):
+        return self.field.count(color)
+
     def save(self, *args, **kwargs):
         if not self.field:
             # start constellation
             self.field = ",".join([CELL_EMPTY] * self.game.size**2)
             # place player1
             self.set_cell(row=(self.game.size/2)-1, col=(self.game.size/2)-1,
-                          color=self.player1.color.name,
+                          color=self.game.player1.color.name,
                           turn_cells=False)
             self.set_cell(row=self.game.size/2, col=self.game.size/2,
-                          color=self.player1.color.name,
+                          color=self.game.player1.color.name,
                           turn_cells=False)
             # place player2
             self.set_cell(row=(self.game.size/2)-1, col=self.game.size/2,
-                          color=self.player2.color.name,
+                          color=self.game.player2.color.name,
                           turn_cells=False)
             self.set_cell(row=self.game.size/2, col=(self.game.size/2)-1,
-                          color=self.player2.color.name,
+                          color=self.game.player2.color.name,
                           turn_cells=False)
 
         # save
@@ -242,7 +242,7 @@ class Move(models.Model):
             print " ".join(row)
 
     def __unicode__(self):
-        return "{0.pk} ({0.player.user.username} - {0.game})".format(self)
+        return "{0.pk} ({0.game})".format(self)
 
 
 class Socket(models.Model):
