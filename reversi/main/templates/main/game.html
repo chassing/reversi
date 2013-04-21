@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% block extra_js %}
-<script type="text/javascript">
-    window.game_id = {{ game.pk }};
-    window.user_id = {{ user.pk }};
-</script>
+    <script type="text/javascript">
+        window.game_id = {{ game.pk }};
+        window.user_id = {{ user.pk }};
+    </script>
 {% endblock extra_js %}
 
 {% block content %}
