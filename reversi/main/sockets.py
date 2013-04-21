@@ -49,10 +49,14 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         # create new move
         move = Move(game=self.game, player=self.player)
         move.field = self.game.last_move().field
-        move.set_cell(row=data['row'], col=data['col'], tile=self.player.color.name)
-        move.save()
+        if move.is_valid_cell(row=data['row'], col=data['col'], color=self.player.color.name):
+            move.set_cell(row=data['row'], col=data['col'], tile=self.player.color.name)
+            # turn stones
+            move.turn_cells(row=data['row'], col=data['col'], color=self.player.color.name)
+            # save changes
+            move.save()
 
-        self.broadcast_grid()
+            self.broadcast_grid()
 
     def recv_disconnect(self):
         """ browser disconnect

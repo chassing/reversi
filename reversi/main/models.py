@@ -106,6 +106,55 @@ class Move(models.Model):
         """
         return self.field.split(",")[row*self.game.size+col]
 
+    def turn_cells(self, row, col, color):
+        if self.get_cell(row, col) not in (CELL_EMPTY, CELL_VALID):
+            self.turn_cells_one_direction(row, col, -1, -1, color)
+            self.turn_cells_one_direction(row, col, -1, 0, color)
+            self.turn_cells_one_direction(row, col, -1, 1, color)
+            self.turn_cells_one_direction(row, col, 0, -1, color)
+            self.turn_cells_one_direction(row, col, 0, 1, color)
+            self.turn_cells_one_direction(row, col, 1, -1, color)
+            self.turn_cells_one_direction(row, col, 1, 0, color)
+            self.turn_cells_one_direction(row, col, 1, 1, color)
+
+    def turn_cells_one_direction(self, row, col, dx, dy, color):
+        """ turn tiles
+        """
+        c = col + dx
+        r = row + dy
+        # amount of enemy stones
+        amt = 0
+        # flipping only possible if there is an own stone "behind" them
+        possible = False
+        #log.debug("New Tile: {},{}, direction {},{}".format(row, col, dy, dx))
+        while self.in_game_field(r, c):
+            #log.debug("Testing {},{}".format(r, c))
+            if self.get_cell(r, c) not in (CELL_EMPTY, CELL_VALID):
+                if self.get_cell(r, c) != color:
+                    amt += 1
+                else:
+                    # own stone found -> enemy stones are flipped up to this point
+                    possible = True
+                    break
+            else:
+                # empty/valid field behind enemy stones, but no own stone
+                return
+            c += dx
+            r += dy
+
+        # flip stones in this direction until you get to an empty/valid/own field
+        if possible:
+            c = col + dx
+            r = row + dy
+            while self.in_game_field(r, c) and self.get_cell(r, c) not in (color, CELL_EMPTY, CELL_VALID):
+               # log.debug("Flipping {},{}".format(r, c))
+                self.set_cell(r, c, color)
+                c += dx
+                r += dy
+
+    def in_game_field(self, row, col):
+        return (row >= 0 and col >= 0 and row < self.game.size-1 and col < self.game.size-1)
+
     def is_valid_cell(self, row, col, color):
         """ is the cell valid for given user
         """
@@ -122,14 +171,14 @@ class Move(models.Model):
                                    (row, col-1),                 (row, col+1),
                                    (row+1, col-1), (row+1, col), (row+1, col+1)]:
             if test_row < 0 or test_col < 0 or test_row > self.game.size-1 or test_col > self.game.size-1:
-                log.debug("{},{} outside".format(test_row, test_col))
+                #log.debug("{},{} outside".format(test_row, test_col))
                 continue
             if self.get_cell(row=test_row, col=test_col) in (color, CELL_EMPTY):
-                log.debug("{},{} own tile or empty".format(test_row, test_col))
+                #log.debug("{},{} own tile or empty".format(test_row, test_col))
                 continue
 
             # enemy tile found, now search for my own tile in this direction
-            log.debug("{},{} enemy".format(test_row, test_col))
+            #log.debug("{},{} enemy".format(test_row, test_col))
             while True:
                 if row - test_row < 0:
                     # is the next row
@@ -144,12 +193,12 @@ class Move(models.Model):
                     # is the previous col
                     test_col -= 1
 
-                log.debug("{},{} testing".format(test_row, test_col))
+                #log.debug("{},{} testing".format(test_row, test_col))
                 if test_row < 0 or test_col < 0 or test_row > self.game.size-1 or test_col > self.game.size-1:
                     # outside
                     break
 
-                log.debug("{},{} is {}".format(test_row, test_col, self.get_cell(row=test_row, col=test_col)))
+                #log.debug("{},{} is {}".format(test_row, test_col, self.get_cell(row=test_row, col=test_col)))
                 if self.get_cell(row=test_row, col=test_col) == color:
                     # enemy tile found
                     return True
