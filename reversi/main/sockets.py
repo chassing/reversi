@@ -42,17 +42,14 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
 
         if self.game.next_player() != self.player:
             self.log("{0.request.user.username} is a cheater".format(self))
-            # someone tries to cheat :(
-            self.emit("cheater", {})
+            # someone tries to cheat or duplicated socket.io requests :(
             return
 
         # create new move
         move = Move(game=self.game, player=self.player)
         move.field = self.game.last_move().field
         if move.is_valid_cell(row=data['row'], col=data['col'], color=self.player.color.name):
-            move.set_cell(row=data['row'], col=data['col'], tile=self.player.color.name)
-            # turn stones
-            move.turn_cells(row=data['row'], col=data['col'], color=self.player.color.name)
+            move.set_cell(row=data['row'], col=data['col'], color=self.player.color.name)
             # save changes
             move.save()
 

@@ -4,7 +4,6 @@ from django.test import TestCase
 from main.models import Game
 from main.models import Move
 from main.models import CELL_EMPTY as E
-#from models import CELL_VALID as V
 
 
 def _(f):
@@ -74,8 +73,257 @@ class MoveTest(TestCase):
 
         self.assertEqual(move.field, _(self.start_field))
 
-    def test_grid(self):
-        pass
+    def test_set_cell_turn_cells(self):
+        C = self.player1.color.name
+        M = self.player2.color.name
+        F1 = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, C, E, E,
+            E, E, E, C, M, E, E, E,
+            E, E, E, M, C, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        F2 = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, C, E, E,
+            E, E, E, C, C, E, E, E,
+            E, E, E, C, C, E, E, E,
+            E, E, C, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        move = Move(game=self.game, player=self.player1, field=_(F1))
+        move.set_cell(row=5, col=2, color=self.player1.color.name)
+        move.save()
+        self.assertEqual(move.field, _(F2))
+
+    def test_set_cell_no_turn_cells(self):
+        C = self.player1.color.name
+        M = self.player2.color.name
+        F1 = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, C, E, E,
+            E, E, E, C, M, E, E, E,
+            E, E, E, M, C, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        F2 = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, C, E, E,
+            E, E, E, C, M, E, E, E,
+            E, E, E, M, C, E, E, E,
+            E, E, C, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        move = Move(game=self.game, player=self.player1, field=_(F1))
+        move.set_cell(row=5, col=2, color=self.player1.color.name, turn_cells=False)
+        move.save()
+        self.assertEqual(move.field, _(F2))
+
+    def test_turn_cells_north(self):
+        C = self.player1.color.name
+        M = self.player2.color.name
+        F1 = [
+            C, E, E, E, E, E, E, E,
+            M, E, E, E, E, E, E, E,
+            M, E, E, E, E, E, E, E,
+            M, E, E, E, E, E, E, E,
+            M, E, E, E, E, E, E, E,
+            M, E, E, E, E, E, E, E,
+            M, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        F2 = [
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+        ]
+        move = Move(game=self.game, player=self.player1, field=_(F1))
+        move.set_cell(row=7, col=0, color=C)
+        move.save()
+        self.assertEqual(move.field, _(F2))
+
+    def test_turn_cells_south(self):
+        C = self.player1.color.name
+        M = self.player2.color.name
+        F1 = [
+            E, E, E, E, E, E, E, E,
+            M, E, E, E, E, E, E, E,
+            M, E, E, E, E, E, E, E,
+            M, E, E, E, E, E, E, E,
+            M, E, E, E, E, E, E, E,
+            M, E, E, E, E, E, E, E,
+            M, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+        ]
+        F2 = [
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+            C, E, E, E, E, E, E, E,
+        ]
+        move = Move(game=self.game, player=self.player1, field=_(F1))
+        move.set_cell(row=0, col=0, color=C)
+        move.save()
+        self.assertEqual(move.field, _(F2))
+
+    def test_turn_cells_east(self):
+        C = self.player1.color.name
+        M = self.player2.color.name
+        F1 = [
+            E, M, M, M, M, M, M, C,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        F2 = [
+            C, C, C, C, C, C, C, C,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        move = Move(game=self.game, player=self.player1, field=_(F1))
+        move.set_cell(row=0, col=0, color=C)
+        move.save()
+        self.assertEqual(move.field, _(F2))
+
+    def test_turn_cells_west(self):
+        C = self.player1.color.name
+        M = self.player2.color.name
+        F1 = [
+            C, M, M, M, M, M, M, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        F2 = [
+            C, C, C, C, C, C, C, C,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        move = Move(game=self.game, player=self.player1, field=_(F1))
+        move.set_cell(row=0, col=7, color=C)
+        move.save()
+        self.assertEqual(move.field, _(F2))
+
+    def test_turn_cells_east_and_west(self):
+        C = self.player1.color.name
+        M = self.player2.color.name
+        F1 = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            C, M, M, E, M, M, M, C,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        F2 = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            C, C, C, C, C, C, C, C,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        move = Move(game=self.game, player=self.player1, field=_(F1))
+        move.set_cell(row=3, col=3, color=C)
+        move.save()
+        self.assertEqual(move.field, _(F2))
+
+    def test_turn_cells_north_east_south_and_west(self):
+        C = self.player1.color.name
+        M = self.player2.color.name
+        F1 = [
+            E, E, E, C, E, E, E, E,
+            E, E, E, M, E, E, E, E,
+            E, E, E, M, E, E, E, E,
+            C, M, M, M, M, M, M, C,
+            E, E, E, M, E, E, E, E,
+            E, E, E, M, E, E, E, E,
+            E, E, E, M, E, E, E, E,
+            E, E, E, C, E, E, E, E,
+        ]
+        F2 = [
+            E, E, E, C, E, E, E, E,
+            E, E, E, C, E, E, E, E,
+            E, E, E, C, E, E, E, E,
+            C, C, C, C, C, C, C, C,
+            E, E, E, C, E, E, E, E,
+            E, E, E, C, E, E, E, E,
+            E, E, E, C, E, E, E, E,
+            E, E, E, C, E, E, E, E,
+        ]
+        move = Move(game=self.game, player=self.player1, field=_(F1))
+        move.set_cell(row=3, col=3, color=C)
+        move.save()
+        self.assertEqual(move.field, _(F2))
+
+    def test_turn_cells_all_directions(self):
+        C = self.player1.color.name
+        M = self.player2.color.name
+        F1 = [
+            C, E, E, C, E, E, C, E,
+            M, M, E, M, E, M, E, E,
+            M, E, M, M, M, E, E, E,
+            C, M, M, M, M, M, M, C,
+            M, E, M, M, M, E, E, M,
+            M, M, E, M, E, M, E, M,
+            C, E, E, M, E, E, M, M,
+            E, E, E, C, E, E, E, C,
+        ]
+        F2 = [
+            C, E, E, C, E, E, C, E,
+            M, C, E, C, E, C, E, E,
+            M, E, C, C, C, E, E, E,
+            C, C, C, C, C, C, C, C,
+            M, E, C, C, C, E, E, M,
+            M, C, E, C, E, C, E, M,
+            C, E, E, C, E, E, C, M,
+            E, E, E, C, E, E, E, C,
+        ]
+        move = Move(game=self.game, player=self.player1, field=_(F1))
+        move.set_cell(row=3, col=3, color=C)
+        move.save()
+        self.assertEqual(move.field, _(F2))
 
     def test_valid_north(self):
         move = Move(game=self.game, player=self.player2, field=_(self.start_field))
