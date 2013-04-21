@@ -15,7 +15,7 @@ class IndexView(TemplateView):
     @method_decorator(login_required)
     def get(self, request):
         tmpl = RequestContext(request)
-        tmpl["games"] = Game.objects.filter(players=self.request.user)
+        tmpl["games"] = Game.objects.filter(players__user=request.user)
         return self.render_to_response(tmpl)
 
 
