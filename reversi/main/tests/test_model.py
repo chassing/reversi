@@ -165,6 +165,26 @@ class MoveTest(TestCase):
         move.save()
         self.assertTrue(move.is_valid_cell(row=5, col=5, color=M))
 
+    def test_valid_bug_found(self):
+        B = self.player1.color.name
+        W = self.player2.color.name
+        F = [
+            W, W, W, B, E, E, B, E,
+            W, W, B, B, E, E, B, E,
+            W, W, B, B, B, B, B, E,
+            W, W, B, W, B, B, E, E,
+            E, W, E, B, W, W, E, E,
+            E, E, B, W, W, W, E, E,
+            E, B, E, W, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        move = Move(game=self.game, player=self.player1, field=_(F))
+        move.save()
+        self.assertTrue(not move.is_valid_cell(row=6, col=0, color=W))
+        self.assertTrue(not move.is_valid_cell(row=6, col=2, color=W))
+        self.assertTrue(move.is_valid_cell(row=4, col=2, color=W))
+        self.assertTrue(move.is_valid_cell(row=5, col=1, color=W))
+
     def test_not_valid_all_empty(self):
         move = Move(game=self.game, player=self.player2, field=_(self.start_field))
         move.save()

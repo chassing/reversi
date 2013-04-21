@@ -68,6 +68,14 @@ class Move(models.Model):
     class Meta:
         ordering = ('date',)
 
+    @property
+    def player1(self):
+        return self.game.players.all()[0]
+
+    @property
+    def player2(self):
+        return self.game.players.all()[1]
+
     def grid(self):
         """ get grid representation for the next player
 
@@ -153,12 +161,12 @@ class Move(models.Model):
                 r += dy
 
     def in_game_field(self, row, col):
-        return (row >= 0 and col >= 0 and row < self.game.size-1 and col < self.game.size-1)
+        return row >= 0 and col >= 0 and row < self.game.size-1 and col < self.game.size-1
 
     def is_valid_cell(self, row, col, color):
         """ is the cell valid for given user
         """
-        if row < 0 or col < 0 or row > self.game.size-1 or col > self.game.size-1:
+        if not self.in_game_field(row, col):
             # row, col outside
             return False
 
@@ -170,15 +178,15 @@ class Move(models.Model):
         for test_row, test_col in [(row-1, col-1), (row-1, col), (row-1, col+1),
                                    (row, col-1),                 (row, col+1),
                                    (row+1, col-1), (row+1, col), (row+1, col+1)]:
-            if test_row < 0 or test_col < 0 or test_row > self.game.size-1 or test_col > self.game.size-1:
-                #log.debug("{},{} outside".format(test_row, test_col))
+            if not self.in_game_field(test_row, test_col):
+                log.debug("{},{} outside".format(test_row, test_col))
                 continue
             if self.get_cell(row=test_row, col=test_col) in (color, CELL_EMPTY):
-                #log.debug("{},{} own tile or empty".format(test_row, test_col))
+                log.debug("{},{} own tile or empty".format(test_row, test_col))
                 continue
 
             # enemy tile found, now search for my own tile in this direction
-            #log.debug("{},{} enemy".format(test_row, test_col))
+            log.debug("{},{} enemy found. go further".format(test_row, test_col))
             while True:
                 if row - test_row < 0:
                     # is the next row
@@ -193,35 +201,37 @@ class Move(models.Model):
                     # is the previous col
                     test_col -= 1
 
-                #log.debug("{},{} testing".format(test_row, test_col))
-                if test_row < 0 or test_col < 0 or test_row > self.game.size-1 or test_col > self.game.size-1:
+                log.debug("testing {},{}".format(test_row, test_col))
+                if not self.in_game_field(test_row, test_col):
                     # outside
                     break
-
-                #log.debug("{},{} is {}".format(test_row, test_col, self.get_cell(row=test_row, col=test_col)))
+                log.debug("{},{} is {}".format(test_row, test_col, self.get_cell(row=test_row, col=test_col)))
+                if self.get_cell(row=test_row, col=test_col) == CELL_EMPTY:
+                    break
                 if self.get_cell(row=test_row, col=test_col) == color:
                     # enemy tile found
                     return True
+                # another enemy tile found, go further
         return False
-
-    def compute(self):
-        """ calculate the next field state
-        """
-        pass
 
     def save(self, *args, **kwargs):
         if not self.field:
             # start constellation
             self.field = ",".join([CELL_EMPTY] * self.game.size**2)
             # place player1
-            self.set_cell(row=(self.game.size/2)-1, col=(self.game.size/2)-1, tile=self.game.players.all()[0].color.name)
-            self.set_cell(row=self.game.size/2, col=self.game.size/2, tile=self.game.players.all()[0].color.name)
+            self.set_cell(row=(self.game.size/2)-1, col=(self.game.size/2)-1,
+                          color=self.player1.color.name,
+                          turn_cells=False)
+            self.set_cell(row=self.game.size/2, col=self.game.size/2,
+                          color=self.player1.color.name,
+                          turn_cells=False)
             # place player2
-            self.set_cell(row=(self.game.size/2)-1, col=self.game.size/2, tile=self.game.players.all()[1].color.name)
-            self.set_cell(row=self.game.size/2, col=(self.game.size/2)-1, tile=self.game.players.all()[1].color.name)
-
-        # calculate all field updates
-        self.compute()
+            self.set_cell(row=(self.game.size/2)-1, col=self.game.size/2,
+                          color=self.player2.color.name,
+                          turn_cells=False)
+            self.set_cell(row=self.game.size/2, col=(self.game.size/2)-1,
+                          color=self.player2.color.name,
+                          turn_cells=False)
 
         # save
         super(Move, self).save(*args, **kwargs)
