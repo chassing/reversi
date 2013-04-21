@@ -21,6 +21,22 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
     def log(self, message, level=logging.INFO):
         logger.log(level, "[{0}] {1}".format(self.socket.sessid, message))
 
+    @property
+    def game(self):
+        return self.socket.session['game']
+
+    @game.setter
+    def game(self, value):
+        self.socket.session['game'] = value
+
+    @property
+    def player(self):
+        return self.socket.session['player']
+
+    @player.setter
+    def player(self, value):
+        self.socket.session['player'] = value
+
     def on_join(self, data):
         """ user is joining a game
         """
