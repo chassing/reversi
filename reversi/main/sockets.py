@@ -52,7 +52,6 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             move.set_cell(row=data['row'], col=data['col'], color=self.player.color.name)
             # save changes
             move.save()
-
             self.broadcast_grid()
 
     def recv_disconnect(self):

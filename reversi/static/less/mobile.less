@@ -34,7 +34,7 @@
     .field-cell-state-empty { background-size: @cell_width @cell_heigth }
 }
 
-// 320x480 Landscape, old smartphones may not have scaling options
+// 320x480 HVGA Landscape, old smartphones may not have scaling options
 @media handheld(max-width: 480px) and (max-height: 320px){
     @cell_width: 21px;
     @cell_heigth: @cell_width;
@@ -44,7 +44,7 @@
     .field-cell-state-empty { background-size: @cell_width @cell_heigth }
 }
 
-// 320x480 Portrait, old smartphones
+// 320x480 HVGA Portrait, old smartphones
 @media handheld(max-width: 320px) and (max-height: 480px){
     @cell_width: 21px;
     @cell_heigth: @cell_width;
