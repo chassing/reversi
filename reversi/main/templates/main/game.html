@@ -10,7 +10,7 @@
 {% block content %}
     <table id="field">
         <tr ng-repeat="row in grid">
-            <td ng-repeat="tile in row" ng-click="hit(tile)">
+            <td ng-repeat="tile in row" ng-click="hit_handler(tile)">
                 <reversi-field tile="tile"></reversi-field>
             </td>
         </tr>
@@ -37,6 +37,13 @@
                 <td class="stat-cell field-cell-state-{{ player.color }}"></td>
                 <td>{{ stats[player.id].tiles_set }}</td>
                 <td>{{ stats[player.id].tiles }}</td>
+            </tr>
+            <tr>
+                <td>Gesamt</td>
+                <td></td>
+                <td></td>
+                <td ng-bind="stats_sum('tiles_set')"></td>
+                <td ng-bind="stats_sum('tiles')"></td>
             </tr>
         </table>
 

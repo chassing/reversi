@@ -40,14 +40,14 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         """
         self.log("{0.request.user.username} hits {1}".format(self, data))
 
-        if self.game.next_player() != self.player:
+        if self.game.next_player != self.player:
             self.log("{0.request.user.username} is a cheater".format(self))
             # someone tries to cheat or duplicated socket.io requests :(
             return
 
         # create new move
         move = Move(game=self.game, player=self.player)
-        move.field = self.game.last_move().field
+        move.field = self.game.last_move.field
         if move.is_valid_cell(row=data['row'], col=data['col'], color=self.player.color.name):
             move.set_cell(row=data['row'], col=data['col'], color=self.player.color.name)
             # save changes
@@ -59,14 +59,14 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         """
         self.log("{0.request.user.username} pass".format(self))
 
-        if self.game.next_player() != self.player:
+        if self.game.next_player != self.player:
             self.log("{0.request.user.username} is a cheater".format(self))
             # someone tries to cheat or duplicated socket.io requests :(
             return
 
         # create new move
         move = Move(game=self.game, player=self.player, passed=True)
-        move.field = self.game.last_move().field
+        move.field = self.game.last_move.field
         # save changes
         move.save()
         self.broadcast_grid()
@@ -95,15 +95,14 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
     def broadcast_grid(self):
         try:
             # get the last move
-            move = self.game.last_move()
+            move = self.game.last_move
         except IndexError:
             move = Move(game=self.game)
             move.save()
         # set current player
-        next = self.game.next_player()
         self.broadcast_event("current_player", {
-            "nickname": next.user.nickname,
-            "id": next.user.pk
+            "nickname": self.game.next_player.user.nickname,
+            "id": self.game.next_player.user.pk
         })
         # update players
         self.broadcast_event("players", [
@@ -131,6 +130,22 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             },
             'move_count': self.game.moves.count()
         })
+        # game end?
+        if self.game.end:
+            self.log("game ended")
+            if self.game.winner:
+                winner = {
+                    "name": self.game.winner.user.nickname,
+                    "id": self.game.winner.pk
+                }
+            else:
+                winner = {
+                    "name": "unentschieden",
+                    "id": 0
+                }
+            self.log("winner {0}".format(winner["name"]))
+            self.broadcast_event("end", winner)
+
         # update the grid as last event
         self.broadcast_event("grid", move.grid())
 

@@ -10,9 +10,17 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
         id: null
     };
     $scope.grid = [];
+    $scope.end = false;
 
-    $scope.hit = function(tile) {
+    /*
+        click handler
+    */
+    $scope.hit_handler = function(tile) {
         $log.info(tile);
+        if ($scope.end === true) {
+            alert("Spiel ist zu Ende");
+            return;
+        }
         if ($scope.current_player.id !== window.user_id) {
             alert("Du bist nicht dran!");
             return;
@@ -23,6 +31,14 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
         $gameserver.emit("hit", tile);
     };
 
+    $scope.button_handler = function(target) {
+        $log.info("button:" + target);
+        $gameserver.emit(target, {});
+    };
+
+    /*
+        view helper
+    */
     $scope.is_current_player = function(id) {
         if (id == $scope.current_player.id)
             return "info";
@@ -40,7 +56,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
                 }
             }
         }
-        if (pass === false && $scope.current_player.id == window.user_id) {
+        if (pass === false && $scope.current_player.id == window.user_id && $scope.end !== true) {
             $log.info("add 'pass' button");
             $scope.dynamic_buttons.push({
                 name: 'Passen',
@@ -49,11 +65,20 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
         }
     };
 
-    $scope.button_handler = function(target) {
-        $log.info("button:" + target);
-        $gameserver.emit(target, {});
+    $scope.stats_sum = function(key) {
+        i = 0;
+        angular.forEach($scope.stats, function(value) {
+            if (typeof value === 'object') {
+                i = i + value[key];
+            }
+
+        });
+        return i;
     };
 
+    /*
+        socketio event handler
+    */
     $gameserver.on('connect', function(data) {
         $gameserver.emit("join", {id: window.game_id});
     });
@@ -78,6 +103,12 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
         $scope.grid = data;
 
         $scope.set_dynamic_buttons();
+    });
+
+    $gameserver.on('end', function(data) {
+        $scope.end = true;
+        $scope.winner = data.name;
+        alert("Spiel ist zu Ende - Gewinner:" + $scope.winner);
     });
 
     $gameserver.on('cheater', function(data) {

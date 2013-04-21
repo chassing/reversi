@@ -22,27 +22,99 @@ class GameTest(TestCase):
         """ get the next player
         """
         # without moves player 1 is the next - should be an impossible situation
-        self.assertEqual(self.game.next_player(), self.player1)
+        self.assertEqual(self.game.next_player, self.player1)
         # after first move (start constellation) player 1 is the next
         Move(game=self.game, player=self.player1).save()
-        self.assertEqual(self.game.next_player(), self.player1)
+        self.assertEqual(self.game.next_player, self.player1)
         # player 2 is the next
         Move(game=self.game, player=self.player1).save()
-        self.assertEqual(self.game.next_player(), self.player2)
+        self.assertEqual(self.game.next_player, self.player2)
         # player 1 is the next
         Move(game=self.game, player=self.player2).save()
-        self.assertEqual(self.game.next_player(), self.player1)
+        self.assertEqual(self.game.next_player, self.player1)
 
     def test_last_move(self):
         """ get the last move
         """
         move = Move(game=self.game, player=self.player1)
         move.save()
-        self.assertEqual(self.game.last_move(), move)
+        self.assertEqual(self.game.last_move, move)
 
         move = Move(game=self.game, player=self.player2)
         move.save()
-        self.assertEqual(self.game.last_move(), move)
+        self.assertEqual(self.game.last_move, move)
+
+    def test_end(self):
+        Move(game=self.game, player=self.player1, passed=True).save()
+        Move(game=self.game, player=self.player2, passed=True).save()
+        self.assertTrue(self.game.end)
+
+    def test_winner_player1(self):
+        C = self.player1.color.name
+        F1 = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, C, E, E,
+            E, E, E, C, C, C, E, E,
+            E, E, E, C, C, C, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        move = Move(game=self.game, player=self.player1, field=_(F1))
+        move.save()
+        move = Move(game=self.game, player=self.player2, passed=True)
+        move.field = self.game.last_move.field
+        move.save()
+        move = Move(game=self.game, player=self.player1, passed=True)
+        move.field = self.game.last_move.field
+        move.save()
+        self.assertEqual(self.game.winner, self.player1)
+
+    def test_winner_player2(self):
+        M = self.player2.color.name
+        F1 = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, M, M, M, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        move = Move(game=self.game, player=self.player2, field=_(F1))
+        move.save()
+        move = Move(game=self.game, player=self.player1, passed=True)
+        move.field = self.game.last_move.field
+        move.save()
+        move = Move(game=self.game, player=self.player2, passed=True)
+        move.field = self.game.last_move.field
+        move.save()
+        self.assertEqual(self.game.winner, self.player2)
+
+    def test_winner_draw(self):
+        M = self.player2.color.name
+        C = self.player1.color.name
+        F1 = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, C, C, M, M, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        move = Move(game=self.game, player=self.player2, field=_(F1))
+        move.save()
+        move = Move(game=self.game, player=self.player1, passed=True)
+        move.field = self.game.last_move.field
+        move.save()
+        move = Move(game=self.game, player=self.player2, passed=True)
+        move.field = self.game.last_move.field
+        move.save()
+        self.assertEqual(self.game.winner, None)
 
 
 class MoveTest(TestCase):

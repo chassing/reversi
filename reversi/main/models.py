@@ -25,13 +25,14 @@ class Game(models.Model):
     #players = models.ManyToManyField(ReversiUser, through='Player')
     size = models.IntegerField(default=8)
 
+    @property
     def next_player(self):
         if self.moves.count() == 1:
             # player 1 is the first on
             return self.player1
 
         try:
-            last_move = self.last_move()
+            last_move = self.last_move
         except IndexError:
             return self.player1
 
@@ -39,8 +40,31 @@ class Game(models.Model):
         next = self.player2 if last_move.player == self.player1 else self.player1
         return next
 
+    @property
     def last_move(self):
         return self.moves.reverse()[0]
+
+    @property
+    def end(self):
+        """ last both moves are passed
+        """
+        try:
+            return self.moves.reverse()[0].passed and self.moves.reverse()[1].passed
+        except IndexError:
+            return False
+
+    @property
+    def winner(self):
+        if not self.end:
+            raise Exception("Game not ended")
+        p1 = self.last_move.tiles_count(color=self.player1.color.name)
+        p2 = self.last_move.tiles_count(color=self.player2.color.name)
+        if p1 > p2:
+            return self.player1
+        if p2 > p1:
+            return self.player2
+        # draw
+        return None
 
     @property
     def player1(self):
@@ -85,7 +109,7 @@ class Move(models.Model):
         def _get_row(row, move):
             r = []
             for col, state in enumerate(move):
-                if state == CELL_EMPTY and self.is_valid_cell(row, col, self.game.next_player().color.name):
+                if state == CELL_EMPTY and self.is_valid_cell(row, col, self.game.next_player.color.name):
                     state = CELL_VALID
                 r.append({
                     "state": state,
