@@ -49,7 +49,7 @@ class Game(models.Model):
         """ last both moves are passed
         """
         try:
-            return self.moves.reverse()[0].passed and self.moves.reverse()[1].passed
+            return self.moves.reverse()[0].passed and self.moves.reverse()[1].passed or CELL_EMPTY not in self.last_move.field
         except IndexError:
             return False
 

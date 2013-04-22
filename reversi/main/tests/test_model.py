@@ -44,9 +44,29 @@ class GameTest(TestCase):
         move.save()
         self.assertEqual(self.game.last_move, move)
 
-    def test_end(self):
+    def test_no_end(self):
+        Move(game=self.game, player=self.player1).save()
+        self.assertTrue(not self.game.end)
+
+    def test_end_passed(self):
         Move(game=self.game, player=self.player1, passed=True).save()
         Move(game=self.game, player=self.player2, passed=True).save()
+        self.assertTrue(self.game.end)
+
+    def test_end_no_empty_cell(self):
+        C = self.player1.color.name
+        M = self.player2.color.name
+        F1 = [
+            C, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            M, M, M, C, C, C, M, M,
+            M, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+        ]
+        Move(game=self.game, player=self.player1, field=_(F1)).save()
         self.assertTrue(self.game.end)
 
     def test_winner_player1(self):
