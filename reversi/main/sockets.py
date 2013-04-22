@@ -17,25 +17,31 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
 
     def initialize(self):
         self.log("Socketio session started")
+        if 'games' not in self.session:
+            self.session['games'] = set()
 
     def log(self, message, level=logging.INFO):
         logger.log(level, "[{0}] {1}".format(self.socket.sessid, message))
 
-    @property
-    def game(self):
-        return self.socket.session['game']
+    def join(self, game):
+        self.session['games'].add(game)
 
-    @game.setter
-    def game(self, value):
-        self.socket.session['game'] = value
+    def leave(self, game):
+        self.session['games'].remove(game)
 
-    @property
-    def player(self):
-        return self.socket.session['player']
-
-    @player.setter
-    def player(self, value):
-        self.socket.session['player'] = value
+    def emit_to_game(self, game, event, *args):
+        """ This is sent to all in the game
+        (in this particular Namespace)
+        """
+        pkt = dict(type="event",
+                   name=event,
+                   args=args,
+                   endpoint=self.ns_name)
+        for sessid, socket in self.socket.server.sockets.iteritems():
+            if 'games' not in socket.session:
+                continue
+            if game in socket.session['games']:
+                socket.send_packet(pkt)
 
     def on_join(self, data):
         """ user is joining a game
@@ -43,13 +49,14 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         # does not work :(
         self.game = Game.objects.get(pk=data["id"], players__user=self.request.user)
         self.log("{0.request.user.username} is joining the game {0.game.pk}".format(self))
+        self.join(self.game.pk)
 
         self.player = Player.objects.get(game=self.game, user=self.request.user)
         self.player.sockets.add(Socket(session=self.socket.sessid))
         self.player.save()
 
         self.socket.session['user'] = self.request.user
-        self.broadcast_connected_players()
+        self._removed_staled_sessions()
         self.broadcast_grid()
 
     def on_hit(self, data):
@@ -98,16 +105,9 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             socket.delete()
         except Socket.DoesNotExist:
             pass
-        self.broadcast_connected_players()
-        self.disconnect(silent=True)
-
-    def broadcast_connected_players(self):
+        self.leave(self.game.pk)
         self._removed_staled_sessions()
-        connected_players = 0
-        for p in self.game.players.all():
-            connected_players += p.sockets.count()
-        self.log("connected players: {0}".format(connected_players), level=logging.DEBUG)
-        self.broadcast_event('connected_players', {"value": connected_players})
+        self.disconnect(silent=True)
 
     def broadcast_grid(self):
         try:
@@ -117,12 +117,12 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             move = Move(game=self.game)
             move.save()
         # set current player
-        self.broadcast_event("current_player", {
+        self.emit_to_game(self.game.pk, "current_player", {
             "nickname": self.game.next_player.user.nickname,
             "id": self.game.next_player.pk
         })
         # update players
-        self.broadcast_event("players", [
+        self.emit_to_game(self.game.pk, "players", [
             {
                 'id': self.game.player1.pk,
                 'name': self.game.player1.user.nickname,
@@ -135,7 +135,7 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             },
         ])
         # update stats
-        self.broadcast_event("statistics", {
+        self.emit_to_game(self.game.pk, "statistics", {
             self.game.player1.pk: {
                 'tiles': move.tiles_count(color=self.game.player1.color.name),
                 'tiles_set': self.game.moves.filter(player=self.game.player1, passed=False).count(),
@@ -161,10 +161,10 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
                     "id": 0
                 }
             self.log("winner {0}".format(winner["name"]))
-            self.broadcast_event("end", winner)
+            self.emit_to_game(self.game.pk, "end", winner)
 
         # update the grid as last event
-        self.broadcast_event("grid", move.grid())
+        self.emit_to_game(self.game.pk, "grid", move.grid())
 
     def _removed_staled_sessions(self):
         """ clean staled sockets
