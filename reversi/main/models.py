@@ -156,7 +156,6 @@ class Move(models.Model):
         # flipping only possible if there is an own stone "behind" them
         possible = False
         while self.in_game_field(r, c):
-            log.debug("Testing {},{} is {}".format(r, c, self.get_cell(r, c)))
             if self.get_cell(r, c) == CELL_EMPTY:
                 # empty field behind enemy stones, but no own stone
                 return
@@ -170,7 +169,6 @@ class Move(models.Model):
 
         # flip stones in this direction until you get to an own tile
         if possible:
-            log.debug("turn cells possible")
             c = col + dx
             r = row + dy
             while self.in_game_field(r, c) and self.get_cell(r, c) not in (color, CELL_EMPTY):
@@ -198,14 +196,11 @@ class Move(models.Model):
                                    (row, col-1),                 (row, col+1),
                                    (row+1, col-1), (row+1, col), (row+1, col+1)]:
             if not self.in_game_field(test_row, test_col):
-                log.debug("{},{} outside".format(test_row, test_col))
                 continue
             if self.get_cell(row=test_row, col=test_col) in (color, CELL_EMPTY):
-                log.debug("{},{} own tile or empty".format(test_row, test_col))
                 continue
 
             # enemy tile found, now search for my own tile in this direction
-            log.debug("{},{} enemy found. go further".format(test_row, test_col))
             while True:
                 if row - test_row < 0:
                     # is the next row
@@ -220,11 +215,9 @@ class Move(models.Model):
                     # is the previous col
                     test_col -= 1
 
-                log.debug("testing {},{}".format(test_row, test_col))
                 if not self.in_game_field(test_row, test_col):
                     # outside
                     break
-                log.debug("{},{} is {}".format(test_row, test_col, self.get_cell(row=test_row, col=test_col)))
                 if self.get_cell(row=test_row, col=test_col) == CELL_EMPTY:
                     break
                 if self.get_cell(row=test_row, col=test_col) == color:
