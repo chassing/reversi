@@ -119,7 +119,7 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         # set current player
         self.broadcast_event("current_player", {
             "nickname": self.game.next_player.user.nickname,
-            "id": self.game.next_player.user.pk
+            "id": self.game.next_player.pk
         })
         # update players
         self.broadcast_event("players", [
