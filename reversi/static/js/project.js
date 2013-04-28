@@ -3,6 +3,10 @@
 var reversiApp = angular.module('reversiApp', []);
 
 reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
+    $scope.default_buttons = [{
+        name: 'Aufgeben',
+        target: 'surrender'
+    }];
     $scope.dynamic_buttons = null;
     $scope.players = null;
     $scope.current_player = {
@@ -46,7 +50,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
     };
 
     $scope.set_dynamic_buttons = function() {
-        $scope.dynamic_buttons = [];
+        $scope.dynamic_buttons = $scope.default_buttons;
         // valid moves available
         pass = false;
         for (var i=0; i < $scope.grid.length; i++) {

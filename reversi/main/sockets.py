@@ -96,6 +96,14 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         move.save()
         self.broadcast_grid()
 
+    def on_surrender(self, data):
+        """ player surrendered
+        """
+        self.log("{0.request.user.username} surrender".format(self))
+        self.player.surrendered = True
+        self.player.save()
+        self.broadcast_grid()
+
     def recv_disconnect(self):
         """ browser disconnect
         """

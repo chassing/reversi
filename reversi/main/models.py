@@ -22,7 +22,6 @@ class TileColor(models.Model):
 
 
 class Game(models.Model):
-    #players = models.ManyToManyField(ReversiUser, through='Player')
     size = models.IntegerField(default=8)
 
     @property
@@ -48,15 +47,34 @@ class Game(models.Model):
     def end(self):
         """ last both moves are passed
         """
-        try:
-            return self.moves.reverse()[0].passed and self.moves.reverse()[1].passed or CELL_EMPTY not in self.last_move.field
-        except IndexError:
-            return False
+        # game ends if last 2 moves are passed
+        if self.moves.count() >= 2 and \
+                self.moves.reverse()[0].passed and \
+                self.moves.reverse()[1].passed:
+            return True
+
+        # game ends if one of the player surrendered
+        if self.player1.surrendered or self.player2.surrendered:
+            return True
+
+        # game ends if no empty cells are available
+        if self.moves.count() > 0 and CELL_EMPTY not in self.last_move.field:
+            return True
+
+        return False
 
     @property
     def winner(self):
         if not self.end:
             raise Exception("Game not ended")
+
+        # someone surrendered?
+        if self.player1.surrendered:
+            return self.player2
+        if self.player2.surrendered:
+            return self.player1
+
+        # retrieve winner on tiles count
         p1 = self.last_move.tiles_count(color=self.player1.color.name)
         p2 = self.last_move.tiles_count(color=self.player2.color.name)
         if p1 > p2:
@@ -82,6 +100,7 @@ class Player(models.Model):
     user = models.ForeignKey(ReversiUser)
     game = models.ForeignKey(Game, related_name="players")
     color = models.ForeignKey(TileColor)
+    surrendered = models.BooleanField(default=False)
 
     def __unicode__(self):
         return "{0.user.username} - {0.game} - {0.color}".format(self)

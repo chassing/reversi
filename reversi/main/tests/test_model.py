@@ -48,7 +48,7 @@ class GameTest(TestCase):
         Move(game=self.game, player=self.player1).save()
         self.assertTrue(not self.game.end)
 
-    def test_end_passed(self):
+    def test_end_last_two_moves_passed(self):
         Move(game=self.game, player=self.player1, passed=True).save()
         Move(game=self.game, player=self.player2, passed=True).save()
         self.assertTrue(self.game.end)
@@ -68,6 +68,26 @@ class GameTest(TestCase):
         ]
         Move(game=self.game, player=self.player1, field=_(F1)).save()
         self.assertTrue(self.game.end)
+
+    def test_end_player1_surrender(self):
+        self.player1.surrendered = True
+        self.player1.save()
+        self.assertTrue(self.game.end)
+
+    def test_end_player2_surrender(self):
+        self.player2.surrendered = True
+        self.player2.save()
+        self.assertTrue(self.game.end)
+
+    def test_winner_player1_surrender(self):
+        self.player1.surrendered = True
+        self.player1.save()
+        self.assertEqual(self.game.winner, self.player2)
+
+    def test_winner_player2_surrender(self):
+        self.player2.surrendered = True
+        self.player2.save()
+        self.assertEqual(self.game.winner, self.player1)
 
     def test_winner_player1(self):
         C = self.player1.color.name
