@@ -1,8 +1,8 @@
 /* Project specific Javascript goes here. */
 
-var reversiApp = angular.module('reversiApp', []);
+var reversiApp = angular.module('reversiApp', ['$strap.directives']);
 
-reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
+reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal) {
     $scope.default_buttons = [{
         name: 'Aufgeben',
         target: 'surrender'
@@ -14,7 +14,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
         id: null
     };
     $scope.grid = [];
-    $scope.end = false;
+    $scope.game_end = false;
     $scope.update_grid = true;
 
     /*
@@ -22,7 +22,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
     */
     $scope.hit_handler = function(tile) {
         $log.info(tile);
-        if ($scope.end === true) {
+        if ($scope.game_end === true) {
             alert("Spiel ist zu Ende");
             return;
         }
@@ -74,7 +74,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
                 }
             }
         }
-        if (pass === false && $scope.current_player.id == window.player_id && $scope.end !== true) {
+        if (pass === false && $scope.current_player.id == window.player_id && $scope.game_end !== true) {
             $log.info("add 'pass' button");
             $scope.dynamic_buttons.push({
                 name: 'Passen',
@@ -145,9 +145,15 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
     $gameserver.on('grid', $scope._grid_callback);
 
     $gameserver.on('end', function(data) {
-        $scope.end = true;
+        $log.info("game end", data);
+        $scope.game_end = true;
         $scope.winner = data.name;
-        alert("Spiel ist zu Ende - Gewinner:" + $scope.winner);
+        var modal = $modal({
+          template: 'winner.html',
+          show: true,
+          backdrop: 'static',
+          scope: $scope
+        });
     });
 
     $gameserver.on('cheater', function(data) {

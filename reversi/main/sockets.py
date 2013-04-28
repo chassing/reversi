@@ -134,11 +134,19 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         except IndexError:
             move = Move(game=self.game)
             move.save()
-        # set current player
-        self.emit_to_game(self.game.pk, "current_player", {
-            "nickname": self.game.next_player.user.nickname,
-            "id": self.game.next_player.pk
-        })
+
+        if self.game.next_player:
+            # set current player
+            self.emit_to_game(self.game.pk, "current_player", {
+                "nickname": self.game.next_player.user.nickname,
+                "id": self.game.next_player.pk
+            })
+        else:
+            self.emit_to_game(self.game.pk, "current_player", {
+                "nickname": None,
+                "id": None
+            })
+
         # update players
         self.emit_to_game(self.game.pk, "players", [
             {

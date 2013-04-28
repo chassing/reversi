@@ -26,6 +26,9 @@ class Game(models.Model):
 
     @property
     def next_player(self):
+        if self.end:
+            return None
+
         if self.moves.count() == 1:
             # player 1 is the first on
             return self.player1
@@ -125,10 +128,12 @@ class Move(models.Model):
           [XXX,XXX,XXX, ... ,XXX]
         ]
         """
+        game_end = self.game.end
+
         def _get_row(row, move):
             r = []
             for col, state in enumerate(move):
-                if state == CELL_EMPTY and self.is_valid_cell(row, col, self.game.next_player.color.name):
+                if not game_end and state == CELL_EMPTY and self.is_valid_cell(row, col, self.game.next_player.color.name):
                     state = CELL_VALID
                 r.append({
                     "state": state,
