@@ -73,6 +73,7 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         move = Move(game=self.game, player=self.player)
         move.field = self.game.last_move.field
         if move.is_valid_cell(row=data['row'], col=data['col'], color=self.player.color.name):
+            self.broadcast_move(row=data['row'], col=data['col'], color=self.player.color.name)
             move.set_cell(row=data['row'], col=data['col'], color=self.player.color.name)
             # save changes
             move.save()
@@ -108,6 +109,15 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         self.leave(self.game.pk)
         self._removed_staled_sessions()
         self.disconnect(silent=True)
+
+    def broadcast_move(self, row, col, color):
+        """
+        """
+        self.emit_to_game(self.game.pk, "set_cell", {
+            "row": row,
+            "col": col,
+            "state": color
+        })
 
     def broadcast_grid(self):
         try:

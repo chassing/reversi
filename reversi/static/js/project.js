@@ -11,6 +11,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
     };
     $scope.grid = [];
     $scope.end = false;
+    $scope.update_grid = true;
 
     /*
         click handler
@@ -98,12 +99,33 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
         $scope.current_player = data;
     });
 
-    $gameserver.on('grid', function(data) {
-        $log.info("grid", data);
-        $scope.grid = data;
-
-        $scope.set_dynamic_buttons();
+    $gameserver.on('set_cell', function(data) {
+        $log.info("set_cell", data);
+        $scope.grid[data.row][data.col] = data;
+        // disable grid updates for a moment
+        $scope.update_grid = false;
+        setTimeout(function () {
+            $scope.update_grid = true;
+        }, 1000);
     });
+
+    $scope._grid_callback = function(data) {
+        $log.info("grid", data);
+        if ($scope.update_grid === true) {
+            $log.info("updating grid");
+            $scope.grid = data;
+            $scope.set_dynamic_buttons();
+        } else {
+            setTimeout(function() {
+                $log.info("not updating grid ... ");
+                $scope.$apply(function () {
+                    $scope._grid_callback(data);
+                });
+            }, 400);
+        }
+    };
+
+    $gameserver.on('grid', $scope._grid_callback);
 
     $gameserver.on('end', function(data) {
         $scope.end = true;
