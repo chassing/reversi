@@ -8,45 +8,99 @@
 {% endblock extra_js %}
 
 {% block content %}
-    <table id="field">
-        <tr ng-repeat="row in grid">
-            <td ng-repeat="tile in row" ng-click="hit_handler(tile)">
-                <reversi-field tile="tile"></reversi-field>
-            </td>
-        </tr>
-    </table>
+    <div class="row">
+        <div class="span7">
+            <table id="field">
+                <tr ng-repeat="row in grid">
+                    <td ng-repeat="tile in row" ng-click="hit_handler(tile)">
+                        <reversi-field tile="tile"></reversi-field>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-    {% verbatim %}
-        <ul>
-            <li ng-repeat="dyn_btn in dynamic_buttons">
-                <button class="btn" ng-click="button_handler(dyn_btn.target)">{{ dyn_btn.name }}</button>
-            </li>
-        </ul>
+        <div class="span4">
+            {% verbatim %}
+                <div ng-repeat="player in players" class="alert" ng-class="highlight_current_player(player.id)">
+                    <table class="table table-condensed">
+                        <tr>
+                            <th colspan="2" style="border-top: 0px">
+                                <i class="icon-star" ng-show="is_current_player(player.id)"></i>
+                                <span class="text-huge">
 
-        <table id="statistics" class="table table-striped">
-            <tr>
-                <th></th>
-                <th>Name</th>
-                <th>Farbe</th>
-                <th>Anzahl gesetzter Stein</th>
-                <th>Anzahl Steine</th>
-            </tr>
-            <tr ng-repeat="player in players" ng-class="is_current_player(player.id)">
-                <td>Spieler {{ $index }}</td>
-                <td>{{ player.name }}</td>
-                <td class="stat-cell field-cell-state-{{ player.color }}"></td>
-                <td>{{ stats[player.id].tiles_set }}</td>
-                <td>{{ stats[player.id].tiles }}</td>
-            </tr>
-            <tr>
-                <td>Gesamt</td>
-                <td></td>
-                <td></td>
-                <td ng-bind="stats_sum('tiles_set')"></td>
-                <td ng-bind="stats_sum('tiles')"></td>
-            </tr>
-        </table>
+                                    {{ player.name }}
+                                    <i class="icon-user" ng-show="is_player(player.id)">&nbsp;</i>
+                                </span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>Anzahl gesetzter Steine</td>
+                            <td width="10%">
+                                <span class="badge badge-info">
+                                    {{ stats[player.id].tiles_set }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Anzahl eigener Steine</td>
+                            <td width="10%">
+                                <span class="badge badge-info">
+                                    {{ stats[player.id].tiles }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Farbe</td>
+                            <td class="stat-cell-{{ player.color }}"></td>
+                        </tr>
+                    </table>
+                </div>
 
-        Am Zug: {{ current_player.nickname }} <br/>
-    {% endverbatim %}
+                <div class="alert alert-default">
+                    <table class="table table-condensed">
+                        <tr>
+                            <th colspan="2" style="border-top: 0px">
+                                <span class="text-huge">Spieldetails</span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>Zuganzahl</td>
+                            <td width="10%">
+                                <span class="badge badge-info">
+                                    {{ stats_sum('tiles_set') }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Steinanzahl</td>
+                            <td width="10%">
+                                <span class="badge badge-info">
+                                    {{ stats_sum('tiles') }}
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="alert alert-default">
+                    <table class="table table-condensed">
+                        <tr>
+                            <th colspan="5" style="border-top: 0px">
+                                <span class="text-huge">Aktionen</span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td ng-repeat="dyn_btn in dynamic_buttons">
+                                <button class="btn" ng-click="button_handler(dyn_btn.target)">
+                                    {{ dyn_btn.name }}
+                                </button>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            {% endverbatim %}
+        </div>
+    </div>
+
 {% endblock content %}

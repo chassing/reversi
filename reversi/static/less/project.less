@@ -4,7 +4,7 @@
 @border_color: #CCC;
 @radius: 4px;
 
-@cell_width: 80px;
+@cell_width: 70px;
 @cell_heigth: @cell_width;
 @cell_margin: 2px;
 @cell_border_size: 2px;
@@ -27,14 +27,24 @@
     background: #CCC;
     cursor: pointer;
 }
+.field-cell-image-black {
+    background-image: url("/static/img/black.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.field-cell-image-white {
+    background-image: url("/static/img/white.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+}
 .field-cell-state-black {
-    // field for player 1
-    background: #ffffff url("/static/img/black.png") no-repeat center center;
+    .field-cell-image-black;
+    background-color: #ffffff;
     background-size: @cell_width @cell_heigth
 }
 .field-cell-state-white {
-    // field for player 2
-    background: #ffffff url("/static/img/white.png") no-repeat center center;
+    .field-cell-image-white;
+    background-color: #ffffff;
     background-size: @cell_width @cell_heigth
 }
 .field-cell-state-empty {
@@ -42,8 +52,24 @@
     background: #FFF;
 }
 
-.stat-cell {
-    width: @cell_width;
-    height: @cell_heigth;
+.stat-cell-black {
+    .field-cell-image-black;
+    background-size: 20px;
+    background-position: left center;
 }
 
+.stat-cell-white {
+    .field-cell-image-white;
+    background-size: 20px;
+    background-position: left center;
+}
+
+.text-huge {
+    font-size: 25px;
+}
+
+.alert-default {
+    color: #000;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+}

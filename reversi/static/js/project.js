@@ -44,9 +44,22 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
     /*
         view helper
     */
+    $scope.highlight_current_player = function(id) {
+        if ($scope.is_current_player(id))
+            return "alert-success";
+        return "alert-default";
+    };
+
     $scope.is_current_player = function(id) {
         if (id == $scope.current_player.id)
-            return "info";
+            return true;
+        return false;
+    };
+
+    $scope.is_player = function(id) {
+        if (id == window.player_id)
+            return true;
+        return false;
     };
 
     $scope.set_dynamic_buttons = function() {
