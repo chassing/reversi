@@ -1,6 +1,6 @@
 web: python manage.py runserver_socketio 0.0.0.0:$PORT
 #web: python manage.py run_gunicorn -c gunicorn -b 0.0.0.0:$PORT -w 9 -k gevent --max-requests 250
-
+migrate: python manage.py migrate main
 
 # heroku labs:enable user-env-compile
 # heroku config:set DJANGO_SETTINGS_MODULE=reversi.settings.production
