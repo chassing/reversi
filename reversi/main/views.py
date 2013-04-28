@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 
 from .models import Game
+from .models import Player
 
 
 class IndexView(TemplateView):
@@ -25,8 +26,8 @@ class GameView(TemplateView):
     @method_decorator(login_required)
     def get(self, request, id):
         tmpl = RequestContext(request)
-        tmpl["game"] = get_object_or_404(Game, pk=id)
-        tmpl["user"] = request.user
+        tmpl["game"] = game = get_object_or_404(Game, pk=id)
+        tmpl["player"] = get_object_or_404(Player, user=request.user, game=game)
         tmpl["field_size"] = xrange(0, 8)
         return self.render_to_response(tmpl)
 

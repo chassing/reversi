@@ -21,7 +21,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
             alert("Spiel ist zu Ende");
             return;
         }
-        if ($scope.current_player.id !== window.user_id) {
+        if ($scope.current_player.id !== window.player_id) {
             alert("Du bist nicht dran!");
             return;
         }
@@ -56,7 +56,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver) {
                 }
             }
         }
-        if (pass === false && $scope.current_player.id == window.user_id && $scope.end !== true) {
+        if (pass === false && $scope.current_player.id == window.player_id && $scope.end !== true) {
             $log.info("add 'pass' button");
             $scope.dynamic_buttons.push({
                 name: 'Passen',
