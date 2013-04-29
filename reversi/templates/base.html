@@ -1,11 +1,11 @@
 {% load static %}
 
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" ng-app="reversiApp"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" ng-app="reversiApp"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" ng-app="reversiApp"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" ng-app="reversiApp"> <!--<![endif]-->
-<html lang="en" ng-app="reversiApp">
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" {% if use_angular %} ng-app="reversiApp" {% endif %}> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" {% if use_angular %} ng-app="reversiApp" {% endif %}> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" {% if use_angular %} ng-app="reversiApp" {% endif %}> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" {% if use_angular %} ng-app="reversiApp" {% endif %}> <!--<![endif]-->
+<html lang="en" {% if use_angular %} ng-app="reversiApp" {% endif %}>
     <head>
         <meta charset="utf-8">
         <title>{% block title %}reversi{% endblock title %}</title>
@@ -33,7 +33,7 @@
         {% block extra_css %}{% endblock extra_css %}
     </head>
 
-    <body ng-controller="ReversiCtrl" class="ng-cloak">
+    <body {% if use_angular %}ng-controller="ReversiCtrl" class="ng-cloak" {% endif %}>
 
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
@@ -76,8 +76,10 @@
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="{% static 'js/plugins.js' %}"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
-        <script src="{% static 'js/angular-strap.min.js' %}"></script>
+        {% if use_angular %}
+            <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+            <script src="{% static 'js/angular-strap.min.js' %}"></script>
+        {% endif %}
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
         <script src="{% static 'js/socket.io.min.js' %}"></script>
 

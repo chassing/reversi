@@ -27,6 +27,7 @@ class GameView(TemplateView):
         tmpl["game"] = game = get_object_or_404(Game, pk=id)
         tmpl["player"] = get_object_or_404(Player, user=request.user, game=game)
         tmpl["field_size"] = xrange(0, 8)
+        tmpl["use_angular"] = True
         return self.render_to_response(tmpl)
 
 
