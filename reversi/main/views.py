@@ -13,10 +13,8 @@ from .models import Player
 class IndexView(TemplateView):
     template_name = "main/index.html"
 
-    @method_decorator(login_required)
     def get(self, request):
         tmpl = RequestContext(request)
-        tmpl["games"] = Game.objects.filter(players__user=request.user)
         return self.render_to_response(tmpl)
 
 
@@ -42,5 +40,19 @@ class NewGameView(TemplateView):
         return self.render_to_response(tmpl)
 
 
-class AboutView(TemplateView):
-    template_name = "main/about.html"
+class ListGamesView(TemplateView):
+    template_name = "main/list-games.html"
+
+    @method_decorator(login_required)
+    def get(self, request):
+        tmpl = RequestContext(request)
+        tmpl["games"] = Game.objects.filter(players__user=request.user)
+        return self.render_to_response(tmpl)
+
+
+class UserProfileView(TemplateView):
+    template_name = "main/user-profile.html"
+
+    def get(self, request):
+        tmpl = RequestContext(request)
+        return self.render_to_response(tmpl)

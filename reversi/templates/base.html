@@ -30,8 +30,6 @@
         <!-- This file store project specific CSS -->
         <link href="{% static 'css/project.css' %}" rel="stylesheet">
 
-        <!-- Use this to quickly test CSS changes in a template,
-                then move to project.css -->
         {% block extra_css %}{% endblock extra_css %}
     </head>
 
@@ -40,19 +38,29 @@
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
                     <a class="brand" href="#">reversi</a>
-                    <div class="nav-collapse collapse">
-                        <ul class="nav">
-                            <li class="active"><a href="#">Home</a></li>
-                            <li><a href="{% url 'main:about' %}">About</a></li>
-                            <li><a href="#contact">Contact</a></li>
+                    <ul class="nav">
+                        <li><a href="{% url 'main:index' %}">Home</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'main:list-games' %}">Spiele</a></li>
+                        {% endif %}
+                    </ul>
+                    {% block nav-right %}
+                        <ul class="nav pull-right">
+                            {% if user.is_authenticated %}
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user icon-white"></i> {{ user.username }} ({{ user.nickname }})<b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        {% if user.is_staff %}
+                                            <li><a href="{% url 'admin:index' %}">Admin</a></li>
+                                        {% endif %}
+                                        <li><a href="{% url 'main:user-profile' %}">Profil</a></li>
+                                        <li><a href="{% url 'auth_logout' %}">Ausloggen</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
                         </ul>
-                    </div><!--/.nav-collapse -->
+                    {% endblock %}
                 </div>
             </div>
         </div>

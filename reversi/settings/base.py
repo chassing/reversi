@@ -188,6 +188,8 @@ THIRD_PARTY_APPS = (
     'django_mobile',
     # favicon, robots, 404, 500
     'site_basics',
+    # user registration
+    'registration',
 )
 
 # Apps specific for this project go here.
@@ -222,8 +224,9 @@ LOGGING = {
     },
     'handlers': {
         'mail_admins': {
+            'class': 'django.utils.log.AdminEmailHandler',
             'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
+            'include_html': True,
         },
         'console': {
             'class': 'logging.StreamHandler',
@@ -232,9 +235,9 @@ LOGGING = {
     },
     'loggers': {
         'django.request': {
-            'handlers': ['console'],
+            'handlers': ['console', 'mail_admins'],
             'level': 'ERROR',
-            'propagate': False,
+            'propagate': True,
         },
         'django.request.tastypie': {
             'handlers': ['console'],
@@ -269,3 +272,7 @@ AUTH_USER_MODEL = 'main.ReversiUser'
 
 # django-site-basics
 ERROR_PAGE_THEME = 'robotik'
+
+
+# registration
+ACCOUNT_ACTIVATION_DAYS = 7

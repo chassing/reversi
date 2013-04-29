@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <ul>
+        {% for game in games %}
+            <li><a href="{% url 'main:game' id=game.pk %}">{{ game }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'main:new-game' %}" class="btn">New Game</a></li>
+{% endblock content %}

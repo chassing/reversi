@@ -1,10 +1,61 @@
 {% extends "base.html" %}
+{% load static i18n %}
+
+{% block extra_js %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $("#modal").modal({
+                backdrop: true,
+                keyboard: false,
+                show: false
+          });
+          document.getElementById("id_username").focus();
+        });
+    </script>
+{% endblock %}
+
+{% block nav-right %}
+    <span class="nav pull-right">
+        {% if not user.is_authenticated %}
+            <a href="#modal" class="btn btn-primary" data-toggle="modal"><i class="icon-user icon-white"></i> Login </a>
+            <a href="{% url 'registration_register' %}" class="btn"><i class="icon-cog"></i> Registrieren </a>
+        {% else %}
+            {{ block.super }}
+        {% endif %}
+    </span>
+{% endblock %}
 
 {% block content %}
-    <ul>
-     	{% for game in games %}
-            <li><a href="{% url 'main:game' id=game.pk %}">{{ game }}</a></li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'main:new-game' %}" class="btn">New Game</a></li>
+    <div>
+        <img class="thumbnail" src="{% static 'img/reversi-screenshot.png' %}" alt="">
+    </div>
+
+    <div id="modal" class="modal hide fade">
+        <form method="post" action="{% url 'auth_login' %}" class="form-stacked">{% csrf_token %}
+            <div class="modal-header">
+                <h3>Login</h3>
+            </div>
+            <div class="modal-body">
+                {% if form.errors %}
+                    <p class="alert-message error">{% trans "Sorry, that is not a valid username or password" %}</p>
+                {% endif %}
+
+                <input type="hidden" name="next" value="{% url 'main:index' %}" />
+                <input type="hidden" name="this_is_the_login_form" value="1" />
+
+                <div class="clearfix">
+                    <input type="text" class="span5" name="username" id="id_username" placeholder="Benutzername" />
+                </div>
+
+                <div class="clearfix">
+                    <input type="password" class="span5" name="password" id="id_password" placeholder="Passwort"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="submit_bt" class="btn btn-primary">{% trans 'Log in' %}</button>
+                <a href="{% url 'main:index' %}" class="btn">{% trans 'Cancel' %}</button>
+                <a class="btn" href="{% url 'auth_password_reset' %}">{% trans "Forgot your password" %}?</a>
+            </div>
+        </form>
+    </div>
 {% endblock content %}

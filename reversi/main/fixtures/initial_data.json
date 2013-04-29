@@ -1,6 +1,14 @@
 [
     {
         "fields": {
+            "domain": "reversi.ca-net.org",
+            "name": "reversi.ca-net.org"
+        },
+        "model": "sites.site",
+        "pk": 1
+    },
+    {
+        "fields": {
             "date_joined": "2013-04-18T15:22:00.477Z",
             "email": "admin@admin.org",
             "first_name": "",
