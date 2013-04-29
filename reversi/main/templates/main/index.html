@@ -8,8 +8,11 @@
                 backdrop: true,
                 keyboard: false,
                 show: false
-          });
-          document.getElementById("id_username").focus();
+            });
+
+            $('#modal').on('shown', function () {
+                document.getElementById("id_username").focus();
+            });
         });
     </script>
 {% endblock %}
