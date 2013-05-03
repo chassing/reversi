@@ -34,7 +34,7 @@
 
     </head>
 
-    <body {% if use_angular %}ng-controller="ReversiCtrl" class="ng-cloak" {% endif %}>
+    <body {% if use_angular %}ng-controller="ReversiCtrl" class="ng-cloak" {% endif %} {% block angular_body %}{% endblock angular_body %}>
 
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">

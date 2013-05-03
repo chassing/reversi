@@ -18,6 +18,9 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
     $scope.update_grid = true;
     $scope.skin = window.skin;
 
+    $scope.selected_row = undefined;
+    $scope.selected_column = undefined;
+
     /*
         click handler
     */
@@ -95,6 +98,53 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
         return i;
     };
 
+    $scope.handle_keypress = function(key) {
+        if (key < 13) return;
+        if (key > 13 && (key < 49 || key > 72)) return;
+        if (56 < key && key < 65) return;
+
+        $log.info("key: " +  key);
+
+        if ($scope.current_player.id !== window.player_id) {
+            alert("Du bist nicht dran!");
+            return;
+        }
+
+        if (key >= 49 && key <= 56) {
+            // select row
+            if ($scope.selected_column !== undefined) {
+                $scope.selected_row = key - 49;
+            }
+        }
+        if (key >= 65 && key <= 72) {
+            $scope.selected_column = key - 65;
+            $scope.selected_row = undefined;
+        }
+
+        if (key == 13 && $scope.selected_column !== undefined && $scope.selected_row !== undefined) {
+            // hit
+            $gameserver.emit("hit", {
+                row: $scope.selected_row,
+                col: $scope.selected_column
+            });
+            $scope.selected_column = undefined;
+            $scope.selected_row = undefined;
+        }
+    };
+
+    $scope.highlight_selected_column = function(tile) {
+        if (tile.col === $scope.selected_column) {
+            return "skin-" + $scope.skin + "-selected";
+        }
+        return "";
+    };
+
+    $scope.highlight_selected_row = function(row) {
+        if (row === $scope.selected_row) {
+            return "skin-" + $scope.skin + "-selected";
+        }
+        return "";
+    };
     /*
         socketio event handler
     */
@@ -161,6 +211,10 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
         $log.info("cheater", data);
         alert("Aber aber aber, das will ich nicht nochmal sehen!");
     });
+
+    $gameserver.on('invalid_move', function(data) {
+        alert("Dieser Zug ist nicht erlaubt");
+    });
 });
 
 reversiApp.factory('$gameserver', function ($rootScope) {
@@ -203,5 +257,21 @@ reversiApp.directive('reversiField', function() {
             tile: '=',
             skin: '='
         }
+    };
+});
+
+reversiApp.directive('onKeyupFn', function() {
+    return function(scope, elm, attrs) {
+        //Evaluate the variable that was passed
+        //In this case we're just passing a variable that points
+        //to a function we'll call each keyup
+        var keyupFn = scope.$eval(attrs.onKeyupFn);
+        elm.bind('keyup', function(evt) {
+            //$apply makes sure that angular knows
+            //we're changing something
+            scope.$apply(function() {
+                keyupFn.call(scope, evt.which);
+            });
+        });
     };
 });

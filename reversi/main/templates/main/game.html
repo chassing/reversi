@@ -9,15 +9,21 @@
     </script>
 {% endblock extra_js %}
 
+
+{% block angular_body %}
+    on-keyup-fn="handle_keypress"
+{% endblock %}
+
+
 {% block content %}
     <div class="row">
         <div class="span8">
             {% verbatim %}
                 <table id="field" class="skin-{{ skin }}-game-field-background">
                     <tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td></tr>
-                    <tr ng-repeat="row in grid">
+                    <tr ng-repeat="row in grid" ng-class="highlight_selected_row($index)" >
                         <td> {{ $index + 1 }}</td>
-                        <td ng-repeat="tile in row" ng-click="hit_handler(tile)">
+                        <td ng-class="highlight_selected_column(tile)" ng-repeat="tile in row" ng-click="hit_handler(tile)">
                             <reversi-field tile="tile" skin="skin"></reversi-field>
                         </td>
                     </tr>

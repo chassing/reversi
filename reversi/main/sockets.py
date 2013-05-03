@@ -78,6 +78,8 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             # save changes
             move.save()
             self.broadcast_grid()
+        else:
+            self.emit("invalid_move", {})
 
     def on_pass(self, data):
         """ now valid cells available so the player passes
