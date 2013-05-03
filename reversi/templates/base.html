@@ -31,6 +31,7 @@
         <link href="{% static 'css/project.css' %}" rel="stylesheet">
 
         {% block extra_css %}{% endblock extra_css %}
+
     </head>
 
     <body {% if use_angular %}ng-controller="ReversiCtrl" class="ng-cloak" {% endif %}>
