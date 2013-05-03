@@ -6,19 +6,30 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-CELL_VALID = "valid"
-CELL_EMPTY = "empty"
+CELL_VALID = "v"
+CELL_EMPTY = "e"
+CELL_PLAYER1 = "1"
+CELL_PLAYER2 = "2"
+
+
+def get_default_skin():
+    return Skin.objects.get(pk=1)
+
+
+class Skin(models.Model):
+    name = models.CharField(max_length=254)
+    description = models.CharField(max_length=254, default="")
+    player1 = models.CharField(max_length=254, help_text="player 1 css class")
+    player2 = models.CharField(max_length=254, help_text="player 2 css class")
+    field = models.CharField(max_length=254, blank=True, help_text="game field css class")
+
+    def __unicode__(self):
+        return self.name
 
 
 class ReversiUser(AbstractUser):
     nickname = models.CharField(max_length=254)
-
-
-class TileColor(models.Model):
-    name = models.CharField(max_length=254)
-
-    def __unicode__(self):
-        return self.name
+    skin = models.ForeignKey(Skin, null=True, default=get_default_skin)
 
 
 class Game(models.Model):
@@ -78,8 +89,8 @@ class Game(models.Model):
             return self.player1
 
         # retrieve winner on tiles count
-        p1 = self.last_move.tiles_count(color=self.player1.color.name)
-        p2 = self.last_move.tiles_count(color=self.player2.color.name)
+        p1 = self.last_move.tiles_count(color=CELL_PLAYER1)
+        p2 = self.last_move.tiles_count(color=CELL_PLAYER2)
         if p1 > p2:
             return self.player1
         if p2 > p1:
@@ -100,10 +111,14 @@ class Game(models.Model):
 
 
 class Player(models.Model):
+    COLOR_CHOICES = (
+        (CELL_PLAYER1, 'black'),
+        (CELL_PLAYER2, 'white'),
+    )
     user = models.ForeignKey(ReversiUser)
     game = models.ForeignKey(Game, related_name="players")
-    color = models.ForeignKey(TileColor)
     surrendered = models.BooleanField(default=False)
+    color = models.CharField(max_length=1, choices=COLOR_CHOICES)
 
     def __unicode__(self):
         return "{0.user.username} - {0.game} - {0.color}".format(self)
@@ -133,7 +148,7 @@ class Move(models.Model):
         def _get_row(row, move):
             r = []
             for col, state in enumerate(move):
-                if not game_end and state == CELL_EMPTY and self.is_valid_cell(row, col, self.game.next_player.color.name):
+                if not game_end and state == CELL_EMPTY and self.is_valid_cell(row, col, self.game.next_player.color):
                     state = CELL_VALID
                 r.append({
                     "state": state,
@@ -259,17 +274,17 @@ class Move(models.Model):
             self.field = ",".join([CELL_EMPTY] * self.game.size**2)
             # place player1
             self.set_cell(row=(self.game.size/2)-1, col=(self.game.size/2)-1,
-                          color=self.game.player1.color.name,
+                          color=CELL_PLAYER1,
                           turn_cells=False)
             self.set_cell(row=self.game.size/2, col=self.game.size/2,
-                          color=self.game.player1.color.name,
+                          color=CELL_PLAYER1,
                           turn_cells=False)
             # place player2
             self.set_cell(row=(self.game.size/2)-1, col=self.game.size/2,
-                          color=self.game.player2.color.name,
+                          color=CELL_PLAYER2,
                           turn_cells=False)
             self.set_cell(row=self.game.size/2, col=(self.game.size/2)-1,
-                          color=self.game.player2.color.name,
+                          color=CELL_PLAYER2,
                           turn_cells=False)
 
         # save

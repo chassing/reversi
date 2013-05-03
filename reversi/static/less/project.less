@@ -22,47 +22,6 @@
 
     margin: @cell_margin;
 }
-.field-cell-state-valid {
-    // valid field
-    background: #CCC;
-    cursor: pointer;
-}
-.field-cell-image-black {
-    background-image: url("/static/img/black.png");
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-.field-cell-image-white {
-    background-image: url("/static/img/white.png");
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-.field-cell-state-black {
-    .field-cell-image-black;
-    background-color: #ffffff;
-    background-size: @cell_width @cell_heigth
-}
-.field-cell-state-white {
-    .field-cell-image-white;
-    background-color: #ffffff;
-    background-size: @cell_width @cell_heigth
-}
-.field-cell-state-empty {
-    // empty field
-    background: #FFF;
-}
-
-.stat-cell-black {
-    .field-cell-image-black;
-    background-size: 20px;
-    background-position: left center;
-}
-
-.stat-cell-white {
-    .field-cell-image-white;
-    background-size: 20px;
-    background-position: left center;
-}
 
 .text-huge {
     font-size: 25px;
@@ -72,4 +31,105 @@
     color: #000;
     background-color: #ffffff;
     border: 1px solid #ccc;
+}
+
+
+/*
+  SKIN: BLACK VS WHITE
+*/
+.skin-black-white-game-field-background {
+
+}
+
+.skin-black-white-field-cell-state-v {
+    // valid field
+    background: #CCC;
+    cursor: pointer;
+}
+.skin-black-white-field-cell-image-1 {
+    background-image: url("/static/img/blackwhite/black.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.skin-black-white-field-cell-image-2 {
+    background-image: url("/static/img/blackwhite/white.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.skin-black-white-field-cell-state-1 {
+    .skin-black-white-field-cell-image-1;
+    background-color: #ffffff;
+    background-size: @cell_width @cell_heigth
+}
+.skin-black-white-field-cell-state-2 {
+    .skin-black-white-field-cell-image-2;
+    background-color: #ffffff;
+    background-size: @cell_width @cell_heigth
+}
+.skin-black-white-field-cell-state-e {
+    // empty field
+    background: #FFF;
+}
+
+.skin-black-white-stat-cell-1 {
+    .skin-black-white-field-cell-image-1;
+    background-size: 20px;
+    background-position: left center;
+}
+
+.skin-black-white-stat-cell-2 {
+    .skin-black-white-field-cell-image-2;
+    background-size: 20px;
+    background-position: left center;
+}
+
+/*
+  SKIN: STARWARS
+*/
+.skin-starwars-game-field-background {
+    background-color: #000;
+    td {
+        color: #fff;
+    }
+}
+.skin-starwars-field-cell-state-v {
+    // valid field
+    background: #CCC;
+    cursor: pointer;
+}
+.skin-starwars-field-cell-image-1 {
+    background-image: url("/static/img/starwars/darth.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.skin-starwars-field-cell-image-2 {
+    background-image: url("/static/img/starwars/yoda.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.skin-starwars-field-cell-state-1 {
+    .skin-starwars-field-cell-image-1;
+    background-color: #ffffff;
+    background-size: @cell_width @cell_heigth
+}
+.skin-starwars-field-cell-state-2 {
+    .skin-starwars-field-cell-image-2;
+    background-color: #ffffff;
+    background-size: @cell_width @cell_heigth
+}
+.skin-starwars-field-cell-state-e {
+    // empty field
+    background: #000;
+}
+
+.skin-starwars-stat-cell-1 {
+    .skin-starwars-field-cell-image-1;
+    background-size: 20px;
+    background-position: left center;
+}
+
+.skin-starwars-stat-cell-2 {
+    .skin-starwars-field-cell-image-2;
+    background-size: 20px;
+    background-position: left center;
 }

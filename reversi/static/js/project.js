@@ -16,6 +16,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
     $scope.grid = [];
     $scope.game_end = false;
     $scope.update_grid = true;
+    $scope.skin = window.skin;
 
     /*
         click handler
@@ -30,7 +31,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
             alert("Du bist nicht dran!");
             return;
         }
-        if (tile.state !== "valid") {
+        if (tile.state !== "v") {
             return;
         }
         $gameserver.emit("hit", tile);
@@ -68,7 +69,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
         pass = false;
         for (var i=0; i < $scope.grid.length; i++) {
             for (var j=0; j < $scope.grid[i].length; j++) {
-                if ($scope.grid[i][j].state === 'valid') {
+                if ($scope.grid[i][j].state === 'v') {
                     pass = true;
                     break;
                 }
@@ -197,9 +198,10 @@ reversiApp.directive('reversiField', function() {
         restrict:
             'E',
         template:
-            '<div class="field-cell field-cell-state-{{ tile.state }}"></div>',
+            '<div class="field-cell skin-{{ skin }}-field-cell-state-{{ tile.state }}"></div>',
         scope: {
-            tile: '='
+            tile: '=',
+            skin: '='
         }
     };
 });

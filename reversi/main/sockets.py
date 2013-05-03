@@ -72,9 +72,9 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         # create new move
         move = Move(game=self.game, player=self.player)
         move.field = self.game.last_move.field
-        if move.is_valid_cell(row=data['row'], col=data['col'], color=self.player.color.name):
-            self.broadcast_move(row=data['row'], col=data['col'], color=self.player.color.name)
-            move.set_cell(row=data['row'], col=data['col'], color=self.player.color.name)
+        if move.is_valid_cell(row=data['row'], col=data['col'], color=self.player.color):
+            self.broadcast_move(row=data['row'], col=data['col'], color=self.player.color)
+            move.set_cell(row=data['row'], col=data['col'], color=self.player.color)
             # save changes
             move.save()
             self.broadcast_grid()
@@ -152,22 +152,22 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             {
                 'id': self.game.player1.pk,
                 'name': self.game.player1.user.nickname,
-                'color': self.game.player1.color.name,
+                'color': self.game.player1.color,
             },
             {
                 'id': self.game.player2.pk,
                 'name': self.game.player2.user.nickname,
-                'color': self.game.player2.color.name,
+                'color': self.game.player2.color,
             },
         ])
         # update stats
         self.emit_to_game(self.game.pk, "statistics", {
             self.game.player1.pk: {
-                'tiles': move.tiles_count(color=self.game.player1.color.name),
+                'tiles': move.tiles_count(color=self.game.player1.color),
                 'tiles_set': self.game.moves.filter(player=self.game.player1, passed=False).count(),
             },
             self.game.player2.pk: {
-                'tiles': move.tiles_count(color=self.game.player2.color.name),
+                'tiles': move.tiles_count(color=self.game.player2.color),
                 'tiles_set': self.game.moves.filter(player=self.game.player2, passed=False).count(),
 
             },

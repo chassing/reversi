@@ -5,19 +5,24 @@
     <script type="text/javascript">
         window.game_id = {{ game.pk }};
         window.player_id = {{ player.pk }};
+        window.skin = '{{ player.user.skin.name }}';
     </script>
 {% endblock extra_js %}
 
 {% block content %}
     <div class="row">
         <div class="span8">
-            <table id="field">
-                <tr ng-repeat="row in grid">
-                    <td ng-repeat="tile in row" ng-click="hit_handler(tile)">
-                        <reversi-field tile="tile"></reversi-field>
-                    </td>
-                </tr>
-            </table>
+            {% verbatim %}
+                <table id="field" class="skin-{{ skin }}-game-field-background">
+                    <tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td></tr>
+                    <tr ng-repeat="row in grid">
+                        <td> {{ $index + 1 }}</td>
+                        <td ng-repeat="tile in row" ng-click="hit_handler(tile)">
+                            <reversi-field tile="tile" skin="skin"></reversi-field>
+                        </td>
+                    </tr>
+                </table>
+            {% endverbatim %}
         </div>
 
         <div class="span4">
@@ -52,7 +57,7 @@
                         </tr>
                         <tr>
                             <td>Farbe</td>
-                            <td class="stat-cell-{{ player.color }}"></td>
+                            <td class="skin-{{ skin }}-stat-cell-{{ player.color }}"></td>
                         </tr>
                     </table>
                 </div>

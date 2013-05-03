@@ -4,7 +4,7 @@ from .models import ReversiUser
 from .models import Player
 from .models import Game
 from .models import Move
-from .models import TileColor
+from .models import Skin
 from .models import Socket
 
 
@@ -25,5 +25,5 @@ admin.site.register(ReversiUser, ReversiUserAdmin)
 admin.site.register(Player)
 admin.site.register(Game, GameModelAdmin)
 admin.site.register(Move)
-admin.site.register(TileColor)
+admin.site.register(Skin)
 admin.site.register(Socket)

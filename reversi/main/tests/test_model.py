@@ -21,10 +21,12 @@ class GameTest(TestCase):
     def test_next_player(self):
         """ get the next player
         """
+        self.assertEqual(Move.objects.count(), 0)
         # without moves player 1 is the next - should be an impossible situation
         self.assertEqual(self.game.next_player, self.player1)
         # after first move (start constellation) player 1 is the next
         Move(game=self.game, player=self.player1).save()
+        self.assertEqual(Move.objects.count(), 1)
         self.assertEqual(self.game.next_player, self.player1)
         # player 2 is the next
         Move(game=self.game, player=self.player1).save()
@@ -54,8 +56,8 @@ class GameTest(TestCase):
         self.assertTrue(self.game.end)
 
     def test_end_no_empty_cell(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F1 = [
             C, C, C, C, C, C, C, C,
             C, C, C, C, C, C, C, C,
@@ -90,7 +92,7 @@ class GameTest(TestCase):
         self.assertEqual(self.game.winner, self.player1)
 
     def test_winner_player1(self):
-        C = self.player1.color.name
+        C = self.player1.color
         F1 = [
             E, E, E, E, E, E, E, E,
             E, E, E, E, E, E, E, E,
@@ -112,7 +114,7 @@ class GameTest(TestCase):
         self.assertEqual(self.game.winner, self.player1)
 
     def test_winner_player2(self):
-        M = self.player2.color.name
+        M = self.player2.color
         F1 = [
             E, E, E, E, E, E, E, E,
             E, E, E, E, E, E, E, E,
@@ -134,8 +136,8 @@ class GameTest(TestCase):
         self.assertEqual(self.game.winner, self.player2)
 
     def test_winner_draw(self):
-        M = self.player2.color.name
-        C = self.player1.color.name
+        M = self.player2.color
+        C = self.player1.color
         F1 = [
             E, E, E, E, E, E, E, E,
             E, E, E, E, E, E, E, E,
@@ -165,8 +167,8 @@ class MoveTest(TestCase):
         self.player1 = self.game.players.all()[0]
         self.player2 = self.game.players.all()[1]
 
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
 
         self.start_field = [
             E, E, E, E, E, E, E, E,
@@ -186,8 +188,8 @@ class MoveTest(TestCase):
         self.assertEqual(move.field, _(self.start_field))
 
     def test_set_cell_turn_cells(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F1 = [
             E, E, E, E, E, E, E, E,
             E, E, E, E, E, E, E, E,
@@ -209,13 +211,13 @@ class MoveTest(TestCase):
             E, E, E, E, E, E, E, E,
         ]
         move = Move(game=self.game, player=self.player1, field=_(F1))
-        move.set_cell(row=5, col=2, color=self.player1.color.name)
+        move.set_cell(row=5, col=2, color=self.player1.color)
         move.save()
         self.assertEqual(move.field, _(F2))
 
     def test_set_cell_no_turn_cells(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F1 = [
             E, E, E, E, E, E, E, E,
             E, E, E, E, E, E, E, E,
@@ -237,13 +239,13 @@ class MoveTest(TestCase):
             E, E, E, E, E, E, E, E,
         ]
         move = Move(game=self.game, player=self.player1, field=_(F1))
-        move.set_cell(row=5, col=2, color=self.player1.color.name, turn_cells=False)
+        move.set_cell(row=5, col=2, color=self.player1.color, turn_cells=False)
         move.save()
         self.assertEqual(move.field, _(F2))
 
     def test_turn_cells_north(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F1 = [
             C, E, E, E, E, E, E, E,
             M, E, E, E, E, E, E, E,
@@ -270,8 +272,8 @@ class MoveTest(TestCase):
         self.assertEqual(move.field, _(F2))
 
     def test_turn_cells_south(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F1 = [
             E, E, E, E, E, E, E, E,
             M, E, E, E, E, E, E, E,
@@ -298,8 +300,8 @@ class MoveTest(TestCase):
         self.assertEqual(move.field, _(F2))
 
     def test_turn_cells_east(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F1 = [
             E, M, M, M, M, M, M, C,
             E, E, E, E, E, E, E, E,
@@ -326,8 +328,8 @@ class MoveTest(TestCase):
         self.assertEqual(move.field, _(F2))
 
     def test_turn_cells_west(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F1 = [
             C, M, M, M, M, M, M, E,
             E, E, E, E, E, E, E, E,
@@ -354,8 +356,8 @@ class MoveTest(TestCase):
         self.assertEqual(move.field, _(F2))
 
     def test_turn_cells_east_and_west(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F1 = [
             E, E, E, E, E, E, E, E,
             E, E, E, E, E, E, E, E,
@@ -382,8 +384,8 @@ class MoveTest(TestCase):
         self.assertEqual(move.field, _(F2))
 
     def test_turn_cells_north_east_south_and_west(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F1 = [
             E, E, E, C, E, E, E, E,
             E, E, E, M, E, E, E, E,
@@ -410,8 +412,8 @@ class MoveTest(TestCase):
         self.assertEqual(move.field, _(F2))
 
     def test_turn_cells_all_directions(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F1 = [
             C, E, E, C, E, E, C, E,
             M, M, E, M, E, M, E, E,
@@ -440,11 +442,11 @@ class MoveTest(TestCase):
     def test_valid_north(self):
         move = Move(game=self.game, player=self.player2, field=_(self.start_field))
         move.save()
-        self.assertTrue(move.is_valid_cell(row=5, col=3, color=self.player1.color.name))
+        self.assertTrue(move.is_valid_cell(row=5, col=3, color=self.player1.color))
 
     def test_valid_north_east(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F = [
             E, E, E, E, E, E, E, E,
             E, E, E, E, E, E, E, E,
@@ -462,11 +464,11 @@ class MoveTest(TestCase):
     def test_valid_east(self):
         move = Move(game=self.game, player=self.player2, field=_(self.start_field))
         move.save()
-        self.assertTrue(move.is_valid_cell(row=3, col=5, color=self.player1.color.name))
+        self.assertTrue(move.is_valid_cell(row=3, col=5, color=self.player1.color))
 
     def test_valid_south_east(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F = [
             E, E, E, E, E, E, E, E,
             E, E, E, E, E, E, E, E,
@@ -484,11 +486,11 @@ class MoveTest(TestCase):
     def test_valid_south(self):
         move = Move(game=self.game, player=self.player1, field=_(self.start_field))
         move.save()
-        self.assertTrue(move.is_valid_cell(row=2, col=3, color=self.player2.color.name))
+        self.assertTrue(move.is_valid_cell(row=2, col=3, color=self.player2.color))
 
     def test_valid_south_west(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F = [
             E, E, E, E, E, E, E, E,
             E, E, E, E, E, E, E, E,
@@ -506,11 +508,11 @@ class MoveTest(TestCase):
     def test_valid_west(self):
         move = Move(game=self.game, player=self.player1, field=_(self.start_field))
         move.save()
-        self.assertTrue(move.is_valid_cell(row=3, col=2, color=self.player2.color.name))
+        self.assertTrue(move.is_valid_cell(row=3, col=2, color=self.player2.color))
 
     def test_valid_north_west(self):
-        C = self.player1.color.name
-        M = self.player2.color.name
+        C = self.player1.color
+        M = self.player2.color
         F = [
             E, E, E, E, E, E, E, E,
             E, E, E, E, E, E, E, E,
@@ -526,8 +528,8 @@ class MoveTest(TestCase):
         self.assertTrue(move.is_valid_cell(row=5, col=5, color=M))
 
     def test_valid_bug_found(self):
-        B = self.player1.color.name
-        W = self.player2.color.name
+        B = self.player1.color
+        W = self.player2.color
         F = [
             W, W, W, B, E, E, B, E,
             W, W, B, B, E, E, B, E,
@@ -548,14 +550,14 @@ class MoveTest(TestCase):
     def test_not_valid_all_empty(self):
         move = Move(game=self.game, player=self.player2, field=_(self.start_field))
         move.save()
-        self.assertTrue(not move.is_valid_cell(row=0, col=0, color=self.player1.color.name))
+        self.assertTrue(not move.is_valid_cell(row=0, col=0, color=self.player1.color))
 
     def test_not_valid_outside(self):
         move = Move(game=self.game, player=self.player2, field=_(self.start_field))
         move.save()
-        self.assertTrue(not move.is_valid_cell(row=9, col=0, color=self.player1.color.name))
+        self.assertTrue(not move.is_valid_cell(row=9, col=0, color=self.player1.color))
 
     def test_not_valid(self):
         move = Move(game=self.game, player=self.player2, field=_(self.start_field))
         move.save()
-        self.assertTrue(not move.is_valid_cell(row=2, col=3, color=self.player1.color.name))
+        self.assertTrue(not move.is_valid_cell(row=2, col=3, color=self.player1.color))
