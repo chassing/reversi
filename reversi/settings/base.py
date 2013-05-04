@@ -184,6 +184,8 @@ THIRD_PARTY_APPS = (
     'site_basics',
     # user registration
     'registration',
+    # twitter bootstrap forms
+    'bootstrap_toolkit',
 )
 
 # Apps specific for this project go here.

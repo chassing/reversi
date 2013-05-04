@@ -23,7 +23,7 @@
             "last_name": "",
             "nickname": "super admin",
             "password": "pbkdf2_sha256$10000$Awwz3YMgQH3e$yn9Nk64p88s/zXV49XkDP251eMx3qAR0/obi1DZLGn0=",
-            "skin": 1,
+            "skin": 2,
             "user_permissions": [],
             "username": "admin"
         },

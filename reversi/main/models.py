@@ -31,9 +31,14 @@ class ReversiUser(AbstractUser):
     nickname = models.CharField(max_length=254)
     skin = models.ForeignKey(Skin, null=True, default=get_default_skin)
 
+    def __unicode__(self):
+        return self.nickname
+
 
 class Game(models.Model):
+    name = models.CharField(max_length=100)
     size = models.IntegerField(default=8)
+    created = models.DateTimeField(auto_now=True, auto_now_add=True)
 
     @property
     def next_player(self):
@@ -107,7 +112,7 @@ class Game(models.Model):
         return self.players.all()[1]
 
     def __unicode__(self):
-        return "{0.pk}".format(self)
+        return "{0.pk} - {0.name}".format(self)
 
 
 class Player(models.Model):
@@ -274,17 +279,17 @@ class Move(models.Model):
             self.field = ",".join([CELL_EMPTY] * self.game.size**2)
             # place player1
             self.set_cell(row=(self.game.size/2)-1, col=(self.game.size/2)-1,
-                          color=CELL_PLAYER1,
+                          color=self.game.player1.color,
                           turn_cells=False)
             self.set_cell(row=self.game.size/2, col=self.game.size/2,
-                          color=CELL_PLAYER1,
+                          color=self.game.player1.color,
                           turn_cells=False)
             # place player2
             self.set_cell(row=(self.game.size/2)-1, col=self.game.size/2,
-                          color=CELL_PLAYER2,
+                          color=self.game.player2.color,
                           turn_cells=False)
             self.set_cell(row=self.game.size/2, col=(self.game.size/2)-1,
-                          color=CELL_PLAYER2,
+                          color=self.game.player2.color,
                           turn_cells=False)
 
         # save
