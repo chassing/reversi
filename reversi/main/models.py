@@ -94,8 +94,8 @@ class Game(models.Model):
             return self.player1
 
         # retrieve winner on tiles count
-        p1 = self.last_move.tiles_count(color=CELL_PLAYER1)
-        p2 = self.last_move.tiles_count(color=CELL_PLAYER2)
+        p1 = self.last_move.tiles_count(color=self.player1.color)
+        p2 = self.last_move.tiles_count(color=self.player2.color)
         if p1 > p2:
             return self.player1
         if p2 > p1:
