@@ -52,7 +52,9 @@
     },
     {
         "fields": {
-            "size": 8
+            "name": "first game",
+            "size": 8,
+            "created": "2013-05-04T14:23:43.536Z"
         },
         "model": "main.game",
         "pk": 1
