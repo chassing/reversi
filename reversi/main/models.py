@@ -125,8 +125,11 @@ class Player(models.Model):
     surrendered = models.BooleanField(default=False)
     color = models.CharField(max_length=1, choices=COLOR_CHOICES)
 
+    class Meta:
+        ordering = ('pk',)
+
     def __unicode__(self):
-        return "{0.user.username} - {0.game} - {0.color}".format(self)
+        return "{0.user.username} - {0.game}".format(self)
 
 
 class Move(models.Model):
