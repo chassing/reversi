@@ -1,10 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <ul>
-        {% for game in games %}
-            <li><a href="{% url 'main:game' id=game.pk %}">{{ game }}</a></li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'main:new-game' %}" class="btn">New Game</a></li>
+    <div class="row">
+        <div class="span5">
+            {% for game in games %}
+                <table class="table table-condensed">
+                    <tr>
+                        <th colspan="2" style="border-top: 0px">
+                            <span class="text-huge">
+                                <a href="{% url 'main:game' id=game.pk %}">{{ game.name }}</a>
+                            </span>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="30%">Die Kontrahenten</td>
+                        <td>
+                            {{ game.player1.user.nickname }} - {{ game.player2.user.nickname }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Erstellt am</td>
+                        <td>
+                            {{ game.created }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td>
+                            {% if game.end %}
+                                {% if game.winner %}
+                                    Gewinner: {{ game.winner.user.nickname }}
+                                {% else %}
+                                    unentschieden
+                                {% endif %}
+                            {% else %}
+                                Noch nicht beendet
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            {% empty %}
+                Noch nie ein Spiel gespielt
+            {% endfor %}
+        </div>
+    </div>
+    <a href="{% url 'main:new-game' %}" class="btn btn-primary">Neues Spiel</a></li>
 {% endblock content %}
