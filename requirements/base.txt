@@ -5,6 +5,5 @@ dj-database-url==0.2.1
 gevent==0.13.8
 git+https://github.com/abourget/gevent-socketio.git
 gevent-websocket==0.3.6
-django-mobile==0.2.4
 django-site-basics==0.2.4
  https://bitbucket.org/chassing/django-registration/get/tip.tar.bz2#egg=django-registration
