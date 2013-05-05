@@ -216,7 +216,7 @@ reversiApp.factory('$gameserver', function ($rootScope) {
             emit: function (eventName, callback) { return; }
         };
 
-    var socket = io.connect("/game");
+    var socket = io.connect("/game", {'sync disconnect on unload' : true});
     return {
         on: function (eventName, callback) {
             socket.on(eventName, function () {

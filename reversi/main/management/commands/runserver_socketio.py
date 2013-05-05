@@ -15,6 +15,7 @@ from socketio.server import SocketIOServer
 
 RELOAD = False
 
+
 def reload_watcher():
     global RELOAD
     while True:
@@ -22,6 +23,7 @@ def reload_watcher():
         if RELOAD:
             kill(getpid(), SIGINT)
         sleep(1)
+
 
 class Command(BaseCommand):
 
@@ -51,7 +53,7 @@ class Command(BaseCommand):
             print "SocketIOServer running on %s:%s" % bind
             print
             handler = self.get_handler(*args, **options)
-            server = SocketIOServer(bind, handler, resource="socket.io", policy_server=True)
+            server = SocketIOServer(bind, handler, resource="socket.io", policy_server=False)
             server.serve_forever()
         except KeyboardInterrupt:
             if RELOAD:
@@ -76,3 +78,12 @@ class Command(BaseCommand):
                 (use_static_handler and insecure_serving)):
             handler = StaticFilesHandler(handler)
         return handler
+
+
+from socketio.handler import SocketIOHandler
+from socketio import transports
+
+SocketIOHandler.handler_types = {
+    'xhr-polling': transports.XHRPollingTransport,
+    'jsonp-polling': transports.JSONPolling,
+}
