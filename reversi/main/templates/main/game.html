@@ -15,12 +15,16 @@
 {% endblock %}
 
 
+{% block game_name %}
+    {{ game.name }}
+{% endblock %}
+
+
 {% block content %}
-    <h2 class="span8 pagination-centered">{{ game.name }}</h2>
     <div class="row">
         <div class="span8">
             {% verbatim %}
-                <table id="field" class="skin-{{ skin }}-game-field-background">
+                <table id="field" class="skin-{{ skin }}-game-field-background" style="margin-bottom: 20px">
                     <tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td></tr>
                     <tr ng-repeat="row in grid" ng-class="highlight_selected_row($index)" >
                         <td> {{ $index + 1 }}</td>
@@ -35,7 +39,7 @@
         <div class="span4">
             {% verbatim %}
                 <div ng-repeat="player in players" class="alert" ng-class="highlight_current_player(player.id)">
-                    <table class="table table-condensed">
+                    <table class="table table-condensed" style="margin-bottom: 0px">
                         <tr>
                             <th colspan="2" style="border-top: 0px">
                                 <i class="icon-warning-sign" tooltip="Spieler ist nicht verbunden" ng-show="is_not_connected(player)">&nbsp;</i>
@@ -47,7 +51,7 @@
                             </th>
                         </tr>
                         <tr>
-                            <td>Anzahl gesetzter Steine</td>
+                            <td>Gesetzte Steine</td>
                             <td width="10%">
                                 <span class="badge badge-info">
                                     {{ stats[player.id].tiles_set }}
@@ -55,7 +59,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Anzahl eigener Steine</td>
+                            <td>Eigene Steine</td>
                             <td width="10%">
                                 <span class="badge badge-info">
                                     {{ stats[player.id].tiles }}
@@ -70,7 +74,7 @@
                 </div>
 
                 <div class="alert alert-default">
-                    <table class="table table-condensed">
+                    <table class="table table-condensed" style="margin-bottom: 0px">
                         <tr>
                             <th colspan="2" style="border-top: 0px">
                                 <span class="text-huge">Spieldetails</span>
@@ -104,7 +108,7 @@
                 </div>
 
                 <div class="alert alert-default" ng-hide="game_end">
-                    <table class="table table-condensed">
+                    <table class="table table-condensed" style="margin-bottom: 0px">
                         <tr>
                             <th colspan="5" style="border-top: 0px">
                                 <span class="text-huge">Aktionen</span>
@@ -123,7 +127,6 @@
             {% endverbatim %}
         </div>
     </div>
-
 
     <script type="text/ng-template" id="winner.html">
         <div class="modal-header">

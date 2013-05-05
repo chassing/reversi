@@ -39,7 +39,9 @@
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
-                    <a class="brand" href="#">reversi</a>
+                    <span class="brand" style="color: #fff">
+                        {% block game_name %}reversi{% endblock game_name %}
+                    </span>
                     <ul class="nav">
                         <li><a href="{% url 'main:index' %}">Home</a></li>
                         {% if user.is_authenticated %}

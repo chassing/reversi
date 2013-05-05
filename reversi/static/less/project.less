@@ -4,11 +4,10 @@
 @border_color: #CCC;
 @radius: 4px;
 
-@cell_width: 67px;
+@cell_width: 70px;
 @cell_heigth: @cell_width;
-@cell_margin: 2px;
-@cell_border_size: 2px;
-
+@cell_margin: 0px;
+@cell_border_size: 1px;
 
 .field-cell {
     width: @cell_width;
@@ -22,6 +21,22 @@
 
     margin: @cell_margin;
 }
+
+@media (max-width: 979px) and (min-width: 768px) {
+    @cell_width: 56px;
+    @cell_heigth: @cell_width;
+
+    .field-cell {
+        width: @cell_width;
+        height: @cell_heigth;
+    }
+
+    .alert {
+        padding: 5px 5px 5px 5px;
+        margin-bottom: 6px;
+    }
+}
+
 
 .text-huge {
     font-size: 25px;
