@@ -101,6 +101,14 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         move.save()
         self.broadcast_grid()
 
+    def on_deny(self, data):
+        """ user denied this game
+        """
+        self.log("{0.request.user.username} deny".format(self))
+        self.player.denied = True
+        self.player.save()
+        self.broadcast_grid()
+
     def on_surrender(self, data):
         """ player surrendered
         """

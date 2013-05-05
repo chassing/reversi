@@ -111,6 +111,7 @@ class GameTest(TestCase):
         move = Move(game=self.game, player=self.player1, passed=True)
         move.field = self.game.last_move.field
         move.save()
+        self.assertTrue(self.game.end)
         self.assertEqual(self.game.winner, self.player1)
 
     def test_winner_player2(self):
@@ -133,6 +134,7 @@ class GameTest(TestCase):
         move = Move(game=self.game, player=self.player2, passed=True)
         move.field = self.game.last_move.field
         move.save()
+        self.assertTrue(self.game.end)
         self.assertEqual(self.game.winner, self.player2)
 
     def test_winner_draw(self):
@@ -156,6 +158,18 @@ class GameTest(TestCase):
         move = Move(game=self.game, player=self.player2, passed=True)
         move.field = self.game.last_move.field
         move.save()
+        self.assertEqual(self.game.winner, None)
+
+    def test_end_player1_denied(self):
+        self.player1.denied = True
+        self.player1.save()
+        self.assertTrue(self.game.end)
+        self.assertEqual(self.game.winner, None)
+
+    def test_end_player2_denied(self):
+        self.player2.denied = True
+        self.player2.save()
+        self.assertTrue(self.game.end)
         self.assertEqual(self.game.winner, None)
 
 

@@ -4,6 +4,7 @@ log = logging.getLogger("main.models")
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.dispatch import receiver, Signal
 
 
 CELL_VALID = "v"
@@ -29,8 +30,7 @@ class Theme(models.Model):
 
 class ReversiUser(AbstractUser):
     nickname = models.CharField(max_length=254, verbose_name='Spitzname')
-    #theme = models.ForeignKey(Theme, null=True, default=get_default_theme, verbose_name="Motiv")
-    theme = models.ForeignKey(Theme, null=True, verbose_name="Motiv")
+    theme = models.ForeignKey(Theme, null=True, default=get_default_theme, verbose_name="Motiv")
 
     def __unicode__(self):
         return self.nickname
@@ -40,13 +40,14 @@ class Game(models.Model):
     name = models.CharField(max_length=100)
     size = models.IntegerField(default=8)
     created = models.DateTimeField(auto_now=True, auto_now_add=True)
+    end = models.BooleanField(default=False)
 
     @property
     def next_player(self):
         if self.end:
             return None
 
-        if self.moves.count() == 1:
+        if self.moves.count() <= 1:
             # player 1 is the first on
             return self.player1
 
@@ -61,46 +62,21 @@ class Game(models.Model):
 
     @property
     def last_move(self):
-        return self.moves.reverse()[0]
-
-    @property
-    def end(self):
-        """ last both moves are passed
-        """
-        # game ends if last 2 moves are passed
-        if self.moves.count() >= 2 and \
-                self.moves.reverse()[0].passed and \
-                self.moves.reverse()[1].passed:
-            return True
-
-        # game ends if one of the player surrendered
-        if self.player1.surrendered or self.player2.surrendered:
-            return True
-
-        # game ends if no empty cells are available
-        if self.moves.count() > 0 and CELL_EMPTY not in self.last_move.field:
-            return True
-
-        return False
+        try:
+            return self.moves.reverse()[0]
+        except IndexError:
+            return Move(game=self, player=self.player1)
 
     @property
     def winner(self):
         if not self.end:
             raise Exception("Game not ended")
 
-        # someone surrendered?
-        if self.player1.surrendered:
-            return self.player2
-        if self.player2.surrendered:
+        if self.player1.winner:
             return self.player1
+        if self.player2.winner:
+            return self.player2
 
-        # retrieve winner on tiles count
-        p1 = self.last_move.tiles_count(color=self.player1.color)
-        p2 = self.last_move.tiles_count(color=self.player2.color)
-        if p1 > p2:
-            return self.player1
-        if p2 > p1:
-            return self.player2
         # draw
         return None
 
@@ -124,6 +100,8 @@ class Player(models.Model):
     user = models.ForeignKey(ReversiUser)
     game = models.ForeignKey(Game, related_name="players")
     surrendered = models.BooleanField(default=False)
+    denied = models.BooleanField(default=False)
+    winner = models.BooleanField(default=False)
     color = models.CharField(max_length=1, choices=COLOR_CHOICES)
 
     class Meta:
@@ -131,6 +109,11 @@ class Player(models.Model):
 
     def __unicode__(self):
         return "{0.user.username} - {0.game}".format(self)
+
+    def save(self, *args, **kwargs):
+        super(Player, self).save(*args, **kwargs)
+        if self.surrendered or self.denied:
+            game_end.send(sender=self, game=self.game)
 
 
 class Move(models.Model):
@@ -299,6 +282,15 @@ class Move(models.Model):
         # save
         super(Move, self).save(*args, **kwargs)
 
+        # game ends
+        # * if last 2 moves are passed
+        # * if no empty cells are available
+        if self.game.moves.count() >= 2 and \
+                self.game.moves.reverse()[0].passed and \
+                self.game.moves.reverse()[1].passed or \
+                CELL_EMPTY not in self.field:
+            game_end.send(sender=self, game=self.game)
+
     def print_human_readable_grid(self):
         grid = []
         for r in xrange(0, self.game.size):
@@ -316,3 +308,39 @@ class Socket(models.Model):
 
     def __unicode__(self):
         return "{0.session} - {0.player.user.username}".format(self)
+
+
+game_end = Signal(providing_args=["game"])
+
+
+@receiver(game_end, dispatch_uid="game_end_handler")
+def game_end_handler(sender, game, **kwargs):
+    if game.end:
+        # already set
+        return
+
+    # set end
+    game.end = True
+    game.save()
+
+    # now get the winner
+    player1 = game.player1
+    player2 = game.player2
+
+    # someone surrendered?
+    if player1.surrendered:
+        player2.winner = True
+    if player2.surrendered:
+        player1.winner = True
+
+    # retrieve winner on tiles count
+    p1 = game.last_move.tiles_count(color=player1.color)
+    p2 = game.last_move.tiles_count(color=player2.color)
+    if p1 > p2:
+        log.info("player1 wins with {} against {}".format(p1, p2))
+        player1.winner = True
+    if p2 > p1:
+        log.info("player2 wins with {} against {}".format(p2, p1))
+        player2.winner = True
+    player1.save()
+    player2.save()

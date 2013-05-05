@@ -85,51 +85,6 @@
     },
     {
         "fields": {
-            "name": "first game",
-            "size": 8,
-            "created": "2013-05-04T14:23:43.536Z"
-        },
-        "model": "main.game",
-        "pk": 1
-    },
-    {
-        "fields": {
-            "color": "1",
-            "game": 1,
-            "surrendered": false,
-            "user": 1
-        },
-        "model": "main.player",
-        "pk": 1
-    },
-    {
-        "fields": {
-            "color": "2",
-            "game": 1,
-            "surrendered": false,
-            "user": 2
-        },
-        "model": "main.player",
-        "pk": 2
-    },
-    {
-        "fields": {
-            "player": 2,
-            "session": "547761566696"
-        },
-        "model": "main.socket",
-        "pk": 19
-    },
-    {
-        "fields": {
-            "player": 1,
-            "session": "264145808841"
-        },
-        "model": "main.socket",
-        "pk": 20
-    },
-    {
-        "fields": {
             "domain": "reversi.ca-net.org",
             "name": "reversi.ca-net.org"
         },
