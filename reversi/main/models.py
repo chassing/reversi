@@ -12,11 +12,11 @@ CELL_PLAYER1 = "1"
 CELL_PLAYER2 = "2"
 
 
-def get_default_skin():
-    return Skin.objects.get(pk=1)
+def get_default_theme():
+    return Theme.objects.get(pk=1)
 
 
-class Skin(models.Model):
+class Theme(models.Model):
     name = models.CharField(max_length=254)
     description = models.CharField(max_length=254, default="")
     player1 = models.CharField(max_length=254, help_text="player 1 css class")
@@ -29,7 +29,8 @@ class Skin(models.Model):
 
 class ReversiUser(AbstractUser):
     nickname = models.CharField(max_length=254, verbose_name='Spitzname')
-    skin = models.ForeignKey(Skin, null=True, default=get_default_skin, verbose_name="Motiv")
+    #theme = models.ForeignKey(Theme, null=True, default=get_default_theme, verbose_name="Motiv")
+    theme = models.ForeignKey(Theme, null=True, verbose_name="Motiv")
 
     def __unicode__(self):
         return self.nickname

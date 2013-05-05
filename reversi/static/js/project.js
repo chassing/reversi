@@ -16,7 +16,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
     $scope.grid = [];
     $scope.game_end = false;
     $scope.update_grid = true;
-    $scope.skin = window.skin;
+    $scope.theme = window.theme;
 
     $scope.selected_row = undefined;
     $scope.selected_column = undefined;
@@ -121,14 +121,14 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
 
     $scope.highlight_selected_column = function(tile) {
         if (tile.col === $scope.selected_column) {
-            return "skin-" + $scope.skin + "-selected";
+            return "theme-" + $scope.theme + "-selected";
         }
         return "";
     };
 
     $scope.highlight_selected_row = function(row) {
         if (row === $scope.selected_row) {
-            return "skin-" + $scope.skin + "-selected";
+            return "theme-" + $scope.theme + "-selected";
         }
         return "";
     };
@@ -244,10 +244,10 @@ reversiApp.directive('reversiField', function() {
         restrict:
             'E',
         template:
-            '<div class="field-cell skin-{{ skin }}-field-cell-state-{{ tile.state }}"></div>',
+            '<div class="field-cell theme-{{ theme }}-field-cell-state-{{ tile.state }}"></div>',
         scope: {
             tile: '=',
-            skin: '='
+            theme: '='
         }
     };
 });

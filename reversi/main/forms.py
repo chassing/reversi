@@ -60,8 +60,8 @@ class MultiplayerGameForm(forms.Form):
         self.fields["color_player1"] = forms.ChoiceField(
             label="Farbe SpielerIn 1",
             choices=(
-                (CELL_PLAYER1, user.skin.player1),
-                (CELL_PLAYER2, user.skin.player2),
+                (CELL_PLAYER1, user.theme.player1),
+                (CELL_PLAYER2, user.theme.player2),
             ),
             widget=forms.RadioSelect(
                 attrs={
@@ -73,8 +73,8 @@ class MultiplayerGameForm(forms.Form):
         self.fields["color_player2"] = forms.ChoiceField(
             label="Farbe SpielerIn 2",
             choices=(
-                (CELL_PLAYER1, user.skin.player1),
-                (CELL_PLAYER2, user.skin.player2),
+                (CELL_PLAYER1, user.theme.player1),
+                (CELL_PLAYER2, user.theme.player2),
             ),
             widget=forms.RadioSelect(
                 attrs={
@@ -103,7 +103,7 @@ class MultiplayerGameForm(forms.Form):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = ReversiUser
-        fields = ('nickname', 'email', 'skin')
+        fields = ('nickname', 'email', 'theme')
         widgets = {
             'nickname': BootstrapTextInput(
                 prepend='N',

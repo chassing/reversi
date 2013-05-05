@@ -7,8 +7,41 @@
             "player1": "black",
             "player2": "white"
         },
-        "model": "main.skin",
+        "model": "main.theme",
         "pk": 1
+    },
+    {
+        "fields": {
+            "description": "Star Wars",
+            "field": "starwars",
+            "name": "starwars",
+            "player1": "darth",
+            "player2": "yoda"
+        },
+        "model": "main.theme",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "description": "Star Trek F\u00f6deration vs Borg",
+            "field": "startrek-borg",
+            "name": "startrek-borg",
+            "player1": "federation",
+            "player2": "borg"
+        },
+        "model": "main.theme",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "description": "Star Trek F\u00f6deration vs Klingonen",
+            "field": "startrek-klingon",
+            "name": "startrek-klingon",
+            "player1": "federation",
+            "player2": "klingon"
+        },
+        "model": "main.theme",
+        "pk": 4
     },
     {
         "fields": {
@@ -23,7 +56,7 @@
             "last_name": "",
             "nickname": "super admin",
             "password": "pbkdf2_sha256$10000$Awwz3YMgQH3e$yn9Nk64p88s/zXV49XkDP251eMx3qAR0/obi1DZLGn0=",
-            "skin": 2,
+            "theme": 2,
             "user_permissions": [],
             "username": "admin"
         },
@@ -43,7 +76,7 @@
             "last_name": "",
             "nickname": "super admin2",
             "password": "pbkdf2_sha256$10000$jaz4wu9cqo4f$ZB6ZO+j5FJisGSIcTnKeO3FED9mUrpf6LeENLbh9j7Y=",
-            "skin": 1,
+            "theme": 1,
             "user_permissions": [],
             "username": "admin2"
         },
