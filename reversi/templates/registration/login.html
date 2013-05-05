@@ -14,29 +14,36 @@
 {% endblock %}
 
 {% block content %}
-    <div class="well">
-        {% if form.errors %}
-            <p class="alert-message error">{% trans "Sorry, that is not a valid username or password" %}</p>
-        {% endif %}
+    <div class="row">
+        <div class="well span5">
+            <h3>Reversi Mitglieder Login</h3>
+            {% if form.errors %}
+                <p class="alert alert-error">Dies ist keine g&uuml;ltige Benutzername/Passwort-Kombination</p>
+            {% endif %}
 
-        <form method="post" class="form-stacked">{% csrf_token %}
-            <div class="clearfix">
-                <label for="id_username">{% trans 'Username' %}</label>
-                <input type="text" class="span3" name="username" id="id_username" />
-            </div>
+            <form method="post" class="form form-stacked">{% csrf_token %}
+                <div class="clearfix">
+                    <label for="id_username">{% trans 'Username' %}</label>
+                    <input type="text" class="span3" name="username" id="id_username" />
+                </div>
 
-            <div class="clearfix">
-                <label for="id_password">{% trans 'Password' %}</label>
-                <input type="password" class="span3" name="password" id="id_password"/>
-            </div>
+                <div class="clearfix">
+                    <label for="id_password">{% trans 'Password' %}</label>
+                    <input type="password" class="span3" name="password" id="id_password"/>
+                </div>
 
-            <div class="clearfix">
-                <button id="submit_bt" class="btn primary">{% trans 'Log in' %}</button>
-            </div>
+                <div class="clearfix">
+                    <button id="submit_bt" class="btn btn-primary">Einloggen</button>
+                    <a href="{% url 'main:index' %}" class="btn">Abbrechen</a>
+                </div>
 
-            <input type="hidden" name="next" value="{{ next }}" />
-            <input type="hidden" name="this_is_the_login_form" value="1" />
-        </form>
+                <div style="margin-top: 10px">
+                    <a class="btn" href="{% url 'auth_password_reset' %}">Password vergessen?</a>
+                </div>
 
+                <input type="hidden" name="next" value="{% url 'main:index' %}" />
+                <input type="hidden" name="this_is_the_login_form" value="1" />
+            </form>
+        </div>
     </div>
 {% endblock %}
