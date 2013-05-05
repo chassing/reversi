@@ -1,7 +1,7 @@
 /*! project specific CSS goes here. */
 @field_size: 8;
 
-@border_color: #CCC;
+@border_color: #000;
 @radius: 4px;
 
 @cell_width: 70px;
@@ -12,7 +12,6 @@
 .field-cell {
     width: @cell_width;
     height: @cell_heigth;
-    float: left;
 
     border: @cell_border_size solid @border_color;
     -webkit-border-radius: @radius;
@@ -55,10 +54,12 @@
 .theme-black-white-game-field-background {
 
 }
-
+.theme-black-white-field-cell {
+    border: @cell_border_size solid #000;
+}
 .theme-black-white-field-cell-state-v {
     // valid field
-    background: #CCC;
+    background-color: #CCC;
     cursor: pointer;
 }
 .theme-black-white-field-cell-image-1 {
@@ -82,24 +83,20 @@
     background-size: @cell_width @cell_heigth
 }
 .theme-black-white-field-cell-state-e {
-    // empty field
-    background: #FFF;
+    // empty field - use table background color
 }
-
 .theme-black-white-stat-cell-1 {
     .theme-black-white-field-cell-image-1;
     background-size: 20px;
     background-position: left center;
 }
-
 .theme-black-white-stat-cell-2 {
     .theme-black-white-field-cell-image-2;
     background-size: 20px;
     background-position: left center;
 }
-
 .theme-black-white-selected {
-    background-color: #000;
+    background-color: #444;
 }
 
 
@@ -111,6 +108,9 @@
     td {
         color: #fff;
     }
+}
+.theme-starwars-field-cell {
+    border: @cell_border_size solid #fff;
 }
 .theme-starwars-field-cell-state-v {
     // valid field
@@ -138,24 +138,20 @@
     background-size: @cell_width @cell_heigth
 }
 .theme-starwars-field-cell-state-e {
-    // empty field
-    background: #000;
+    // empty field - use table background color
 }
-
 .theme-starwars-stat-cell-1 {
     .theme-starwars-field-cell-image-1;
     background-size: 20px;
     background-position: left center;
 }
-
 .theme-starwars-stat-cell-2 {
     .theme-starwars-field-cell-image-2;
     background-size: 20px;
     background-position: left center;
 }
-
 .theme-starwars-selected {
-    background-color: #ffffff;
+    background-color: #444;
 }
 
 /*
@@ -166,6 +162,9 @@
     td {
         color: #fff;
     }
+}
+.theme-startrek-borg-field-cell {
+    border: @cell_border_size solid #fff;
 }
 .theme-startrek-borg-field-cell-state-v {
     // valid field
@@ -193,34 +192,33 @@
     background-size: @cell_width @cell_heigth
 }
 .theme-startrek-borg-field-cell-state-e {
-    // empty field
-    background: #000;
+    // empty field - use table background color
 }
-
 .theme-startrek-borg-stat-cell-1 {
     .theme-startrek-borg-field-cell-image-1;
     background-size: 20px;
     background-position: left center;
 }
-
 .theme-startrek-borg-stat-cell-2 {
     .theme-startrek-borg-field-cell-image-2;
     background-size: 20px;
     background-position: left center;
 }
-
 .theme-startrek-borg-selected {
-    background-color: #ffffff;
+    background-color: #444;
 }
 
 /*
   THEME: STARTREK-KLINGON
 */
 .theme-startrek-klingon-game-field-background {
-    background-color: #000;
+    background: #000;
     td {
         color: #fff;
     }
+}
+.theme-startrek-klingon-field-cell {
+    border: @cell_border_size solid #fff;
 }
 .theme-startrek-klingon-field-cell-state-v {
     // valid field
@@ -248,22 +246,18 @@
     background-size: @cell_width @cell_heigth
 }
 .theme-startrek-klingon-field-cell-state-e {
-    // empty field
-    background: #000;
+    // empty field - use table background color
 }
-
 .theme-startrek-klingon-stat-cell-1 {
     .theme-startrek-klingon-field-cell-image-1;
     background-size: 20px;
     background-position: left center;
 }
-
 .theme-startrek-klingon-stat-cell-2 {
     .theme-startrek-klingon-field-cell-image-2;
     background-size: 20px;
     background-position: left center;
 }
-
 .theme-startrek-klingon-selected {
-    background-color: #ffffff;
+    background-color: #444;
 }

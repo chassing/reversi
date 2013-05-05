@@ -129,14 +129,10 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
         }
 
         if (key >= 49 && key <= 56) {
-            // select row
-            if ($scope.selected_column !== undefined) {
-                $scope.selected_row = key - 49;
-            }
+            $scope.selected_row = key - 49;
         }
         if (key >= 65 && key <= 72) {
             $scope.selected_column = key - 65;
-            $scope.selected_row = undefined;
         }
 
         if (key == 13 && $scope.selected_column !== undefined && $scope.selected_row !== undefined) {
@@ -270,19 +266,6 @@ reversiApp.factory('$gameserver', function ($rootScope) {
     };
 });
 
-reversiApp.directive('reversiField', function() {
-    return {
-        restrict:
-            'E',
-        template:
-            '<div class="field-cell theme-{{ theme }}-field-cell-state-{{ tile.state }}"></div>',
-        scope: {
-            tile: '=',
-            theme: '='
-        }
-    };
-});
-
 reversiApp.directive('onKeyupFn', function() {
     return function(scope, elm, attrs) {
         //Evaluate the variable that was passed
@@ -306,7 +289,7 @@ reversiApp.directive('tooltip', function () {
         link: function(scope, element, attrs) {
             $(element)
                 .attr('title', attrs.tooltip)
-                .tooltip({placement: "top"});
+                .tooltip({placement: "left"});
         }
     };
 });
