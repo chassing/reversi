@@ -38,10 +38,11 @@
                     <table class="table table-condensed">
                         <tr>
                             <th colspan="2" style="border-top: 0px">
-                                <i class="icon-star" ng-show="is_current_player(player.id)"></i>
+                                <i class="icon-warning-sign" tooltip="Spieler ist nicht verbunden" ng-show="is_not_connected(player)">&nbsp;</i>
+                                <i class="icon-star" tooltip="Spieler ist am Zug" ng-show="is_current_player(player.id)"></i>
                                 <span class="text-huge">
                                     {{ player.name }}
-                                    <i class="icon-user" ng-show="is_player(player.id)">&nbsp;</i>
+                                    <i class="icon-user" tooltip="Das bist Du!" ng-show="is_player(player)">&nbsp;</i>
                                 </span>
                             </th>
                         </tr>

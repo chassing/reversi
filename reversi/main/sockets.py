@@ -155,11 +155,13 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
                 'id': self.game.player1.pk,
                 'name': self.game.player1.user.nickname,
                 'color': self.game.player1.color,
+                'connected': self.game.player1.sockets.count() > 0,
             },
             {
                 'id': self.game.player2.pk,
                 'name': self.game.player2.user.nickname,
                 'color': self.game.player2.color,
+                'connected': self.game.player2.sockets.count() > 0,
             },
         ])
         # update stats

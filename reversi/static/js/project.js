@@ -60,8 +60,14 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
         return false;
     };
 
-    $scope.is_player = function(id) {
-        if (id == window.player_id)
+    $scope.is_player = function(player) {
+        if (player.id == window.player_id)
+            return true;
+        return false;
+    };
+
+    $scope.is_not_connected = function(player) {
+        if (player.connected === false)
             return true;
         return false;
     };
@@ -273,5 +279,17 @@ reversiApp.directive('onKeyupFn', function() {
                 keyupFn.call(scope, evt.which);
             });
         });
+    };
+});
+
+reversiApp.directive('tooltip', function () {
+    return {
+        restrict:
+            'A',
+        link: function(scope, element, attrs) {
+            $(element)
+                .attr('title', attrs.tooltip)
+                .tooltip({placement: "top"});
+        }
     };
 });
