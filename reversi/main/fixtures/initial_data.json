@@ -46,7 +46,7 @@
     {
         "fields": {
             "date_joined": "2013-04-18T15:22:00Z",
-            "email": "admin@admin.org",
+            "email": "chris@ca-net.org",
             "first_name": "",
             "groups": [],
             "is_active": true,
@@ -54,11 +54,11 @@
             "is_superuser": true,
             "last_login": "2013-04-18T15:22:37Z",
             "last_name": "",
-            "nickname": "super admin",
-            "password": "pbkdf2_sha256$10000$Awwz3YMgQH3e$yn9Nk64p88s/zXV49XkDP251eMx3qAR0/obi1DZLGn0=",
+            "nickname": "speed",
+            "password": "pbkdf2_sha256$10000$lx9TN5fd58pS$xngvXN+oZ51lZduuno7yYK0CycAR06qKQDlo4uN/1oE=",
             "theme": 2,
             "user_permissions": [],
-            "username": "admin"
+            "username": "chris"
         },
         "model": "main.reversiuser",
         "pk": 1
@@ -66,7 +66,7 @@
     {
         "fields": {
             "date_joined": "2013-04-18T15:22:21Z",
-            "email": "admin2@admin.org",
+            "email": "manu@ca-net.org",
             "first_name": "",
             "groups": [],
             "is_active": true,
@@ -74,11 +74,11 @@
             "is_superuser": true,
             "last_login": "2013-04-18T15:22:21Z",
             "last_name": "",
-            "nickname": "super admin2",
-            "password": "pbkdf2_sha256$10000$jaz4wu9cqo4f$ZB6ZO+j5FJisGSIcTnKeO3FED9mUrpf6LeENLbh9j7Y=",
+            "nickname": "manu",
+            "password": "pbkdf2_sha256$10000$lx9TN5fd58pS$xngvXN+oZ51lZduuno7yYK0CycAR06qKQDlo4uN/1oE=",
             "theme": 1,
             "user_permissions": [],
-            "username": "admin2"
+            "username": "manu"
         },
         "model": "main.reversiuser",
         "pk": 2
