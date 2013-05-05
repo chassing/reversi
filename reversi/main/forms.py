@@ -98,3 +98,17 @@ class MultiplayerGameForm(forms.Form):
             raise forms.ValidationError("Die Spieler dürfen nicht die gleiche Farbe haben!")
 
         return cleaned_data
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = ReversiUser
+        fields = ('nickname', 'email', 'skin')
+        widgets = {
+            'nickname': BootstrapTextInput(
+                prepend='N',
+            ),
+            'email': BootstrapTextInput(
+                prepend='E',
+            ),
+        }

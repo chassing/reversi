@@ -12,6 +12,7 @@ from .models import Game
 from .models import Player
 
 from forms import MultiplayerGameForm
+from forms import ProfileForm
 
 
 class IndexView(TemplateView):
@@ -80,6 +81,18 @@ class ListGamesView(TemplateView):
 class UserProfileView(TemplateView):
     template_name = "main/user-profile.html"
 
-    def get(self, request):
+    def get(self, request, form=None):
         tmpl = RequestContext(request)
+        if not form:
+            tmpl["form"] = ProfileForm(instance=request.user)
+        else:
+            tmpl["form"] = form
         return self.render_to_response(tmpl)
+
+    @method_decorator(login_required)
+    def post(self, request):
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            form = None
+        return self.get(request, form)

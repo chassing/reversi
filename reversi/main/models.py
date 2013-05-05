@@ -24,12 +24,12 @@ class Skin(models.Model):
     field = models.CharField(max_length=254, blank=True, help_text="game field css class")
 
     def __unicode__(self):
-        return self.name
+        return self.description
 
 
 class ReversiUser(AbstractUser):
-    nickname = models.CharField(max_length=254)
-    skin = models.ForeignKey(Skin, null=True, default=get_default_skin)
+    nickname = models.CharField(max_length=254, verbose_name='Spitzname')
+    skin = models.ForeignKey(Skin, null=True, default=get_default_skin, verbose_name="Motiv")
 
     def __unicode__(self):
         return self.nickname
