@@ -8,12 +8,43 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
         target: 'surrender'
     }];
     $scope.dynamic_buttons = null;
-    $scope.players = null;
+    $scope.players = [{
+        id: 0,
+        name: '',
+        color: '1',
+        connected: false
+    },{
+        id: 1,
+        name: '',
+        color: '2',
+        connected: false
+    }];
+    $scope.stats = {
+        0: {
+            tiles: 0,
+            tiles_set: 0
+        },
+        1: {
+            tiles: 0,
+            tiles_set: 0
+        },
+        move_count: 0
+    };
+
     $scope.current_player = {
         nickname: null,
         id: null
     };
-    $scope.grid = [];
+    $scope.grid = [
+        [{state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}],
+        [{state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}],
+        [{state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}],
+        [{state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}],
+        [{state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}],
+        [{state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}],
+        [{state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}],
+        [{state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}]
+    ];
     $scope.game_end = false;
     $scope.update_grid = true;
     $scope.theme = window.theme;
