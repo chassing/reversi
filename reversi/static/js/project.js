@@ -72,27 +72,6 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
         return false;
     };
 
-    $scope.set_dynamic_buttons = function() {
-        $scope.dynamic_buttons = $scope.default_buttons;
-        // valid moves available
-        pass = false;
-        for (var i=0; i < $scope.grid.length; i++) {
-            for (var j=0; j < $scope.grid[i].length; j++) {
-                if ($scope.grid[i][j].state === 'v') {
-                    pass = true;
-                    break;
-                }
-            }
-        }
-        if (pass === false && $scope.current_player.id == window.player_id && $scope.game_end !== true) {
-            $log.info("add 'pass' button");
-            $scope.dynamic_buttons.push({
-                name: 'Passen',
-                target: 'pass'
-            });
-        }
-    };
-
     $scope.stats_sum = function(key) {
         i = 0;
         angular.forEach($scope.stats, function(value) {
@@ -220,6 +199,29 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
 
     $gameserver.on('invalid_move', function(data) {
         alert("Dieser Zug ist nicht erlaubt");
+    });
+
+    $gameserver.on('update_buttons', function(data) {
+        $scope.dynamic_buttons = $scope.default_buttons.slice(0);
+
+        if ($scope.game_end === true) {
+            return;
+        }
+
+        if (data.pass_btn_for_player_id === window.player_id) {
+            $log.info("add 'pass' button");
+            $scope.dynamic_buttons.push({
+                name: 'Passen',
+                target: 'pass'
+            });
+        }
+        if (data.deny_btn_for_player_id === window.player_id) {
+            $log.info("add 'deny' button");
+            $scope.dynamic_buttons.push({
+                name: 'Spiel ablehnen',
+                target: 'deny'
+            });
+        }
     });
 });
 

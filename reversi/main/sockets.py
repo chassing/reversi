@@ -10,6 +10,7 @@ from .models import Game
 from .models import Move
 from .models import Player
 from .models import Socket
+from .models import CELL_VALID
 
 
 @namespace('/game')
@@ -118,6 +119,7 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             pass
         self.leave(self.game.pk)
         self._removed_staled_sessions()
+        self.broadcast_grid()
         self.disconnect(silent=True)
 
     def broadcast_move(self, row, col, color):
@@ -164,6 +166,7 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
                 'connected': self.game.player2.sockets.count() > 0,
             },
         ])
+
         # update stats
         self.emit_to_game(self.game.pk, "statistics", {
             self.game.player1.pk: {
@@ -177,6 +180,7 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             },
             'move_count': self.game.moves.count()
         })
+
         # game end?
         if self.game.end:
             self.log("game ended")
@@ -193,8 +197,32 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             self.log("winner {0}".format(winner["name"]))
             self.emit_to_game(self.game.pk, "end", winner)
 
+        current_grid = move.grid()
+
+        # show deny button
+        deny_btn_for_player_id = 0
+        if self.game.moves.count() == 1:
+            deny_btn_for_player_id = self.game.player1.pk
+        if self.game.moves.count() == 2:
+            deny_btn_for_player_id = self.game.player2.pk
+
+        pass_btn_for_player_id = self.game.next_player.pk
+        for row in current_grid:
+            for cell in row:
+                if cell["state"] == CELL_VALID:
+                    pass_btn_for_player_id = 0
+                    break
+        if pass_btn_for_player_id == self.game.next_player.pk:
+            self.log("show pass button")
+
+        # set buttons
+        self.emit_to_game(self.game.pk, "update_buttons", {
+            'pass_btn_for_player_id': pass_btn_for_player_id,
+            'deny_btn_for_player_id': deny_btn_for_player_id,
+        })
+
         # update the grid as last event
-        self.emit_to_game(self.game.pk, "grid", move.grid())
+        self.emit_to_game(self.game.pk, "grid", current_grid)
 
     def _removed_staled_sessions(self):
         """ clean staled sockets
