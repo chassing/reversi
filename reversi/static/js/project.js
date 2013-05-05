@@ -91,7 +91,9 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
         $log.info("key: " +  key);
 
         if ($scope.current_player.id !== window.player_id) {
-            alert("Du bist nicht dran!");
+            if (key != 13) {
+                alert("Du bist nicht dran!");
+            }
             return;
         }
 
@@ -155,30 +157,12 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
     $gameserver.on('set_cell', function(data) {
         $log.info("set_cell", data);
         $scope.grid[data.row][data.col] = data;
-        // disable grid updates for a moment
-        $scope.update_grid = false;
-        setTimeout(function () {
-            $scope.update_grid = true;
-        }, 1000);
     });
 
-    $scope._grid_callback = function(data) {
+    $gameserver.on('grid', function(data) {
         $log.info("grid", data);
-        if ($scope.update_grid === true) {
-            $log.info("updating grid");
-            $scope.grid = data;
-            $scope.set_dynamic_buttons();
-        } else {
-            setTimeout(function() {
-                $log.info("not updating grid ... ");
-                $scope.$apply(function () {
-                    $scope._grid_callback(data);
-                });
-            }, 400);
-        }
-    };
-
-    $gameserver.on('grid', $scope._grid_callback);
+        $scope.grid = data;
+    });
 
     $gameserver.on('end', function(data) {
         $log.info("game end", data);
