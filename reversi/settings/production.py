@@ -76,3 +76,12 @@ ALLOWED_HOSTS = [
     "reversi.ca-net.org",
     "still-dusk-5467.herokuapp.com",
 ]
+
+
+# needed for cached static files
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake'
+    }
+}
