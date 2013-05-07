@@ -98,6 +98,7 @@ class DenyGameView(TemplateView):
 class UserProfileView(TemplateView):
     template_name = "main/user-profile.html"
 
+    @method_decorator(login_required)
     def get(self, request, form=None):
         tmpl = RequestContext(request)
         if not form:
@@ -113,3 +114,12 @@ class UserProfileView(TemplateView):
             form.save()
             form = None
         return self.get(request, form)
+
+
+class HelpView(TemplateView):
+    template_name = "main/help.html"
+
+    @method_decorator(login_required)
+    def get(self, request, form=None):
+        tmpl = RequestContext(request)
+        return self.render_to_response(tmpl)

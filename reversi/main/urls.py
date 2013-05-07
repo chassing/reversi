@@ -2,6 +2,7 @@ from django.conf.urls import patterns, url, include
 
 from .views import IndexView, UserProfileView
 from .views import GameView, NewGameView, ListGamesView, DenyGameView
+from .views import HelpView
 
 import socketio.sdjango
 socketio.sdjango.autodiscover()
@@ -15,5 +16,6 @@ urlpatterns = patterns(
     url(r'^game/(?P<id>\d+)$', GameView.as_view(), name="game"),
     url(r'^games$', ListGamesView.as_view(), name="list-games"),
     url(r'^game$', NewGameView.as_view(), name="new-game"),
+    url(r'^help$', HelpView.as_view(), name="help"),
     url(r'^$', IndexView.as_view(), name="index"),
 )
