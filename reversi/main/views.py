@@ -78,6 +78,23 @@ class ListGamesView(TemplateView):
         return self.render_to_response(tmpl)
 
 
+class DenyGameView(TemplateView):
+    template_name = "main/deny-game.html"
+
+    @method_decorator(login_required)
+    def get(self, request, id):
+        tmpl = RequestContext(request)
+        tmpl["game"] = game = get_object_or_404(Game, pk=id)
+
+        if request.GET.get("a") == "yes":
+            # user denied this game
+            player = get_object_or_404(Player, user=request.user, game=game)
+            player.denied = True
+            player.save()
+            return redirect("main:list-games")
+        return self.render_to_response(tmpl)
+
+
 class UserProfileView(TemplateView):
     template_name = "main/user-profile.html"
 

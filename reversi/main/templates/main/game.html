@@ -109,15 +109,17 @@
                 <div class="alert alert-default" ng-hide="game_end">
                     <table class="table table-condensed" style="margin-bottom: 0px">
                         <tr>
-                            <th colspan="5" style="border-top: 0px">
+                            <th style="border-top: 0px">
                                 <span class="text-huge">Aktionen</span>
                             </th>
                         </tr>
                         <tr>
-                            <td ng-repeat="dyn_btn in dynamic_buttons">
-                                <button class="btn" ng-click="button_handler(dyn_btn.target)">
-                                    {{ dyn_btn.name }}
-                                </button>
+                            <td>
+                                <span ng-repeat="(key, properties) in btns">
+                                    <button class="btn" ng-click="button_handler(properties.target)" ng-disabled="properties.disabled">
+                                        {{ properties.name }}
+                                    </button>
+                                </span>
                             </td>
                         </tr>
 

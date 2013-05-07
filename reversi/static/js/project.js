@@ -3,11 +3,21 @@
 var reversiApp = angular.module('reversiApp', ['$strap.directives']);
 
 reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal) {
-    $scope.default_buttons = [{
-        name: 'Aufgeben',
-        target: 'surrender'
-    }];
-    $scope.dynamic_buttons = null;
+    $scope.default_buttons = {
+        surrender: {
+            name: 'Aufgeben',
+            target: 'surrender',
+            disabled: false
+        },
+        pass: {
+            name: 'Passen',
+            target: 'pass',
+            disabled: true
+    }};
+
+    // set default
+    $scope.btns = angular.copy($scope.default_buttons);
+
     $scope.players = [{
         id: 0,
         name: '',
@@ -19,6 +29,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
         color: '2',
         connected: false
     }];
+
     $scope.stats = {
         0: {
             tiles: 0,
@@ -35,6 +46,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
         nickname: null,
         id: null
     };
+
     $scope.grid = [
         [{state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}],
         [{state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}],
@@ -45,6 +57,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
         [{state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}],
         [{state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}, {state: 'e'}]
     ];
+
     $scope.game_end = false;
     $scope.update_grid = true;
     $scope.theme = window.theme;
@@ -213,25 +226,16 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
     });
 
     $gameserver.on('update_buttons', function(data) {
-        $scope.dynamic_buttons = $scope.default_buttons.slice(0);
-
         if ($scope.game_end === true) {
             return;
         }
 
+        // set default
+        $scope.btns = angular.copy($scope.default_buttons);
+
         if (data.pass_btn_for_player_id === window.player_id) {
-            $log.info("add 'pass' button");
-            $scope.dynamic_buttons.push({
-                name: 'Passen',
-                target: 'pass'
-            });
-        }
-        if (data.deny_btn_for_player_id === window.player_id) {
-            $log.info("add 'deny' button");
-            $scope.dynamic_buttons.push({
-                name: 'Spiel ablehnen',
-                target: 'deny'
-            });
+            $log.info("enable 'pass' button");
+            $scope.btns.pass.disabled = false;
         }
     });
 });

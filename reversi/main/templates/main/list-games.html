@@ -1,15 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div class="alert alert-info text-huge">
+        Meine Spiele
+    </div>
+
     <div class="row">
-        <div class="span5">
-            {% for game in games %}
+        {% for game in games %}
+            <div class="span6">
                 <table class="table table-condensed">
                     <tr>
-                        <th colspan="2" style="border-top: 0px">
+                        <th width="60%" style="border-top: 0px">
                             <span class="text-huge">
                                 <a href="{% url 'main:game' id=game.pk %}">{{ game.name }}</a>
                             </span>
+                        </th>
+                        <th style="border-top: 0px">
+                            {% if game.denyable %}
+                                <a href="{% url 'main:deny-game' id=game.pk %}" class="btn">Ablehnen</a>
+                            {% endif %}
                         </th>
                     </tr>
                     <tr>
@@ -39,10 +48,10 @@
                         </td>
                     </tr>
                 </table>
-            {% empty %}
-                Noch nie ein Spiel gespielt
-            {% endfor %}
-        </div>
+            </div>
+        {% empty %}
+            Noch nie ein Spiel gespielt
+        {% endfor %}
     </div>
     <a href="{% url 'main:new-game' %}" class="btn btn-primary">Neues Spiel</a></li>
 {% endblock content %}

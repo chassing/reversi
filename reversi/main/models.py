@@ -88,6 +88,14 @@ class Game(models.Model):
     def player2(self):
         return self.players.all()[1]
 
+    @property
+    def denyable(self):
+        if self.end:
+            return False
+        if self.moves.count() > 2:
+            return False
+        return True
+
     def __unicode__(self):
         return "{0.pk} - {0.name}".format(self)
 
