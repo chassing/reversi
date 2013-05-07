@@ -64,6 +64,8 @@ STATICFILES_STORAGE = 's3storages.StaticStorage'
 STATIC_URL = 'https://se2reversi.s3.amazonaws.com/static/'
 ADMIN_MEDIA_PREFIX = 'https://se2reversi.s3.amazonaws.com/static/admin/'
 MEDIA_URL = 'https://se2reversi.s3.amazonaws.com/media/'
+
+AWS_QUERYSTRING_AUTH = False
 ########## END STATIC FILE CONFIGURATION
 
 LOGGING["loggers"]["main"]["level"] = "INFO"
