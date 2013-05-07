@@ -177,14 +177,14 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         self.emit_to_game(self.game.pk, "statistics", {
             self.game.player1.pk: {
                 'tiles': move.tiles_count(color=self.game.player1.color),
-                'tiles_set': self.game.moves.filter(player=self.game.player1, passed=False).count(),
+                'tiles_set': self.game.moves.filter(player=self.game.player1, passed=False).count() - 1,
             },
             self.game.player2.pk: {
                 'tiles': move.tiles_count(color=self.game.player2.color),
                 'tiles_set': self.game.moves.filter(player=self.game.player2, passed=False).count(),
 
             },
-            'move_count': self.game.moves.count()
+            'move_count': self.game.moves.count() - 1
         })
 
         # game end?
