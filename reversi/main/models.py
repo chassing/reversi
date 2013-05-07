@@ -65,7 +65,7 @@ class Game(models.Model):
         try:
             return self.moves.reverse()[0]
         except IndexError:
-            return Move(game=self, player=self.player1)
+            return Move.objects.create(game=self, player=self.player1)
 
     @property
     def winner(self):
@@ -151,7 +151,9 @@ class Move(models.Model):
 
         grid = []
         for row in xrange(0, self.game.size):
-            grid.append(_get_row(row, self.field.split(",")[row*self.game.size:row*self.game.size+self.game.size]))
+            row_start = row*self.game.size
+            field_part = self.field.split(",")[row_start:row_start+self.game.size]
+            grid.append(_get_row(row, field_part))
         return grid
 
     def set_cell(self, row, col, color, turn_cells=True):

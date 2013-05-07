@@ -142,12 +142,8 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         })
 
     def broadcast_grid(self):
-        try:
-            # get the last move
-            move = self.game.last_move
-        except IndexError:
-            move = Move(game=self.game)
-            move.save()
+        # get the last move
+        move = self.game.last_move
 
         if self.game.next_player:
             # set current player
