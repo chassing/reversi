@@ -21,6 +21,10 @@
     margin: @cell_margin;
 }
 
+.field_head {
+    padding-left: @cell_width / 2;
+}
+
 @media (max-width: 979px) and (min-width: 768px) {
     @cell_width: 56px;
     @cell_heigth: @cell_width;
@@ -28,6 +32,10 @@
     .field-cell {
         width: @cell_width;
         height: @cell_heigth;
+    }
+
+    .field_head {
+        padding-left: @cell_width / 2;
     }
 
     .alert {
@@ -39,6 +47,14 @@
 
 .text-huge {
     font-size: 25px;
+}
+
+.text-large {
+    font-size: 18px;
+}
+
+.text-bold {
+    font-variant: bold;
 }
 
 .alert-default {
@@ -155,7 +171,7 @@
     background-position: left center;
 }
 .theme-starwars-selected {
-    background-color: #444;
+    background-color: #8e8e8e;
 }
 
 /*
@@ -209,7 +225,7 @@
     background-position: left center;
 }
 .theme-startrek-borg-selected {
-    background-color: #444;
+    background-color: #8e8e8e;
 }
 
 /*
@@ -263,5 +279,5 @@
     background-position: left center;
 }
 .theme-startrek-klingon-selected {
-    background-color: #444;
+    background-color: #8e8e8e;
 }
