@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 
+
+{% block headline %}
+    Meine Spiele
+{% endblock headline %}
+
+
 {% block content %}
-    <div class="alert alert-info text-huge">
-        Meine Spiele
-    </div>
+
 
     <div class="row">
         {% for game in games %}

@@ -2,16 +2,28 @@
 {% load bootstrap_toolkit %}
 
 
+{% block headline %}
+    Einstellungen
+{% endblock headline %}
+
+
 {% block content %}
-    <div class="row">
-        <div class="span8">
-            <form method="post" class="form">
-                {% csrf_token %}
-                {% bootstrap_form form layout="vertical" %}
-                <div class="form-actions" style="padding-left: 0px">
-                    <button type="submit" class="btn btn-primary">Speichern</button>
-                </div>
-            </form>
+
+    <form method="post" class="form">{% csrf_token %}
+        <div class="row">
+            <div class="span6 well">
+                {% bootstrap_field form.nickname layout="vertical" %}
+                {% bootstrap_field form.email layout="vertical" %}
+            </div>
+            <div class="span6 well">
+                {% bootstrap_field form.theme layout="vertical" %}
+            </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="span12 well">
+                <button type="submit" class="btn btn-primary">Speichern</button>
+                <a href="{% url 'main:index' %}" class="btn">Zur&uuml;ck</a>
+            </div>
+        </div>
+    </form>
 {% endblock content %}
