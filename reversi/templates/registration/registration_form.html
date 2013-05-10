@@ -1,14 +1,23 @@
 {% extends "base.html" %}
 {% load url from future %}
+{% load bootstrap_toolkit %}
 
-{% block title %}Registration complete{% endblock %}
+{% block headline %}
+    Neuen Benutzer anlegen
+{% endblock headline %}
+
+{% block title %}Neuer Benutzer{% endblock %}
 
 {% block content %}
-    <div class="well span5">
-        <form method='post' action="{% url 'registration_register' %}">{% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" class="btn btn-primary" value="Aktivieren" />
-            <a href='{% url "main:index" %}' class="btn">Cancel</a>
-        </form>
-    </div>
+    <form method='post' action="{% url 'registration_register' %}">{% csrf_token %}
+        <div class="row">
+            <div class="well span12">
+                {% bootstrap_form form layout="vertical" %}
+            </div>
+            <div class="well span12">
+                <input type="submit" class="btn btn-primary" value="Aktivieren" />
+                <a href='{% url "main:index" %}' class="btn">Cancel</a>
+            </div>
+        </div>
+    </form>
 {% endblock %}

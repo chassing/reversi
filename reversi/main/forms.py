@@ -5,6 +5,9 @@ from django import forms
 from bootstrap_toolkit.widgets import BootstrapTextInput
 from bootstrap_toolkit.widgets import create_prepend_append
 
+from registration.forms import RegistrationForm as RegistrationFormOrig
+
+
 from models import ReversiUser
 from models import CELL_PLAYER1, CELL_PLAYER2
 
@@ -15,6 +18,13 @@ class BootstrapSelect(forms.Select):
     def __init__(self, *args, **kwargs):
         self.bootstrap, kwargs = create_prepend_append(**kwargs)
         super(BootstrapSelect, self).__init__(*args, **kwargs)
+
+
+class RegistrationForm(RegistrationFormOrig):
+    nickname = forms.CharField(
+        max_length=254,
+        help_text=u'Der Spitznamen kann jederzeit unter den Profileinstellungen geändert werden.',
+    )
 
 
 class MultiplayerGameForm(forms.Form):
