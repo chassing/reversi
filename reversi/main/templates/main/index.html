@@ -1,21 +1,9 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
 
-{% block extra_js %}
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $("#modal").modal({
-                backdrop: true,
-                keyboard: false,
-                show: false
-            });
-
-            $('#modal').on('shown', function () {
-                document.getElementById("id_username").focus();
-            });
-        });
-    </script>
-{% endblock %}
+{% block headline %}
+    Lobby
+{% endblock headline %}
 
 {% block nav-right %}
     <span class="nav pull-right">

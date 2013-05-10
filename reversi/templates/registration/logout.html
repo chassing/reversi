@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
+{% block headline %}
+    Ausgeloggt
+{% endblock headline %}
+
 {% block content %}
-    logged out
-    <a href="{% url 'main:index' %}">Main</a>
+    Zur&uuml;ck zur <a href="{% url 'main:index' %}">Startseite</a>!
 {% endblock content %}

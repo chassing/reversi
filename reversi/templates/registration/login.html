@@ -1,49 +1,35 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load bootstrap_toolkit %}
 
-{% block extrahead %}
+{% block extra_js %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $("#submit_bt").button().click(function () {
-                return true;
-            });
-
-            document.getElementById("id_username").focus();
+            $("#id_username").focus();
         });
     </script>
 {% endblock %}
 
+{% block headline %}
+    Reversi Mitglieder Login
+{% endblock headline %}
+
+
 {% block content %}
-    <div class="row">
-        <div class="well span5">
-            <h3>Reversi Mitglieder Login</h3>
-            {% if form.errors %}
-                <p class="alert alert-error">Dies ist keine g&uuml;ltige Benutzername/Passwort-Kombination</p>
-            {% endif %}
-
-            <form method="post" class="form form-stacked">{% csrf_token %}
-                <div class="clearfix">
-                    <label for="id_username">{% trans 'Username' %}</label>
-                    <input type="text" class="span3" name="username" id="id_username" />
-                </div>
-
-                <div class="clearfix">
-                    <label for="id_password">{% trans 'Password' %}</label>
-                    <input type="password" class="span3" name="password" id="id_password"/>
-                </div>
-
+    <form method="post" class="form form-stacked">{% csrf_token %}
+        <div class="row">
+            <div class="well span12">
+                {% bootstrap_form form layout="vertical" %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="well span12">
                 <div class="clearfix">
                     <button id="submit_bt" class="btn btn-primary">Einloggen</button>
                     <a href="{% url 'main:index' %}" class="btn">Abbrechen</a>
-                </div>
-
-                <div style="margin-top: 10px">
                     <a class="btn" href="{% url 'auth_password_reset' %}">Password vergessen?</a>
                 </div>
-
-                <input type="hidden" name="next" value="{% url 'main:index' %}" />
-                <input type="hidden" name="this_is_the_login_form" value="1" />
-            </form>
+            </div>
         </div>
-    </div>
+    </form>
 {% endblock %}
