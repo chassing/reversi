@@ -2,21 +2,18 @@
 {% load bootstrap_toolkit %}
 
 
+{% block headline %}
+    <div class="alert alert-error text-huge">
+        Willst du das Spiel wirklich ablehnen?
+    </div>
+{% endblock headline %}
+
+
 {% block content %}
     <div class="row">
-        <div class="span6">
-            <div class="alert alert-error">
-                <p class="text-huge">
-                    Willst du das Spiel wirklich ablehnen?
-                </p>
-
-                <div>
-                    <a href="{% url 'main:deny-game' id=game.pk %}?a=yes" class="btn btn-danger">Das Spiel ablehnen!</a>
-                    <a href="{% url 'main:list-games' %}" class="btn">Zur&uuml;ck</a>
-                </div>
-            </div>
-
-
+        <div class="well span12">
+            <a href="{% url 'main:deny-game' id=game.pk %}?a=yes" class="btn btn-danger">{{ game.name }} ablehnen!</a>
+            <a href="{% url 'main:list-games' %}" class="btn">Zur&uuml;ck</a>
         </div>
     </div>
 {% endblock content %}
