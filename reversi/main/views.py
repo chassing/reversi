@@ -8,11 +8,14 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404, redirect
 
+from registration.backends.default.views import RegistrationView as RegistrationViewOrig
+
 from .models import Game
 from .models import Player
 
-from forms import MultiplayerGameForm
-from forms import ProfileForm
+from .forms import MultiplayerGameForm
+from .forms import ProfileForm
+from .forms import RegistrationForm
 
 
 class IndexView(TemplateView):
@@ -123,3 +126,12 @@ class HelpView(TemplateView):
     def get(self, request, form=None):
         tmpl = RequestContext(request)
         return self.render_to_response(tmpl)
+
+
+class RegistrationView(RegistrationViewOrig):
+    form_class = RegistrationForm
+
+    def register(self, request, **cleaned_data):
+        new_user = super(RegistrationView, self).register(request, **cleaned_data)
+        new_user.nickname = cleaned_data['username']
+        new_user.save()
