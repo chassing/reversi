@@ -59,6 +59,11 @@
                                         <li><a href="{% url 'auth_logout' %}">Ausloggen</a></li>
                                     </ul>
                                 </li>
+                            {% else %}
+                                <span class="nav pull-right">
+                                    <a href="{% url 'auth_login' %}" class="btn btn-primary"><i class="icon-user icon-white"></i> Einloggen </a>
+                                    <a href="{% url 'registration_register' %}" class="btn"><i class="icon-cog"></i> Registrieren </a>
+                                </span>
                             {% endif %}
                         </ul>
                     {% endblock %}

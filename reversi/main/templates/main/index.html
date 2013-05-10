@@ -9,18 +9,6 @@
 {% endblock headline %}
 
 
-{% block nav-right %}
-    <span class="nav pull-right">
-        {% if not user.is_authenticated %}
-            <a href="{% url 'auth_login' %}" class="btn btn-primary"><i class="icon-user icon-white"></i> Einloggen </a>
-            <a href="{% url 'registration_register' %}" class="btn"><i class="icon-cog"></i> Registrieren </a>
-        {% else %}
-            {{ block.super }}
-        {% endif %}
-    </span>
-{% endblock %}
-
-
 {% block content %}
     {% if user.is_authenticated %}
         <div class="row">
