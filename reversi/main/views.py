@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404, redirect
 
 from registration.backends.default.views import RegistrationView as RegistrationViewOrig
 
+from .models import ReversiUser
 from .models import Game
 from .models import Player
 
@@ -23,6 +24,10 @@ class IndexView(TemplateView):
 
     def get(self, request):
         tmpl = RequestContext(request)
+        if request.GET.get("q"):
+            tmpl["users"] = ReversiUser.objects.filter(nickname__icontains=request.GET.get("q")).order_by("nickname")
+        else:
+            tmpl["users"] = ReversiUser.objects.all().order_by("nickname")
         return self.render_to_response(tmpl)
 
 

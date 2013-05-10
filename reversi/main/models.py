@@ -213,7 +213,7 @@ class Move(models.Model):
             c = col + dx
             r = row + dy
             while self.in_game_field(r, c) and self.get_cell(r, c) not in (color, CELL_EMPTY):
-                log.debug("Flipping {},{}".format(r, c))
+                #log.debug("Flipping {},{}".format(r, c))
                 self.set_cell(r, c, color, turn_cells=False)
                 c += dx
                 r += dy
@@ -347,10 +347,8 @@ def game_end_handler(sender, game, **kwargs):
     p1 = game.last_move.tiles_count(color=player1.color)
     p2 = game.last_move.tiles_count(color=player2.color)
     if p1 > p2:
-        log.info("player1 wins with {} against {}".format(p1, p2))
         player1.winner = True
     if p2 > p1:
-        log.info("player2 wins with {} against {}".format(p2, p1))
         player2.winner = True
     player1.save()
     player2.save()
