@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
+
 {% block headline %}
-    Ausgeloggt
+    <div class="alert alert-info text-huge">
+        Ausgeloggt
+    </div>
 {% endblock headline %}
+
 
 {% block content %}
     Zur&uuml;ck zur <a href="{% url 'main:index' %}">Startseite</a>!

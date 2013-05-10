@@ -51,7 +51,7 @@ class MultiplayerGameForm(forms.Form):
         self.fields["player1"] = forms.ModelChoiceField(
             label="Spieler 1",
             queryset=ReversiUser.objects.filter(pk__in=[user.pk, user2.pk]),
-            help_text=u'Der/Die erste SpielerIn beginnt die legendäre Schlacht.',
+            help_text=u'Dieser Spieler beginnt die legendäre Schlacht.',
             widget=BootstrapSelect(
                 prepend='P1',
                 attrs={
@@ -62,7 +62,7 @@ class MultiplayerGameForm(forms.Form):
         self.fields["player2"] = forms.ModelChoiceField(
             label="Spieler 2",
             queryset=ReversiUser.objects.filter(pk__in=[user.pk, user2.pk]),
-            help_text=u'Der/Die zweite SpielerIn verteitigt am Anfang und wird später siegreich sein.',
+            help_text=u'Dieser Spieler verteitigt und wird später siegreich sein.',
             widget=BootstrapSelect(
                 prepend='P2',
                 attrs={
@@ -71,7 +71,7 @@ class MultiplayerGameForm(forms.Form):
             ),
         )
         self.fields["color_player1"] = forms.ChoiceField(
-            label="Farbe SpielerIn 1",
+            label="Farbe Spieler 1",
             choices=(
                 (CELL_PLAYER1, user.theme.player1),
                 (CELL_PLAYER2, user.theme.player2),
@@ -84,7 +84,7 @@ class MultiplayerGameForm(forms.Form):
             )
         )
         self.fields["color_player2"] = forms.ChoiceField(
-            label="Farbe SpielerIn 2",
+            label="Farbe Spieler 2",
             choices=(
                 (CELL_PLAYER1, user.theme.player1),
                 (CELL_PLAYER2, user.theme.player2),
