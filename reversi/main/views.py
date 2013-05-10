@@ -48,17 +48,24 @@ class NewGameView(TemplateView):
     template_name = "main/new-game.html"
 
     @method_decorator(login_required)
-    def get(self, request, form=None):
+    def get(self, request, enemy, form=None):
         tmpl = RequestContext(request)
         if not form:
-            tmpl["form"] = MultiplayerGameForm(request.user)
+            tmpl["form"] = MultiplayerGameForm(
+                user=request.user,
+                user2=get_object_or_404(ReversiUser, pk=enemy),
+            )
         else:
             tmpl["form"] = form
         return self.render_to_response(tmpl)
 
     @method_decorator(login_required)
-    def post(self, request):
-        form = MultiplayerGameForm(request.user, request.POST)
+    def post(self, request, enemy):
+        form = MultiplayerGameForm(
+            user=request.user,
+            user2=get_object_or_404(ReversiUser, pk=enemy),
+            data=request.POST
+        )
         if form.is_valid():
             game = Game(name=form.cleaned_data['name'])
             game.save()
@@ -73,7 +80,7 @@ class NewGameView(TemplateView):
                 color=form.cleaned_data['color_player2'],
             )
             return redirect("main:game", id=game.pk)
-        return self.get(request, form)
+        return self.get(request, enemy, form)
 
 
 class ListGamesView(TemplateView):

@@ -36,37 +36,40 @@ class MultiplayerGameForm(forms.Form):
             prepend='N',
             attrs={
                 'placeholder': 'Benenne das Spiel',
-                'class': 'input-xlarge'
+                'class': 'input-xxlarge'
             }
         ),
     )
-    player1 = forms.ModelChoiceField(
-        label="SpielerIn 1",
-        queryset=ReversiUser.objects.all(),
-        help_text=u'Der/Die erste SpielerIn fängt die legendäre Schlacht an.',
-        widget=BootstrapSelect(
-            prepend='P1',
-            attrs={
-                'class': 'input-xlarge'
-            }
-        ),
-    )
+    # all other fields will be overriden in __init__
+    player1 = forms.ModelChoiceField(queryset=ReversiUser.objects.all())
+    player2 = forms.ModelChoiceField(queryset=ReversiUser.objects.all())
     color_player1 = forms.ChoiceField()
-    player2 = forms.ModelChoiceField(
-        label="SpielerIn 2",
-        queryset=ReversiUser.objects.all(),
-        help_text=u'Der/Die zweite SpielerIn verteitigt am Anfang und wird später siegreich sein.',
-        widget=BootstrapSelect(
-            prepend='P2',
-            attrs={
-                'class': 'input-xlarge'
-            }
-        ),
-    )
     color_player2 = forms.ChoiceField()
 
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, user, user2, *args, **kwargs):
         super(MultiplayerGameForm, self).__init__(*args, **kwargs)
+        self.fields["player1"] = forms.ModelChoiceField(
+            label="Spieler 1",
+            queryset=ReversiUser.objects.filter(pk__in=[user.pk, user2.pk]),
+            help_text=u'Der/Die erste SpielerIn beginnt die legendäre Schlacht.',
+            widget=BootstrapSelect(
+                prepend='P1',
+                attrs={
+                    'class': 'input-xlarge'
+                }
+            ),
+        )
+        self.fields["player2"] = forms.ModelChoiceField(
+            label="Spieler 2",
+            queryset=ReversiUser.objects.filter(pk__in=[user.pk, user2.pk]),
+            help_text=u'Der/Die zweite SpielerIn verteitigt am Anfang und wird später siegreich sein.',
+            widget=BootstrapSelect(
+                prepend='P2',
+                attrs={
+                    'class': 'input-xlarge'
+                }
+            ),
+        )
         self.fields["color_player1"] = forms.ChoiceField(
             label="Farbe SpielerIn 1",
             choices=(
@@ -96,15 +99,19 @@ class MultiplayerGameForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(MultiplayerGameForm, self).clean()
+
         # different players choosen
         player1 = cleaned_data.get("player1")
         player2 = cleaned_data.get("player2")
         if player1 == player2:
             raise forms.ValidationError("Du kannst nicht gegen dich selbst spielen!")
+
         # different colors choosen
         color_player1 = cleaned_data.get("color_player1")
         color_player2 = cleaned_data.get("color_player2")
-        if color_player1 == color_player2:
+        if not color_player1 or not color_player2:
+            raise forms.ValidationError("Wähle die Spielerfarben!")
+        elif color_player1 == color_player2:
             raise forms.ValidationError("Die Spieler dürfen nicht die gleiche Farbe haben!")
 
         return cleaned_data

@@ -2,16 +2,78 @@
 {% load bootstrap_toolkit %}
 
 
+{% block headline %}
+    Neues Spiel er&ouml;ffnen
+{% endblock headline %}
+
+
+{% block extra_js %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input[name=color_player1][value=1]").change(function () {
+                // player1 - black
+                if ($(this).is(":checked")) {
+                    // select player2 - white
+                    $("input[name=color_player2][value=2]").prop('checked', true);
+                }
+            });
+            $("input[name=color_player1][value=2]").change(function () {
+                // player1 - white
+                if ($(this).is(":checked")) {
+                    // select player2 - black
+                    $("input[name=color_player2][value=1]").prop('checked', true);
+                }
+            });
+            $("input[name=color_player2][value=1]").change(function () {
+                // player2 - black
+                if ($(this).is(":checked")) {
+                    // select player1 - white
+                    $("input[name=color_player1][value=2]").prop('checked', true);
+                }
+            });
+            $("input[name=color_player2][value=2]").change(function () {
+                // player2 - white
+                if ($(this).is(":checked")) {
+                    // select player1 - black
+                    $("input[name=color_player1][value=1]").prop('checked', true);
+                }
+            });
+        });
+    </script>
+{% endblock extra_js %}
+
+
 {% block content %}
-    <div class="row">
-        <div class="span8">
-            <form method="post" class="form">
-                {% csrf_token %}
-                {% bootstrap_form form layout="vertical" %}
-                <div class="form-actions" style="padding-left: 0px">
-                    <button type="submit" class="btn btn-primary">Auf in die Schlacht!</button>
-                </div>
-            </form>
+    <form method="post" class="form">{% csrf_token %}
+        {% if form.non_field_errors %}
+            {% include "bootstrap_toolkit/non_field_errors.html" %}
+        {% endif %}
+
+        {% for field in form.hidden_fields %}
+            {% for error in field.errors %}
+                {% include "bootstrap_toolkit/non_field_error.html" %}
+            {% endfor %}
+        {% endfor %}
+
+        <div class="row">
+            <div class="span12 well">
+                {% bootstrap_field form.name layout="vertical" %}
+            </div>
+            <div class="span6 well">
+                {% bootstrap_field form.player1 layout="vertical" %}
+                {% bootstrap_field form.color_player1 layout="vertical" %}
+            </div>
+            <div class="span6 well">
+                {% bootstrap_field form.player2 layout="vertical" %}
+                {% bootstrap_field form.color_player2 layout="vertical" %}
+            </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="span12 well">
+                <button type="submit" class="btn btn-primary">Auf in die Schlacht!</button>
+                <a href="{% url 'main:index' %}" class="btn">Abbrechen</a>
+            </div>
+        </div>
+    </form>
 {% endblock content %}
+

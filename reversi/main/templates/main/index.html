@@ -43,7 +43,7 @@
                             <td>0</td>
                             <td>
                                 {% if u != user %}
-                                    <a href="{% url 'main:new-game' uid=u.pk %}" class="btn btn-mini">Los!</a>
+                                    <a href="{% url 'main:new-game' enemy=u.pk %}" class="btn btn-mini">Los!</a>
                                 {% endif %}
                             </td>
                         </tr>
