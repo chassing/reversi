@@ -4,7 +4,11 @@
 
 {% block headline %}
     <div class="alert alert-info text-huge">
-        Lobby
+        {% if user.is_authenticated %}
+            Lobby
+        {% else %}
+            Willkommen zu
+        {% endif %}
     </div>
 {% endblock headline %}
 
@@ -45,8 +49,24 @@
             </div>
         </div>
     {% else %}
-        <div>
-            <img class="thumbnail" src="{% static 'img/reversi-screenshot.png' %}" alt="">
+        <div class="row">
+            <img class="span12 well" src="{% static 'img/logo.png' %}" alt="">
+
+            <div class="well span12 text-large">
+                Tauchen Sie ein in die spannende Welt von Reversi und
+                <ul>
+                    <li>
+                        Spielen Sie mit all ihren Freunden gleichzeitig.
+                    </li>
+                    <li>
+                        Spielen Sie gegen den Computer und entwickeln dabei neue Strategien.
+                    </li>
+                    <li>
+                        W&auml;hlen Sie aus verschiedenen Motiven je nachdem ob Sie gerade Lust auf
+                        Klassisches Reversi oder einer Scienefiction Version haben.
+                    </li>
+                </ul>
+            </div>
         </div>
     {% endif %}
 {% endblock content %}
