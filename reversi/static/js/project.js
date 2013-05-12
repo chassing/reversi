@@ -94,7 +94,7 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
     */
     $scope.highlight_current_player = function(id) {
         if ($scope.is_current_player(id))
-            return "alert-success";
+            return "alert-info";
         return "alert-default";
     };
 
