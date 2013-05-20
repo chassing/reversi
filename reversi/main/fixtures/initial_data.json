@@ -43,6 +43,17 @@
         "model": "main.theme",
         "pk": 4
     },
+        {
+        "fields": {
+            "description": "Kinder",
+            "field": "children",
+            "name": "children",
+            "player1": "bee",
+            "player2": "flower"
+        },
+        "model": "main.theme",
+        "pk": 5
+    },
     {
         "fields": {
             "date_joined": "2013-04-18T15:22:00Z",
