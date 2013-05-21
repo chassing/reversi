@@ -121,6 +121,7 @@ class Player(models.Model):
     def save(self, *args, **kwargs):
         super(Player, self).save(*args, **kwargs)
         if self.surrendered or self.denied:
+            log.info("{0.user.nickname} surrendered or denied".format(self))
             game_end.send(sender=self, game=self.game)
 
 
@@ -143,12 +144,10 @@ class Move(models.Model):
           [XXX,XXX,XXX, ... ,XXX]
         ]
         """
-        game_end = self.game.end
-
         def _get_row(row, move):
             r = []
             for col, state in enumerate(move):
-                if not game_end and state == CELL_EMPTY and self.is_valid_cell(row, col, self.game.next_player.color):
+                if not self.game.end and state == CELL_EMPTY and self.is_valid_cell(row, col, self.game.next_player.color):
                     state = CELL_VALID
                 r.append({
                     "state": state,
@@ -329,6 +328,8 @@ def game_end_handler(sender, game, **kwargs):
         # already set
         return
 
+    log.info("{} game ends".format(game.pk))
+
     # set end
     game.end = True
     game.save()
@@ -339,16 +340,27 @@ def game_end_handler(sender, game, **kwargs):
 
     # someone surrendered?
     if player1.surrendered:
+        log.info("{} surrendered {} wins".format(player1.user.nickname, player2.user.nickname))
         player2.winner = True
+        player2.save()
+        return
     if player2.surrendered:
+        log.info("{} surrendered {} wins".format(player2.user.nickname, player1.user.nickname))
         player1.winner = True
+        player1.save()
+        return
 
     # retrieve winner on tiles count
     p1 = game.last_move.tiles_count(color=player1.color)
     p2 = game.last_move.tiles_count(color=player2.color)
     if p1 > p2:
+        log.info("{} has more tiles and wins".format(player1.user.nickname))
         player1.winner = True
-    if p2 > p1:
+        player1.save()
+        return
+    elif p2 > p1:
+        log.info("{} has more tiles and wins".format(player1.user.nickname))
         player2.winner = True
-    player1.save()
-    player2.save()
+        player2.save()
+        return
+    log.info("{} is draw".format(game.pk))

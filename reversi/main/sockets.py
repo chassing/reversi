@@ -48,7 +48,6 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
     def on_join(self, data):
         """ user is joining a game
         """
-        # does not work :(
         self.game = Game.objects.get(pk=data["id"], players__user=self.request.user)
         self.log("{0.request.user.username} is joining the game {0.game.pk}".format(self))
         self.join(self.game.pk)
@@ -142,6 +141,9 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         })
 
     def broadcast_grid(self):
+        # refresh game object
+        self.game = Game.objects.get(pk=self.game.pk)
+
         # get the last move
         move = self.game.last_move
 
