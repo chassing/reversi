@@ -145,5 +145,5 @@ class RegistrationView(RegistrationViewOrig):
 
     def register(self, request, **cleaned_data):
         new_user = super(RegistrationView, self).register(request, **cleaned_data)
-        new_user.nickname = cleaned_data['username']
+        new_user.nickname = cleaned_data['nickname']
         new_user.save()

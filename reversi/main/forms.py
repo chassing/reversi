@@ -22,6 +22,7 @@ class BootstrapSelect(forms.Select):
 
 class RegistrationForm(RegistrationFormOrig):
     nickname = forms.CharField(
+        label="Spitzname",
         max_length=254,
         help_text=u'Der Spitznamen kann jederzeit unter den Profileinstellungen geändert werden.',
     )
