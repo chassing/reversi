@@ -1,6 +1,7 @@
 import logging
-
 log = logging.getLogger("main.models")
+
+from random import randint
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -11,6 +12,10 @@ CELL_VALID = "v"
 CELL_EMPTY = "e"
 CELL_PLAYER1 = "1"
 CELL_PLAYER2 = "2"
+
+AI_EASY = "easy"
+AI_MEDIUM = "medium"
+AI_HARD = "hard"
 
 
 def get_default_theme():
@@ -31,6 +36,7 @@ class Theme(models.Model):
 class ReversiUser(AbstractUser):
     nickname = models.CharField(max_length=254, verbose_name='Spitzname')
     theme = models.ForeignKey(Theme, null=True, default=get_default_theme, verbose_name="Motiv")
+    is_ai = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.nickname
@@ -95,6 +101,28 @@ class Game(models.Model):
         if self.moves.count() > 2:
             return False
         return True
+
+    def ai(self, level, player, callback):
+        """ call the AI and make a move
+        """
+        if level == AI_EASY:
+            row, col = self.ai_random(player)
+        elif level == AI_MEDIUM:
+            raise NotImplemented()
+        elif level == AI_HARD:
+            raise NotImplemented()
+        # computer is done
+        callback(row, col, player)
+
+    def ai_random(self, player):
+        """ the random artifical intelligence
+        """
+        valid_cells = self.last_move.valid_cells(color=player.color)
+        cell = valid_cells[randint(0, len(valid_cells) - 1)]
+        move = Move(game=self, player=player, field=self.last_move.field)
+        move.set_cell(row=cell[0], col=cell[1], color=player.color)
+        move.save()
+        return cell[0], cell[1]
 
     def __unicode__(self):
         return "{0.pk} - {0.name}".format(self)
@@ -265,6 +293,16 @@ class Move(models.Model):
                     return True
                 # another enemy tile found, go further
         return False
+
+    def valid_cells(self, color):
+        """ returns a list of tuples with valid cells for the next move
+        """
+        vc = []
+        for row in xrange(0, self.game.size):
+            for col in xrange(0, self.game.size):
+                if self.is_valid_cell(row, col, color):
+                    vc.append((row, col))
+        return vc
 
     def tiles_count(self, color):
         return self.field.count(color)

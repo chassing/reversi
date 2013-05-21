@@ -12,6 +12,7 @@ from .models import Move
 from .models import Player
 from .models import Socket
 from .models import CELL_VALID
+from .models import AI_EASY, AI_MEDIUM, AI_HARD
 
 
 @namespace('/game')
@@ -131,6 +132,12 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
         self.broadcast_grid()
         self.disconnect(silent=True)
 
+    def ai_callback(self, row, col, player):
+        """ will be executed from game model after the computer turn
+        """
+        self.broadcast_move(row=row, col=col, color=player.color)
+        gevent.spawn_later(1, self.broadcast_grid)
+
     def broadcast_move(self, row, col, color):
         """
         """
@@ -188,6 +195,18 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             },
             'move_count': self.game.moves.count() - 1
         })
+
+        if self.game.next_player and self.game.next_player.user.is_ai:
+            # get the level from the username
+            player = self.game.next_player
+            if player.user.username == "computer_easy":
+                level = AI_EASY
+            elif player.user.username == "computer_medium":
+                level = AI_MEDIUM
+            else:
+                level = AI_HARD
+            # let the AI 'think' about the next move
+            gevent.spawn_later(2, self.game.ai, level=level, player=player, callback=self.ai_callback)
 
         current_grid = move.grid()
 

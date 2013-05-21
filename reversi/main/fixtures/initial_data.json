@@ -57,6 +57,69 @@
     {
         "fields": {
             "date_joined": "2013-04-18T15:22:00Z",
+            "email": "ganz@egal.de",
+            "first_name": "",
+            "groups": [],
+            "is_active": false,
+            "is_staff": false,
+            "is_superuser": false,
+            "last_login": "2013-04-18T15:22:37Z",
+            "last_name": "",
+            "nickname": "Computer (leicht)",
+            "password": "!",
+            "theme": 1,
+            "user_permissions": [],
+            "username": "computer_easy",
+            "is_ai": true
+        },
+        "model": "main.reversiuser",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "date_joined": "2013-04-18T15:22:00Z",
+            "email": "mirganz@egal.de",
+            "first_name": "",
+            "groups": [],
+            "is_active": false,
+            "is_staff": false,
+            "is_superuser": false,
+            "last_login": "2013-04-18T15:22:37Z",
+            "last_name": "",
+            "nickname": "Computer (mittel)",
+            "password": "!",
+            "theme": 1,
+            "user_permissions": [],
+            "username": "computer_medium",
+            "is_ai": true
+        },
+        "model": "main.reversiuser",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "date_joined": "2013-04-18T15:22:00Z",
+            "email": "mirimmerganz@egal.de",
+            "first_name": "",
+            "groups": [],
+            "is_active": false,
+            "is_staff": false,
+            "is_superuser": false,
+            "last_login": "2013-04-18T15:22:37Z",
+            "last_name": "",
+            "nickname": "Computer (schwer)",
+            "password": "!",
+            "theme": 1,
+            "user_permissions": [],
+            "username": "computer_hard",
+            "is_ai": true
+        },
+        "model": "main.reversiuser",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "date_joined": "2013-04-18T15:22:00Z",
             "email": "chris@ca-net.org",
             "first_name": "",
             "groups": [],
@@ -72,7 +135,7 @@
             "username": "chris"
         },
         "model": "main.reversiuser",
-        "pk": 1
+        "pk": 4
     },
     {
         "fields": {
@@ -92,7 +155,7 @@
             "username": "manu"
         },
         "model": "main.reversiuser",
-        "pk": 2
+        "pk": 5
     },
     {
         "fields": {
