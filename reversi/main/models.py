@@ -18,6 +18,10 @@ AI_MEDIUM = "medium"
 AI_HARD = "hard"
 
 
+class NoValidMoveException(Exception):
+    pass
+
+
 def get_default_theme():
     return Theme.objects.get(pk=1)
 
@@ -105,12 +109,30 @@ class Game(models.Model):
     def ai(self, level, player, callback):
         """ call the AI and make a move
         """
-        if level == AI_EASY:
-            row, col = self.ai_random(player)
-        elif level == AI_MEDIUM:
-            raise NotImplemented()
-        elif level == AI_HARD:
-            raise NotImplemented()
+        try:
+            if level == AI_EASY:
+                row, col = self.ai_random(player)
+            elif level == AI_MEDIUM:
+                raise NotImplemented()
+            elif level == AI_HARD:
+                raise NotImplemented()
+            move = Move(
+                game=self,
+                player=player,
+                field=self.last_move.field,
+            )
+            move.set_cell(row=row, col=col, color=player.color)
+        except NoValidMoveException:
+            row = col = None
+            move = Move(
+                game=self,
+                player=player,
+                field=self.last_move.field,
+                passed=True
+            )
+
+        # save changes
+        move.save()
         # computer is done
         callback(row, col, player)
 
@@ -118,10 +140,9 @@ class Game(models.Model):
         """ the random artifical intelligence
         """
         valid_cells = self.last_move.valid_cells(color=player.color)
+        if not valid_cells:
+            raise NoValidMoveException()
         cell = valid_cells[randint(0, len(valid_cells) - 1)]
-        move = Move(game=self, player=player, field=self.last_move.field)
-        move.set_cell(row=cell[0], col=cell[1], color=player.color)
-        move.save()
         return cell[0], cell[1]
 
     def __unicode__(self):
