@@ -479,7 +479,7 @@ def game_end_handler(sender, game, **kwargs):
         player1.save()
         return
     elif p2 > p1:
-        log.info("{} has more tiles and wins".format(player1.user.nickname))
+        log.info("{} has more tiles and wins".format(player2.user.nickname))
         player2.winner = True
         player2.save()
         return
