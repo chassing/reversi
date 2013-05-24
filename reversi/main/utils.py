@@ -3,7 +3,7 @@ import random
 
 
 def random_game_name():
-    return "Schlacht um " + STAR_TREK_PLANETS[random.randint(0, len(STAR_TREK_PLANETS))]
+    return "Schlacht um " + STAR_TREK_PLANETS[random.randint(0, len(STAR_TREK_PLANETS) - 1)]
 
 
 STAR_TREK_PLANETS = """
