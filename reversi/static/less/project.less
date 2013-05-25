@@ -337,3 +337,59 @@
 .theme-children-selected {
     background-color: rgba(172, 250, 88, 0.2);
 }
+
+/*
+  THEME: creatures
+*/
+.theme-creatures-game-field-background {
+    /*background-color: #000;
+    td {
+        color: #fff;
+    }*/
+    background-image: url("/static/img/creatures/field.png");
+    background-size: 100% 100%;
+}
+.theme-creatures-field-cell {
+    border: @cell_border_size solid #fff;
+}
+.theme-creatures-field-cell-state-v {
+    // valid field
+    background-color: rgba(243, 247, 129, 1);
+    cursor: pointer;
+}
+.theme-creatures-field-cell-image-1 {
+    background-image: url("/static/img/creatures/black.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.theme-creatures-field-cell-image-2 {
+    background-image: url("/static/img/creatures/lila.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.theme-creatures-field-cell-state-1 {
+    .theme-creatures-field-cell-image-1;
+    //background-color: #ffffff;
+    background-size: @cell_width @cell_heigth
+}
+.theme-creatures-field-cell-state-2 {
+    .theme-creatures-field-cell-image-2;
+    //background-color: #ffffff;
+    background-size: @cell_width @cell_heigth
+}
+.theme-creatures-field-cell-state-e {
+    // empty field - use table background color
+}
+.theme-creatures-stat-cell-1 {
+    .theme-creatures-field-cell-image-1;
+    background-size: 20px;
+    background-position: left center;
+}
+.theme-creatures-stat-cell-2 {
+    .theme-creatures-field-cell-image-2;
+    background-size: 20px;
+    background-position: left center;
+}
+.theme-creatures-selected {
+    background-color: rgba(172, 250, 88, 0.2);
+}

@@ -45,14 +45,25 @@
     },
         {
         "fields": {
-            "description": "Kinder",
+            "description": "Wiese",
             "field": "children",
             "name": "children",
-            "player1": "bee",
-            "player2": "flower"
+            "player1": "Biene",
+            "player2": "Blume"
         },
         "model": "main.theme",
         "pk": 5
+    },
+    {
+        "fields": {
+            "description": "Kreaturen",
+            "field": "creatures",
+            "name": "creatures",
+            "player1": "Schwarz",
+            "player2": "Lila"
+        },
+        "model": "main.theme",
+        "pk": 6
     },
     {
         "fields": {
