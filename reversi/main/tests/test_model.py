@@ -172,6 +172,90 @@ class GameTest(TestCase):
         self.assertTrue(self.game.end)
         self.assertEqual(self.game.winner, None)
 
+    def test_ai_random(self):
+        C = self.player1.color
+        M = self.player2.color
+        F = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, C, E, E, E, E,
+            E, E, E, M, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        Move.objects.create(game=self.game, player=self.player2, field=_(F))
+        self.assertEqual(self.game.ai_random(self.player1), (3, 3))
+
+        F = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, C, E, E, E, E,
+            E, E, C, M, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        Move.objects.create(game=self.game, player=self.player2, field=_(F))
+        self.assertTrue(self.game.ai_random(self.player1) in [(3, 3), (2, 4)])
+
+        F = [
+            E, E, E, E, E, E, E, E,
+            E, E, C, C, E, E, E, E,
+            E, E, C, M, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        Move.objects.create(game=self.game, player=self.player2, field=_(F))
+        self.assertTrue(self.game.ai_random(self.player1) in [(3, 3), (2, 4), (3, 4)])
+
+    def test_ai_ramscher(self):
+        C = self.player1.color
+        M = self.player2.color
+        F = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, C, M, E, E, E,
+            E, E, E, M, C, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        Move.objects.create(game=self.game, player=self.player2, field=_(F))
+        self.assertTrue(self.game.ai_ramscher(me=self.player1, enemy=self.player2) in [(2, 4), (3, 5), (4, 2), (5, 3)])
+
+        F = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, C, C, C, E, E,
+            E, E, E, M, C, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        Move.objects.create(game=self.game, player=self.player1, field=_(F))
+        self.assertTrue(self.game.ai_ramscher(me=self.player2, enemy=self.player2) in [(2, 5)])
+
+        F = [
+            E, E, C, C, C, E, E, E,
+            E, E, M, E, E, E, E, E,
+            C, C, C, C, C, C, E, E,
+            M, M, M, M, M, M, E, E,
+            C, C, C, M, C, C, C, E,
+            C, E, M, E, E, E, E, E,
+            E, M, M, M, M, E, E, E,
+            M, E, M, E, C, E, E, E,
+        ]
+        Move.objects.create(game=self.game, player=self.player2, field=_(F))
+        self.assertTrue(self.game.ai_ramscher(me=self.player1, enemy=self.player2) in [(5, 4)])
+
 
 class MoveTest(TestCase):
     fixtures = ['test-user-data.json']

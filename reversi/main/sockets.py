@@ -64,7 +64,7 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
     def on_hit(self, data):
         """ player hits a valid cell
         """
-        self.log("{0.request.user.username} hits {1}".format(self, data))
+        self.log("{0.request.user.username} hits {1}".format(self, data), level=logging.DEBUG)
 
         if self.game.next_player != self.player:
             self.log("{0.request.user.username} is a cheater".format(self))
@@ -135,8 +135,9 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
     def ai_callback(self, row, col, player):
         """ will be executed from game model after the computer turn
         """
-        self.broadcast_move(row=row, col=col, color=player.color)
-        gevent.spawn_later(1, self.broadcast_grid)
+        if row and col:
+            self.broadcast_move(row=row, col=col, color=player.color)
+        gevent.spawn_later(2, self.broadcast_grid)
 
     def broadcast_move(self, row, col, color):
         """
@@ -167,18 +168,24 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
             })
 
         # update players
+        player1_connected = False
+        player2_connected = False
+        if self.game.player1.sockets.count() > 0 or self.game.player1.user.is_ai:
+            player1_connected = True
+        if self.game.player2.sockets.count() > 0 or self.game.player2.user.is_ai:
+            player2_connected = True
         self.emit_to_game(self.game.pk, "players", [
             {
                 'id': self.game.player1.pk,
                 'name': self.game.player1.user.nickname,
                 'color': self.game.player1.color,
-                'connected': self.game.player1.sockets.count() > 0,
+                'connected': player1_connected,
             },
             {
                 'id': self.game.player2.pk,
                 'name': self.game.player2.user.nickname,
                 'color': self.game.player2.color,
-                'connected': self.game.player2.sockets.count() > 0,
+                'connected': player2_connected,
             },
         ])
 
@@ -198,15 +205,21 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
 
         if self.game.next_player and self.game.next_player.user.is_ai:
             # get the level from the username
-            player = self.game.next_player
-            if player.user.username == "computer_easy":
+            me = self.game.next_player
+            if me.user.username == "computer_easy":
                 level = AI_EASY
-            elif player.user.username == "computer_medium":
+            elif me.user.username == "computer_medium":
                 level = AI_MEDIUM
             else:
                 level = AI_HARD
+
+            if self.game.player1 == self.game.next_player:
+                enemy = self.game.player2
+            else:
+                enemy = self.game.player1
+
             # let the AI 'think' about the next move
-            gevent.spawn_later(2, self.game.ai, level=level, player=player, callback=self.ai_callback)
+            gevent.spawn_later(2, self.game.ai, level=level, me=me, enemy=enemy, callback=self.ai_callback)
 
         current_grid = move.grid()
 

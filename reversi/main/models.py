@@ -2,6 +2,7 @@ import logging
 log = logging.getLogger("main.models")
 
 from random import randint
+from collections import defaultdict
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -16,6 +17,21 @@ CELL_PLAYER2 = "2"
 AI_EASY = "easy"
 AI_MEDIUM = "medium"
 AI_HARD = "hard"
+
+FIELD_SCORES = [
+    [9999, 5, 500, 200, 200, 500, 5, 9999],
+    [5, 1, 50, 150, 150, 50, 1, 5],
+    [500, 50, 250, 100, 100, 250, 50, 500],
+    [200, 150, 100, 50, 50, 100, 150, 200],
+    [200, 150, 100, 50, 50, 100, 150, 200],
+    [500, 50, 250, 100, 100, 250, 50, 500],
+    [5, 1, 50, 150, 150, 50, 1, 5],
+    [9999, 5, 500, 200, 200, 500, 5, 9999],
+]
+
+
+class NoValidMoveException(Exception):
+    pass
 
 
 def get_default_theme():
@@ -102,27 +118,93 @@ class Game(models.Model):
             return False
         return True
 
-    def ai(self, level, player, callback):
+    def ai(self, level, me, enemy, callback):
         """ call the AI and make a move
         """
-        if level == AI_EASY:
-            row, col = self.ai_random(player)
-        elif level == AI_MEDIUM:
-            raise NotImplemented()
-        elif level == AI_HARD:
-            raise NotImplemented()
-        # computer is done
-        callback(row, col, player)
+        try:
+            if level == AI_EASY:
+                row, col = self.ai_random(me)
+            elif level == AI_MEDIUM:
+                row, col = self.ai_ramscher(me, enemy)
+            elif level == AI_HARD:
+                row, col = self.ai_minimax(me, enemy)
+            move = Move(
+                game=self,
+                player=me,
+                field=self.last_move.field,
+            )
+            move.set_cell(row=row, col=col, color=me.color)
+        except NoValidMoveException:
+            row = col = None
+            move = Move(
+                game=self,
+                player=me,
+                field=self.last_move.field,
+                passed=True
+            )
 
-    def ai_random(self, player):
-        """ the random artifical intelligence
-        """
-        valid_cells = self.last_move.valid_cells(color=player.color)
-        cell = valid_cells[randint(0, len(valid_cells) - 1)]
-        move = Move(game=self, player=player, field=self.last_move.field)
-        move.set_cell(row=cell[0], col=cell[1], color=player.color)
+        # save changes
         move.save()
+        # computer is done
+        callback(row, col, me)
+
+    def score_cell(self, row, col):
+        return FIELD_SCORES[row][col]
+
+    def ai_random(self, me):
+        """ AI easy - random
+        """
+        valid_cells = self.last_move.valid_cells(color=me.color)
+        if not valid_cells:
+            raise NoValidMoveException()
+        cell = valid_cells[randint(0, len(valid_cells) - 1)]
         return cell[0], cell[1]
+
+    def ai_ramscher(self, me, enemy):
+        """ AI medium - something like greedy algorithm
+        """
+        valid_cells = self.last_move.valid_cells(color=me.color)
+        log.debug("valid cells: {}".format(valid_cells))
+        if not valid_cells:
+            raise NoValidMoveException()
+
+        move = Move(game=self, player=me)
+        max_score = -999999
+        best_moves = defaultdict(list)
+        for row, col in valid_cells:
+            log.debug("scoring {}, {}".format(row, col))
+            # reset field
+            move.field = self.last_move.field
+
+            # try this move
+            move.set_cell(row=row, col=col, color=me.color)
+
+            # know score this move
+            score = 0
+            for r in xrange(0, self.size):
+                for c in xrange(0, self.size):
+                    if move.get_cell(r, c) == me.color:
+                        score += self.score_cell(r, c)
+                    elif move.get_cell(r, c) == enemy.color:
+                        score -= self.score_cell(r, c)
+
+            log.debug("{}, {} with {}".format(row, col, score))
+            if score >= max_score:
+                log.debug("{} >= {}".format(score, max_score))
+                best_moves[score].append((row, col))
+                max_score = score
+
+        # get a random move from all with max_score
+        return best_moves[max_score][randint(0, len(best_moves[max_score]) - 1)]
+
+    def ai_minimax(self, me, enemy):
+        """ AI hard - minimax algorithm
+        """
+        valid_cells = self.last_move.valid_cells(color=me.color)
+        if not valid_cells:
+            raise NoValidMoveException()
+        raise NotImplemented()
+        #return cell[0], cell[1]
 
     def __unicode__(self):
         return "{0.pk} - {0.name}".format(self)
@@ -397,7 +479,7 @@ def game_end_handler(sender, game, **kwargs):
         player1.save()
         return
     elif p2 > p1:
-        log.info("{} has more tiles and wins".format(player1.user.nickname))
+        log.info("{} has more tiles and wins".format(player2.user.nickname))
         player2.winner = True
         player2.save()
         return
