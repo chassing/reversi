@@ -77,13 +77,20 @@
 /*
   THEME: BLACK VS WHITE
 */
+@black-white_heads_bg : rgba(255, 255, 255, 0);
+
+.theme-black-white-heads-bg {
+    background-color: @black-white_heads_bg !important;
+}
 
 .theme-black-white-field-head {
     .field_head;
+    .theme-black-white-heads-bg;
 }
 
 .theme-black-white-row-head {
     .row_head;
+    .theme-black-white-heads-bg;
 }
 
 .theme-black-white-game-field-background {
@@ -140,12 +147,20 @@
 /*
   THEME: STARWARS
 */
+@starwars_heads_bg : rgba(255, 255, 255, 0);
+
+.theme-starwars-heads-bg {
+    background-color: @starwars_heads_bg !important;
+}
+
 .theme-starwars-field-head {
     .field_head;
+    .theme-starwars-heads-bg;
 }
 
 .theme-starwars-row-head {
     .row_head;
+    .theme-starwars-heads-bg;
 }
 
 .theme-starwars-game-field-background {
@@ -202,12 +217,20 @@
 /*
   THEME: STARTREK-BORG
 */
-.theme-startrek-field-head {
-    .field_head;
+@startrek-borg_heads_bg : rgba(255, 255, 255, 0);
+
+.theme-startrek-borg-heads-bg {
+        background-color: @startrek-borg_heads_bg !important;
 }
 
-.theme-startrek-row-head {
+.theme-startrek-borg-field-head {
+    .field_head;
+    .theme-startrek-borg-heads-bg;
+}
+
+.theme-startrek-borg-row-head {
     .row_head;
+    .theme-startrek-borg-heads-bg;
 }
 
 .theme-startrek-borg-game-field-background {
@@ -264,11 +287,19 @@
 /*
   THEME: STARTREK-KLINGON
 */
+@startrek-klingon_heads_bg : rgba(255, 255, 255, 0);
+
+.theme-startrek-klingon-heads-bg {
+    background-color: @startrek-klingon_heads_bg !important;
+}
+
 .theme-startrek-klingon-field-head {
     .field_head;
+    .theme-startrek-klingon-heads-bg;
 }
 .theme-startrek-klingon-row-head {
     .row_head;
+    .theme-startrek-klingon-heads-bg;
 }
 
 
@@ -326,13 +357,21 @@
 /*
   THEME: CHILDREN
 */
+@children_heads_bg : rgba(172, 250, 88, 0.4);
+
+.theme-children-heads-bg {
+    //!important priorizes this color when selected
+    background-color: @children_heads_bg !important;
+}
 
 .theme-children-field-head {
     .field_head;
+    .theme-children-heads-bg;
 }
 
 .theme-children-row-head {
     .row_head;
+    .theme-children-heads-bg;
 }
 
 .theme-children-game-field-background {
@@ -348,7 +387,7 @@
 }
 .theme-children-field-cell-state-v {
     // valid field
-    background-color: rgba(243, 247, 129, 1);
+    background-color: rgba(243, 247, 129, 0.7) !important;
     cursor: pointer;
 }
 .theme-children-field-cell-image-1 {
@@ -385,18 +424,27 @@
     background-position: left center;
 }
 .theme-children-selected {
-    background-color: rgba(172, 250, 88, 0.2);
+    background-color: @children_heads_bg;
 }
 
 /*
   THEME: creatures
 */
+@creatures_heads_bg : rgba(255, 51, 255, 0.4);
+
+.theme-creatures-heads-bg {
+    background-color: @creatures_heads_bg !important;
+    color: #FFF;
+}
+
 .theme-creatures-field-head {
     .field_head;
+    .theme-creatures-heads-bg;
 }
 
 .theme-creatures-row-head {
     .row_head;
+    .theme-creatures-heads-bg;
 }
 
 .theme-creatures-game-field-background {
@@ -412,7 +460,7 @@
 }
 .theme-creatures-field-cell-state-v {
     // valid field
-    background-color: rgba(243, 247, 129, 1);
+    background-color: rgba(243, 247, 129, 0.7) !important;
     cursor: pointer;
 }
 .theme-creatures-field-cell-image-1 {
@@ -449,5 +497,5 @@
     background-position: left center;
 }
 .theme-creatures-selected {
-    background-color: rgba(172, 250, 88, 0.2);
+    background-color: @creatures_heads_bg;
 }
