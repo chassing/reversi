@@ -7,6 +7,7 @@ from bootstrap_toolkit.widgets import create_prepend_append
 
 from registration.forms import RegistrationForm as RegistrationFormOrig
 
+from django.template.defaultfilters import mark_safe
 
 from models import ReversiUser
 from models import CELL_PLAYER1, CELL_PLAYER2
@@ -30,9 +31,10 @@ class RegistrationForm(RegistrationFormOrig):
 
 class MultiplayerGameForm(forms.Form):
     name = forms.CharField(
+        label=mark_safe('<span class="text-large">Spielname</span>'),
         initial=random_game_name,
         max_length=100,
-        help_text=u'Jeder Schlacht sollte einen sehr coolen Namen für die Geschichtsbücher haben!',
+        help_text=u'Jede Schlacht sollte einen sehr coolen Namen für die Geschichtsbücher haben!',
         widget=BootstrapTextInput(
             prepend='N',
             attrs={
@@ -50,7 +52,7 @@ class MultiplayerGameForm(forms.Form):
     def __init__(self, user, user2, *args, **kwargs):
         super(MultiplayerGameForm, self).__init__(*args, **kwargs)
         self.fields["player1"] = forms.ModelChoiceField(
-            label="Spieler 1",
+            label=mark_safe('<span class="text-large">Spieler 1</span>'),
             queryset=ReversiUser.objects.filter(pk__in=[user.pk, user2.pk]),
             help_text=u'Dieser Spieler beginnt die legendäre Schlacht.',
             widget=BootstrapSelect(
@@ -61,7 +63,7 @@ class MultiplayerGameForm(forms.Form):
             ),
         )
         self.fields["player2"] = forms.ModelChoiceField(
-            label="Spieler 2",
+            label=mark_safe('<span class="text-large">Spieler 2</span>'),
             queryset=ReversiUser.objects.filter(pk__in=[user.pk, user2.pk]),
             help_text=u'Dieser Spieler verteidigt sein Territorium.',
             widget=BootstrapSelect(
@@ -72,7 +74,7 @@ class MultiplayerGameForm(forms.Form):
             ),
         )
         self.fields["color_player1"] = forms.ChoiceField(
-            label="Farbe Spieler 1",
+            label=mark_safe('<span class="text-large">Farbe Spieler 1</span>'),
             choices=(
                 (CELL_PLAYER1, user.theme.player1),
                 (CELL_PLAYER2, user.theme.player2),
@@ -85,7 +87,7 @@ class MultiplayerGameForm(forms.Form):
             )
         )
         self.fields["color_player2"] = forms.ChoiceField(
-            label="Farbe Spieler 2",
+            label=mark_safe('<span class="text-large">Farbe Spieler 2</span>'),
             choices=(
                 (CELL_PLAYER1, user.theme.player1),
                 (CELL_PLAYER2, user.theme.player2),

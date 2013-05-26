@@ -51,7 +51,7 @@ class Theme(models.Model):
 
 class ReversiUser(AbstractUser):
     nickname = models.CharField(max_length=254, verbose_name='Spitzname')
-    theme = models.ForeignKey(Theme, null=True, default=get_default_theme, verbose_name="Motiv")
+    theme = models.ForeignKey(Theme, null=True, default=get_default_theme, verbose_name="Thema")
     is_ai = models.BooleanField(default=False)
 
     def __unicode__(self):
