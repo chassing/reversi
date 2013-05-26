@@ -7,12 +7,14 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
         surrender: {
             name: 'Aufgeben',
             target: 'surrender',
-            disabled: false
+            disabled: false,
+            cls: 'btn-danger'
         },
         pass: {
             name: 'Passen',
             target: 'pass',
-            disabled: true
+            disabled: true,
+            cls: 'btn-primary'
     }};
 
     // set default
@@ -83,6 +85,15 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
         }
         $gameserver.emit("hit", tile);
     };
+
+    $scope.button_class = function(target) {
+        if(target.disabled === true) {
+            return "";
+        } else {
+            return target.cls;
+        }
+
+    }
 
     $scope.button_handler = function(target) {
         $log.info("button:" + target);

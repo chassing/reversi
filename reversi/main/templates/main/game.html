@@ -143,7 +143,7 @@
                         <tr>
                             <td>
                                 <span ng-repeat="(key, properties) in btns">
-                                    <button class="btn" ng-click="button_handler(properties.target)" ng-disabled="properties.disabled">
+                                    <button class="btn" ng-class="button_class(properties)" ng-click="button_handler(properties.target)" ng-disabled="properties.disabled">
                                         {{ properties.name }}
                                     </button>
                                 </span>

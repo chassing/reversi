@@ -32,7 +32,7 @@
                         </th>
                         <th style="border-top: 0px">
                             {% if game.denyable %}
-                                <a href="{% url 'main:deny-game' id=game.pk %}" class="btn btn-mini">Ablehnen</a>
+                                <a href="{% url 'main:deny-game' id=game.pk %}" class="btn btn-mini btn-danger">Ablehnen</a>
                             {% endif %}
                         </th>
                     </tr>
