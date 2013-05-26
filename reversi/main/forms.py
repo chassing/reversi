@@ -63,7 +63,7 @@ class MultiplayerGameForm(forms.Form):
         self.fields["player2"] = forms.ModelChoiceField(
             label="Spieler 2",
             queryset=ReversiUser.objects.filter(pk__in=[user.pk, user2.pk]),
-            help_text=u'Dieser Spieler verteitigt und wird später siegreich sein.',
+            help_text=u'Dieser Spieler verteidigt sein Territorium.',
             widget=BootstrapSelect(
                 prepend='P2',
                 attrs={
