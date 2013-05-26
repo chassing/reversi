@@ -1,11 +1,11 @@
 [
     {
         "fields": {
-            "description": "black VS white",
+            "description": "Schwarz-Weiß",
             "field": "",
             "name": "black-white",
-            "player1": "black",
-            "player2": "white"
+            "player1": "Schwarz",
+            "player2": "Weiß"
         },
         "model": "main.theme",
         "pk": 1
