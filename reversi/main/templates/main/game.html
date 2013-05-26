@@ -23,34 +23,34 @@
                 <table id="field" class="theme-{{ theme }}-game-field-background" style="margin-bottom: 20px">
                     <tr>
                         <td></td>
-                        <td class="field_head text-large text-bold">
+                        <td class="theme-{{ theme }}-field-head text-large text-bold">
                             A
                         </td>
-                        <td class="field_head text-large text-bold">
+                        <td class="theme-{{ theme }}-field-head text-large text-bold">
                             B
                         </td>
-                        <td class="field_head text-large text-bold">
+                        <td class="theme-{{ theme }}-field-head text-large text-bold">
                             C
                         </td>
-                        <td class="field_head text-large text-bold">
+                        <td class="theme-{{ theme }}-field-head text-large text-bold">
                             D
                         </td>
-                        <td class="field_head text-large text-bold">
+                        <td class="theme-{{ theme }}-field-head text-large text-bold">
                             E
                         </td>
-                        <td class="field_head text-large text-bold">
+                        <td class="theme-{{ theme }}-field-head text-large text-bold">
                             F
                         </td>
-                        <td class="field_head text-large text-bold">
+                        <td class="theme-{{ theme }}-field-head text-large text-bold">
                             G
                         </td>
-                        <td class="field_head text-large text-bold">
+                        <td class="theme-{{ theme }}-field-head text-large text-bold">
                             H
                         </td>
 
                     </tr>
                     <tr ng-repeat="row in grid" ng-class="highlight_selected_row($index)" >
-                        <td class="text-large text-bold" style="padding-left: 5px; padding-right: 5px"> {{ $index + 1 }}</td>
+                        <td class="theme-{{ theme }}-row-head text-large text-bold"> {{ $index + 1 }}</td>
                         <td class="field-cell theme-{{ theme }}-field-cell theme-{{ theme }}-field-cell-state-{{ tile.state }}" ng-class="highlight_selected_column(tile)" ng-repeat="tile in row" ng-click="hit_handler(tile)">
                         </td>
                     </tr>

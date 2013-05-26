@@ -3,6 +3,7 @@
 
 @border_color: #000;
 @radius: 4px;
+@radius_off: 0px;
 
 @cell_width: 70px;
 @cell_heigth: @cell_width;
@@ -23,6 +24,11 @@
 
 .field_head {
     padding-left: @cell_width / 2;
+}
+
+.row_head {
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 @media (max-width: 979px) and (min-width: 768px) {
@@ -71,6 +77,15 @@
 /*
   THEME: BLACK VS WHITE
 */
+
+.theme-black-white-field-head {
+    .field_head;
+}
+
+.theme-black-white-row-head {
+    .row_head;
+}
+
 .theme-black-white-game-field-background {
 
 }
@@ -94,12 +109,12 @@
 }
 .theme-black-white-field-cell-state-1 {
     .theme-black-white-field-cell-image-1;
-    background-color: #ffffff;
+    //background-color: #ffffff;
     background-size: @cell_width @cell_heigth
 }
 .theme-black-white-field-cell-state-2 {
     .theme-black-white-field-cell-image-2;
-    background-color: #ffffff;
+    //background-color: #ffffff;
     background-size: @cell_width @cell_heigth
 }
 .theme-black-white-field-cell-state-e {
@@ -116,6 +131,8 @@
     background-position: left center;
 }
 .theme-black-white-selected {
+    //-webkit-border-radius: @radius_off;
+    //-moz-border-radius: @radius_off;
     background-color: #444;
 }
 
@@ -123,6 +140,14 @@
 /*
   THEME: STARWARS
 */
+.theme-starwars-field-head {
+    .field_head;
+}
+
+.theme-starwars-row-head {
+    .row_head;
+}
+
 .theme-starwars-game-field-background {
     background-color: #000;
     td {
@@ -177,6 +202,14 @@
 /*
   THEME: STARTREK-BORG
 */
+.theme-startrek-field-head {
+    .field_head;
+}
+
+.theme-startrek-row-head {
+    .row_head;
+}
+
 .theme-startrek-borg-game-field-background {
     background-color: #000;
     td {
@@ -231,6 +264,14 @@
 /*
   THEME: STARTREK-KLINGON
 */
+.theme-startrek-klingon-field-head {
+    .field_head;
+}
+.theme-startrek-klingon-row-head {
+    .row_head;
+}
+
+
 .theme-startrek-klingon-game-field-background {
     background: #000;
     td {
@@ -285,6 +326,15 @@
 /*
   THEME: CHILDREN
 */
+
+.theme-children-field-head {
+    .field_head;
+}
+
+.theme-children-row-head {
+    .row_head;
+}
+
 .theme-children-game-field-background {
     /*background-color: #000;
     td {
@@ -341,6 +391,14 @@
 /*
   THEME: creatures
 */
+.theme-creatures-field-head {
+    .field_head;
+}
+
+.theme-creatures-row-head {
+    .row_head;
+}
+
 .theme-creatures-game-field-background {
     /*background-color: #000;
     td {
