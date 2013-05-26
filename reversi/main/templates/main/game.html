@@ -76,10 +76,10 @@
                                 </span>
                             </th>
                         </tr>
-                        <tr>
+                        <!--<tr>
                             <td>Gesetzte Steine</td>
                             <td width="10%">
-                                <span class="badge badge-info">
+                                <span class="text-large badge badge-info">
                                     {{ stats[player.id].tiles_set }}
                                 </span>
                             </td>
@@ -87,13 +87,17 @@
                         <tr>
                             <td>Eigene Steine</td>
                             <td width="10%">
-                                <span class="badge badge-info">
+                                <span class="text-large badge badge-info">
                                     {{ stats[player.id].tiles }}
                                 </span>
                             </td>
                         </tr>
                         <tr>
                             <td>Farbe</td>
+                            <td class="theme-{{ theme }}-stat-cell-{{ player.color }}"></td>
+                        </tr>-->
+                        <tr height="50">
+                            <td class="text-huge" width="35px" style="vertical-align: middle; text-align: center;">{{ stats[player.id].tiles }}</td>
                             <td class="theme-{{ theme }}-stat-cell-{{ player.color }}"></td>
                         </tr>
                     </table>
@@ -109,7 +113,7 @@
                         <tr>
                             <td>Zuganzahl</td>
                             <td width="10%">
-                                <span class="badge badge-info">
+                                <span class="text-large badge badge-info">
                                     {{ stats_sum('tiles_set') }}
                                 </span>
                             </td>
@@ -117,15 +121,15 @@
                         <tr>
                             <td>Steinanzahl</td>
                             <td width="10%">
-                                <span class="badge badge-info">
+                                <span class="text-large badge badge-info">
                                     {{ stats_sum('tiles') }}
                                 </span>
                             </td>
                         </tr>
                         <tr ng-show="game_end">
-                            <td>Gewinner</td>
+                            <td>Gewinner/in</td>
                             <td>
-                                <span class="badge badge-info">
+                                <span class="text-large badge badge-important">
                                     {{ winner }}
                                 </span>
                             </td>
