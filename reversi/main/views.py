@@ -90,6 +90,7 @@ class ListGamesView(TemplateView):
     def get(self, request):
         tmpl = RequestContext(request)
         tmpl["games"] = Game.objects.filter(players__user=request.user)
+        tmpl["user"] = request.user
         return self.render_to_response(tmpl)
 
 

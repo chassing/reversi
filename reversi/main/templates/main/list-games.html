@@ -22,7 +22,7 @@
             <div class="well span6">
                 <table class="table table-condensed">
                     <tr>
-                        <th width="60%" style="border-top: 0px">
+                        <th width="70%" style="border-top: 0px">
                             <span class="text-huge">
                                 {% if not game.end and game.next_player.user == user %}
                                     <i id="ist_dran" class="icon-star" title="Du bist am Zug"></i>
@@ -36,20 +36,24 @@
                             {% endif %}
                         </th>
                     </tr>
-                    <tr style = "font-weight:bold">
-                        <td width="30%">Die Kontrahenten</td>
+                    <tr>
+                        <th>Kontrahent</th>
                         <td>
-                            {{ game.player1.user.nickname }} - {{ game.player2.user.nickname }}
+                            {% if user ==  game.player1.user %}
+                                {{ game.player2.user.nickname }}
+                            {% else %}
+                                {{ game.player1.user.nickname }}
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>
-                        <td>Erstellt am</td>
+                        <th>Erstellt am</th>
                         <td>
-                            {{ game.created }}
+                            {{ game.created|date:"d. M Y" }}
                         </td>
                     </tr>
                     <tr>
-                        <td>Status</td>
+                        <th>Status</th>
                         <td>
                             {% if game.end %}
                                 {% if game.winner %}
