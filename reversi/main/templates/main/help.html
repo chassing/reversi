@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static from staticfiles %}
 
 {% block headline %}
     <div class="alert alert-info text-huge">
@@ -9,5 +9,165 @@
 
 
 {% block content %}
-    hier ist die super tolle about seite
+    <div class="row">
+        <div class="well span6">
+            <img src="{% static 'img/tutorial/reversi - 1.jpg'%}">
+        </div>
+        <div class="well span6">
+            Zu Beginn des Spieles liegen 4 Steine auf dem Spielbrett, je zwei von einer Farbe.
+            In diesem Tutorial sind die Farben schwarz und weiß. Später kannst du dir gerne auch
+            andere Motive aussuchen. <br />
+            <br />
+            In Reversi geht es darum, möglichst viele Steine deiner Spielfarbe zusammen zu bekommen.<br />
+            <br />
+            Dies funktioniert so:<br />
+            Du musst versuchen einen neuen Stein deiner Farbe so auf ein leeres Feld zu platzieren,
+            dass zwischen dem neuen Stein und einem bereits vorhandenen Stein, möglichst viele Steine
+            deines Gegners liegen. Die Steine deines Gegners werden dann nämlich ‚umgedreht‘,
+            das heißt sie nehmen deine Spielfarbe an und werden somit zu deinen Steinen.
+        </div>
+    </div>
+    <div class="row">
+        <div class="well span6">
+            Der Spieler mit den schwarzen Steinen hat einen Stein auf das Feld ‚E3‘ gesetzt. <br/>
+            Dadurch wurde der weiße Stein zwischen den beiden schwarzen umgedreht und gehört nun
+            dem schwarzen Spieler. Er liegt nun in Führung.<br/>
+            <br/>
+            Wie du gesehen hast, werden Steine immer auf Felder gesetzt, die an ein schon belegtes
+            Feld angrenzen. Dabei kannst du von einem Stein deiner Farbe aus gesehen waagrecht
+            oder senkrecht, wie es eben der Fall war, einen Stein setzen. Voraussetzung ist,
+            dass sich dazwischen mindestens ein gegnerischer Stein befindet.
+            Natürlich gilt hier: je mehr gegnerische Steine dazwischen desto besser.
+            Man kann aber auch diagonal Steine legen, wie wir dir jetzt zeigen werden.
+        </div>
+        <div class="well span6">
+            <img src="{% static 'img/tutorial/reversi - 2.jpg'%}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="well span6">
+            <img src="{% static 'img/tutorial/reversi - 3.jpg'%}">
+        </div>
+        <div class="well span6">
+            Der Spieler mit der Farbe Weiß hat einen Stein diagonal von einem schon vorhanden
+            weißen Stein gesetzt und damit den Ausgleich geschafft. Es steht nun 3:3. <br />
+            <br />
+            Übrigens: Dir sind bestimmt schon die grau hinterlegten Felder aufgefallen.
+            Diese helfen dir ein bisschen und zweigen dir, bei welchen Feldern ein Spielzug möglich ist.
+        </div>
+    </div>
+    <div class="row">
+        <div class="well span6">
+            So, nun liegt Schwarz wieder in Führung. Weiß hat nur mehr zwei Steine.<br />
+            <br />
+            Wie vorher schon erwähnt, gibt’s bei uns nicht nur Schwarz-Weiß:
+            Wenn du am rechten oberen Bildschirmrand auf deinen Namen klickst und
+            Profil auswählst, kannst du dort zwischen verschiedenen Themes auswählen.
+            Dort kannst du übrigens auch deinen Spitznamen ändern, unter dem du bei
+            anderen Spielern aufscheinst.
+        </div>
+        <div class="well span6">
+            <img src="{% static 'img/tutorial/reversi - 4.jpg'%}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="well span6">
+            <img src="{% static 'img/tutorial/reversi - 5.jpg'%}">
+        </div>
+        <div class="well span6">
+            Der weiße Spieler war mutig. Er hat seinen Stein auf eines der Felder rund um die Ecke gesetzt.<br />
+            <br />
+            Diese Felder nennt man X-Felder, wenn sie der Ecke diagonal gegenüber liegen (B2, B7, G2, G7)
+            und C-Felder (A2, B1, G1, H2, A7, B8, G8 oder H7).
+            Man sollte solche Felder als Anfänger meiden beziehungsweise gut überlegen,
+            ob man seinen Stein dorthin setzen möchte. <br />
+            Wir erklären dir später noch weshalb.
+        </div>
+    </div>
+    <div class="row">
+        <div class="well span6">
+            <img src="{% static 'img/tutorial/reversi - 5b.jpg'%}">
+        </div>
+        <div class="well span6">
+            Nicht, dass wir das vergessen: Einen Stein platzieren kannst du per Mausklick,
+            indem du einfach auf das gewünschte Feld klickst, oder per Tastatur.
+            Dabei gibst du einfach den Buchstaben für die Spalte und die Nummer der Zeile ein.
+            Du kannst das auch umgekehrt machen. Danach einfach auf Enter drücken.
+        </div>
+    </div>
+    <div class="row">
+        <div class="well span6">
+            So jetzt ist Schwarz wieder vorne. Das heißt aber noch lang nichts, da bis zum Ende
+            des Spieles noch viel passieren kann. Bei Reversi werden Spiele meistens
+            erst mit den letzten Spielzügen entschieden.
+        </div>
+        <div class="well span6">
+            <img src="{% static 'img/tutorial/reversi - 6.jpg'%}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="well span6">
+            <img src="{% static 'img/tutorial/reversi - 7.jpg'%}">
+        </div>
+        <div class="well span6">
+            Wie du gerade gesehen hast, kann ein Spielzug viel ändern. Der weiße Spieler liegt
+            jetzt in Führung. Es ist ihm gelungen mit einem Zug zwei schwarze Steine zu erobern.
+            Indem er einen Stein auf D3 gesetzt hat, wurden nämlich die Steine auf E3 und D4 umgedreht,
+            da sie beide von weißen Steinen eingeschlossen waren.<br />
+            <br />
+            Doch der weiße Spieler hat etwas übersehen!
+        </div>
+    </div>
+    <div class="row">
+        <div class="well span6">
+            Weil der weiße Spieler vorher einen Stein auf ein X-Feld (diagonal gegenüber der Ecke)
+            gesetzt hat, hat er dem schwarzen Spieler die Gelegenheit geboten, die Ecke zu erobern.<br />
+            <br />
+            Die Chance, einen Stein auf einem Eckfeld platzieren zu können, sollte man auf jeden
+            Fall nutzen, da dieser Stein dann nicht mehr umgedreht werden kann.
+            Es befindet sich ja kein Feld nach der Ecke, auf das man einen Stein setzen könnte.
+            Im Fachjargon nennt man einen Stein, der seine Farbe nicht mehr wechseln kann,
+            ‚stabil‘. Das Erobern der Ecken kann man als das A und O bei Reversi betrachten.
+            Hat man nämlich einmal einen Stein stabilisiert, kann man an diesen meistens weitere
+            ‚anhängen‘ und diese somit auch stabilisieren. <br />
+            <br />
+            Wir überspringen nun ein paar Spielzüge und spulen bis kurz vors Ende vor,
+            amit du möglichst schnell anfangen kannst zu spielen!
+        </div>
+        <div class="well span6">
+            <img src="{% static 'img/tutorial/reversi - 8.jpg'%}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="well span6">
+            <img src="{% static 'img/tutorial/reversi - 9.jpg'%}">
+        </div>
+        <div class="well span6">
+            Wie du siehst, hat sich das Spielbrett mittlerweile gefüllt. Schwarz und Weiß kämpfen
+            um die letzte Ecke. Schwarz ist an der Reihe und kann seinen Stein jedoch nur
+            auf ein mögliches Feld setzen – das X-Feld. <br />
+            <br />
+            Wenn ein Spieler ziehen kann, muss er das auch tun.
+        </div>
+    </div>
+    <div class="row">
+        <div class="well span6">
+            Dass Schwarz auf ein X-Feld legen hat müssen, hat Weiß aber nichts gebracht.
+            Für den weißen Spieler sind jetzt nämlich gar keine Spielzüge mehr möglich,
+            er muss passen. Den Passen-Button findest du übrigens auf der rechten Seite unter Aktionen.<br />
+            Doch auch der schwarze Spieler kann nicht mehr ziehen und muss passen. <br />
+            Wenn keiner der beiden Spieler mehr einen Spielzug durchführen kann, also beide
+            entweder hintereinander passen oder das Spielbrett voll ist, dann ist das Spiel beendet.<br />
+            <br />
+            Schwarz hat gewonnen! <br />
+            <br />
+            So jetzt bist du bereit, dich selbst ans Spiel zu wagen.
+            Geh einfach zurück in die Lobby, such‘ dir einen Gegner aus und los geht’s! Viel Glück! <br />
+            <br />
+            PS: Weitere Taktiken wirst du bestimmt beim Spielen noch lernen.
+        </div>
+        <div class="well span6">
+            <img src="{% static 'img/tutorial/reversi - 10.jpg'%}">
+        </div>
+    </div>
 {% endblock content %}
