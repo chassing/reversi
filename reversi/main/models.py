@@ -29,6 +29,9 @@ FIELD_SCORES = [
     [9999, 5, 500, 200, 200, 500, 5, 9999],
 ]
 
+WINNER_BONUS = 2
+TILES_SCORE = 5
+
 
 class NoValidMoveException(Exception):
     pass
@@ -53,9 +56,17 @@ class ReversiUser(AbstractUser):
     nickname = models.CharField(max_length=254, verbose_name='Spitzname')
     theme = models.ForeignKey(Theme, null=True, default=get_default_theme, verbose_name="Thema")
     is_ai = models.BooleanField(default=False)
+    score = models.IntegerField(default=0)
+    games_won = models.IntegerField(default=0)
+    games_lost = models.IntegerField(default=0)
+    games_surrendered = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.nickname
+
+    @property
+    def games_count(self):
+        return self.games_won + self.games_lost
 
 
 class Game(models.Model):
@@ -458,29 +469,61 @@ def game_end_handler(sender, game, **kwargs):
     player1 = game.player1
     player2 = game.player2
 
-    # someone surrendered?
-    if player1.surrendered:
-        log.info("{} surrendered {} wins".format(player1.user.nickname, player2.user.nickname))
-        player2.winner = True
-        player2.save()
-        return
-    if player2.surrendered:
-        log.info("{} surrendered {} wins".format(player2.user.nickname, player1.user.nickname))
-        player1.winner = True
-        player1.save()
+    if player1.denied or player2.denied:
+        # no stats if someone denied this game
         return
 
-    # retrieve winner on tiles count
-    p1 = game.last_move.tiles_count(color=player1.color)
-    p2 = game.last_move.tiles_count(color=player2.color)
-    if p1 > p2:
-        log.info("{} has more tiles and wins".format(player1.user.nickname))
-        player1.winner = True
-        player1.save()
+    tiles_player1 = game.last_move.tiles_count(color=player1.color)
+    tiles_player2 = game.last_move.tiles_count(color=player2.color)
+
+    # someone surrendered?
+    if player1.surrendered:
+        # player2 wins
+        winner = player2
+        winner_tiles = tiles_player2
+        loser = player1
+        loser_tiles = tiles_player1
+    elif player2.surrendered:
+        # player1 wins
+        winner = player1
+        winner_tiles = tiles_player1
+        loser = player2
+        loser_tiles = tiles_player2
+    elif tiles_player2 > tiles_player1:
+        # player2 has more tiles
+        winner = player2
+        winner_tiles = tiles_player2
+        loser = player1
+        loser_tiles = tiles_player1
+    elif tiles_player1 > tiles_player2:
+        # player1 has more tiles
+        winner = player1
+        winner_tiles = tiles_player1
+        loser = player2
+        loser_tiles = tiles_player2
+    else:
+        log.info("{} is draw".format(game.pk))
         return
-    elif p2 > p1:
-        log.info("{} has more tiles and wins".format(player2.user.nickname))
-        player2.winner = True
-        player2.save()
-        return
-    log.info("{} is draw".format(game.pk))
+
+    log.info("winner: {0.user} loser: {1.user}".format(winner, loser))
+
+    # set winner flag
+    winner.winner = True
+
+    # update stats
+    winner.user.games_won += 1
+    loser.user.games_lost += 1
+
+    if player1.surrendered or player2.surrendered:
+        log.info("{0.user} surrendered".format(loser))
+        loser.user.games_surrendered += 1
+
+    # update scores
+    winner.user.score += WINNER_BONUS * TILES_SCORE * winner_tiles
+    loser.user.score += TILES_SCORE * loser_tiles
+
+    # save
+    winner.user.save()
+    winner.save()
+    loser.user.save()
+    loser.save()

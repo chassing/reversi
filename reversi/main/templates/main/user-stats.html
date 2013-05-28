@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load bootstrap_toolkit %}
+
+
+{% block headline %}
+    <div class="alert alert-info text-huge">
+        Statistiken
+    </div>
+{% endblock headline %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="well span6">
+            <table class="table table-condensed">
+                <tr>
+                    <th width="70%" style="border-top: 0px">
+                        <span class="text-huge">
+                            Spiele
+                        </span>
+                    </th>
+                </tr>
+                <tr>
+                    <th>Insgesamt</th>
+                    <td>
+                        <span class="badge badge-info">
+                            {{ user.games_count }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Gewonnen</th>
+                    <td>
+                        <span class="badge badge-info">
+                            {{ user.games_won }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Verloren</th>
+                    <td>
+                        <span class="badge badge-info">
+                            {{ user.games_lost }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Aufgegeben</th>
+                    <td>
+                        <span class="badge badge-info">
+                            {{ user.games_surrendered }}
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="well span6">
+            <table class="table table-condensed">
+                <tr>
+                    <th width="70%" style="border-top: 0px">
+                        <span class="text-huge">
+                            Highscore
+                        </span>
+                    </th>
+                </tr>
+                <tr>
+                    <th>Insgesamt</th>
+                    <td>
+                        <span class="badge badge-info">
+                            {{ user.score }}
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+{% endblock content %}

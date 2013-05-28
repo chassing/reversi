@@ -91,6 +91,128 @@ class GameTest(TestCase):
         self.player2.save()
         self.assertEqual(self.game.winner, self.player1)
 
+    def test_stats_player1_winner(self):
+        C = self.player1.color
+        M = self.player2.color
+        F1 = [
+            C, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            C, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+        ]
+        Move(game=self.game, player=self.player1, field=_(F1)).save()
+        # refresh objects from db
+        self.player1 = self.game.players.all()[0]
+        self.player2 = self.game.players.all()[1]
+
+        self.assertEqual(self.player1.user.games_won, 1)
+        self.assertEqual(self.player1.user.score, 2 * 5 * 33)
+        self.assertEqual(self.player2.user.games_lost, 1)
+        self.assertEqual(self.player2.user.score, 5 * 31)
+
+    def test_stats_player2_winner(self):
+        C = self.player1.color
+        M = self.player2.color
+        F1 = [
+            C, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, M,
+            M, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+        ]
+        Move(game=self.game, player=self.player1, field=_(F1)).save()
+        # refresh objects from db
+        self.player1 = self.game.players.all()[0]
+        self.player2 = self.game.players.all()[1]
+
+        self.assertEqual(self.player2.user.games_won, 1)
+        self.assertEqual(self.player2.user.score, 2 * 5 * 33)
+        self.assertEqual(self.player1.user.games_lost, 1)
+        self.assertEqual(self.player1.user.score, 5 * 31)
+
+    def test_stats_player1_denied(self):
+        self.player1.denied = True
+        self.player1.save()
+
+        self.assertEqual(self.player1.user.games_won, 0)
+        self.assertEqual(self.player1.user.games_lost, 0)
+        self.assertEqual(self.player1.user.score, 0)
+        self.assertEqual(self.player2.user.games_won, 0)
+        self.assertEqual(self.player2.user.games_lost, 0)
+        self.assertEqual(self.player2.user.score, 0)
+
+    def test_stats_player2_denied(self):
+        self.player2.denied = True
+        self.player2.save()
+
+        self.assertEqual(self.player1.user.games_won, 0)
+        self.assertEqual(self.player1.user.games_lost, 0)
+        self.assertEqual(self.player1.user.score, 0)
+        self.assertEqual(self.player2.user.games_won, 0)
+        self.assertEqual(self.player2.user.games_lost, 0)
+        self.assertEqual(self.player2.user.score, 0)
+
+    def test_stats_player1_surrendered(self):
+        C = self.player1.color
+        M = self.player2.color
+        F1 = [
+            E, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            M, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+        ]
+        Move(game=self.game, player=self.player1, field=_(F1)).save()
+        self.player1.surrendered = True
+        self.player1.save()
+
+        # refresh objects from db
+        self.player1 = self.game.players.all()[0]
+        self.player2 = self.game.players.all()[1]
+
+        self.assertEqual(self.player1.user.games_lost, 1)
+        self.assertEqual(self.player1.user.games_surrendered, 1)
+        self.assertEqual(self.player1.user.score, 5 * 31)
+        self.assertEqual(self.player2.user.games_won, 1)
+        self.assertEqual(self.player2.user.score, 2 * 5 * 32)
+
+    def test_stats_player2_surrendered(self):
+        C = self.player1.color
+        M = self.player2.color
+        F1 = [
+            E, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            C, C, C, C, C, C, C, C,
+            M, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+            M, M, M, M, M, M, M, M,
+        ]
+        Move(game=self.game, player=self.player1, field=_(F1)).save()
+        self.player2.surrendered = True
+        self.player2.save()
+
+        # refresh objects from db
+        self.player1 = self.game.players.all()[0]
+        self.player2 = self.game.players.all()[1]
+
+        self.assertEqual(self.player1.user.games_won, 1)
+        self.assertEqual(self.player1.user.score, 2 * 5 * 31)
+        self.assertEqual(self.player2.user.games_lost, 1)
+        self.assertEqual(self.player2.user.games_surrendered, 1)
+        self.assertEqual(self.player2.user.score, 5 * 32)
+
     def test_winner_player1(self):
         C = self.player1.color
         F1 = [

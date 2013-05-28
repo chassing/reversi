@@ -132,6 +132,16 @@ class UserProfileView(TemplateView):
         return self.get(request, form)
 
 
+class UserStatsView(TemplateView):
+    template_name = "main/user-stats.html"
+
+    @method_decorator(login_required)
+    def get(self, request, form=None):
+        tmpl = RequestContext(request)
+        tmpl["user"] = request.user
+        return self.render_to_response(tmpl)
+
+
 class HelpView(TemplateView):
     template_name = "main/help.html"
 

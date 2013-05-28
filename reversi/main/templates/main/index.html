@@ -32,12 +32,14 @@
                     <tr class="info">
                         <td class = "text-large">Gegner</td>
                         <td class = "text-large">Highscore</td>
+                        <td class = "text-large">Spiele Gewonnen/Verloren</td>
                         <td class = "text-large">Herausfordern</td>
                     </tr>
                     {% for u in users %}
                         <tr>
                             <td>{{ u.nickname }}</td>
-                            <td>0</td>
+                            <td>{{ u.score }}</td>
+                            <td>{{ u.games_won }}/{{ u.games_lost }}</td>
                             <td>
                                 {% if u != user %}
                                     <a href="{% url 'main:new-game' enemy=u.pk %}" class="btn btn-mini btn-primary">Los!</a>
