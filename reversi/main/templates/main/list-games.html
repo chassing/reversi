@@ -17,8 +17,11 @@
 
 
 {% block content %}
-    <div class="row">
-        {% for game in games %}
+    {% for game in games %}
+        {% if forloop.counter0|divisibleby:2 %}
+            <div class="row">
+        {% endif %}
+
             <div class="well span6">
                 <table class="table table-condensed">
                     <tr>
@@ -68,8 +71,11 @@
                     </tr>
                 </table>
             </div>
-        {% empty %}
-            Noch nie ein Spiel gespielt
-        {% endfor %}
-    </div>
+
+        {% if forloop.counter|divisibleby:2 %}
+            </div>
+        {% endif %}
+    {% empty %}
+        Noch nie ein Spiel gespielt
+    {% endfor %}
 {% endblock content %}
