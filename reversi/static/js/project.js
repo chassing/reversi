@@ -84,6 +84,8 @@ reversiApp.controller("ReversiCtrl", function($scope, $log, $gameserver, $modal)
             return;
         }
         $gameserver.emit("hit", tile);
+        $scope.selected_column = undefined;
+        $scope.selected_row = undefined;
     };
 
     $scope.button_class = function(target) {
