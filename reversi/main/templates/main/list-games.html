@@ -28,7 +28,7 @@
                         <th width="70%" style="border-top: 0px">
                             <span class="text-huge">
                                 {% if not game.end and game.next_player.user == user %}
-                                    <i id="ist_dran" class="icon-star" title="Du bist am Zug"></i>
+                                    <i id="ist_dran" class="icon-star-large" title="Du bist am Zug"></i>
                                 {% endif %}
                                 <a href="{% url 'main:game' id=game.pk %}">{{ game.name }}</a>
                             </span>
