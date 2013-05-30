@@ -15,6 +15,11 @@
     on-keyup-fn="handle_keypress"
 {% endblock %}
 
+{% block headline %}
+    <div class="alert alert-info text-huge">
+        {{ game.name }}
+    </div>
+{% endblock headline %}
 
 {% block content %}
     <div class="row">
@@ -59,9 +64,6 @@
         </div>
 
         <div class="span4">
-            <p class="well text-huge">
-                {{ game.name }}
-            </p>
 
             {% verbatim %}
                 <div ng-repeat="player in players" class="alert" ng-class="highlight_current_player(player.id)">
