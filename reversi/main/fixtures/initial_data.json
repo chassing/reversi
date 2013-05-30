@@ -1,7 +1,7 @@
 [
     {
         "fields": {
-            "description": "Schwarz-Weiß",
+            "description": "Klassisch",
             "field": "",
             "name": "black-white",
             "player1": "Schwarz",
@@ -15,35 +15,13 @@
             "description": "Star Wars",
             "field": "starwars",
             "name": "starwars",
-            "player1": "darth",
-            "player2": "yoda"
+            "player1": "Darth Vader",
+            "player2": "Meister Yoda"
         },
         "model": "main.theme",
         "pk": 2
     },
     {
-        "fields": {
-            "description": "Star Trek F\u00f6deration vs Borg",
-            "field": "startrek-borg",
-            "name": "startrek-borg",
-            "player1": "federation",
-            "player2": "borg"
-        },
-        "model": "main.theme",
-        "pk": 3
-    },
-    {
-        "fields": {
-            "description": "Star Trek F\u00f6deration vs Klingonen",
-            "field": "startrek-klingon",
-            "name": "startrek-klingon",
-            "player1": "federation",
-            "player2": "klingon"
-        },
-        "model": "main.theme",
-        "pk": 4
-    },
-        {
         "fields": {
             "description": "Wiese",
             "field": "children",
@@ -52,7 +30,7 @@
             "player2": "Blume"
         },
         "model": "main.theme",
-        "pk": 5
+        "pk": 3
     },
     {
         "fields": {
@@ -63,7 +41,7 @@
             "player2": "Lila"
         },
         "model": "main.theme",
-        "pk": 6
+        "pk": 4
     },
     {
         "fields": {

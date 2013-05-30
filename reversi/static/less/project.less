@@ -77,10 +77,11 @@
 /*
   THEME: BLACK VS WHITE
 */
-@black-white_heads_bg : rgba(255, 255, 255, 0);
+@black-white_heads_bg : rgba(255, 255, 255, 1);
 
 .theme-black-white-heads-bg {
     background-color: @black-white_heads_bg !important;
+
 }
 
 .theme-black-white-field-head {
@@ -94,14 +95,16 @@
 }
 
 .theme-black-white-game-field-background {
-
+        background-image: url("/static/img/blackwhite/field.png");
+        background-size: cover;
 }
+
 .theme-black-white-field-cell {
     border: @cell_border_size solid #000;
 }
 .theme-black-white-field-cell-state-v {
     // valid field
-    background-color: #CCC;
+    background-color: #CCC !important;
     cursor: pointer;
 }
 .theme-black-white-field-cell-image-1 {
@@ -140,17 +143,17 @@
 .theme-black-white-selected {
     //-webkit-border-radius: @radius_off;
     //-moz-border-radius: @radius_off;
-    background-color: #444;
+    background-color: #999;
 }
 
 
 /*
   THEME: STARWARS
 */
-@starwars_heads_bg : rgba(255, 255, 255, 0);
+@starwars_heads_bg : rgba(0, 0, 0, 1);
 
 .theme-starwars-heads-bg {
-    background-color: @starwars_heads_bg !important;
+    background-color: @starwars_heads_bg;
 }
 
 .theme-starwars-field-head {
@@ -164,7 +167,9 @@
 }
 
 .theme-starwars-game-field-background {
-    background-color: #000;
+    //background-color: #000;
+    background-image: url("/static/img/starwars/field.png");
+    background-size: cover;
     td {
         color: #fff;
     }
@@ -174,27 +179,29 @@
 }
 .theme-starwars-field-cell-state-v {
     // valid field
-    background: #CCC;
+    background-color: rgba(204, 204, 204, 0.6) !important;
     cursor: pointer;
 }
 .theme-starwars-field-cell-image-1 {
-    background-image: url("/static/img/starwars/darth.png");
+    //background-image: url("/static/img/starwars/darth.png");
+    background-image: url("/static/img/starwars/vader_flow.gif");
     background-repeat: no-repeat;
     background-position: center center;
 }
 .theme-starwars-field-cell-image-2 {
-    background-image: url("/static/img/starwars/yoda.png");
+    //background-image: url("/static/img/starwars/yoda.png");
+    background-image: url("/static/img/starwars/yoda_flow.gif");
     background-repeat: no-repeat;
     background-position: center center;
 }
 .theme-starwars-field-cell-state-1 {
     .theme-starwars-field-cell-image-1;
-    background-color: #ffffff;
+    //background-color: #ffffff;
     background-size: @cell_width @cell_heigth
 }
 .theme-starwars-field-cell-state-2 {
     .theme-starwars-field-cell-image-2;
-    background-color: #ffffff;
+    //background-color: #ffffff;
     background-size: @cell_width @cell_heigth
 }
 .theme-starwars-field-cell-state-e {
@@ -211,148 +218,9 @@
     background-position: left center;
 }
 .theme-starwars-selected {
-    background-color: #8e8e8e;
+    background-color: rgba(150, 150, 150, 0.3);
 }
 
-/*
-  THEME: STARTREK-BORG
-*/
-@startrek-borg_heads_bg : rgba(255, 255, 255, 0);
-
-.theme-startrek-borg-heads-bg {
-        background-color: @startrek-borg_heads_bg !important;
-}
-
-.theme-startrek-borg-field-head {
-    .field_head;
-    .theme-startrek-borg-heads-bg;
-}
-
-.theme-startrek-borg-row-head {
-    .row_head;
-    .theme-startrek-borg-heads-bg;
-}
-
-.theme-startrek-borg-game-field-background {
-    background-color: #000;
-    td {
-        color: #fff;
-    }
-}
-.theme-startrek-borg-field-cell {
-    border: @cell_border_size solid #fff;
-}
-.theme-startrek-borg-field-cell-state-v {
-    // valid field
-    background: #CCC;
-    cursor: pointer;
-}
-.theme-startrek-borg-field-cell-image-1 {
-    background-image: url("/static/img/startrek-borg/federation.png");
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-.theme-startrek-borg-field-cell-image-2 {
-    background-image: url("/static/img/startrek-borg/borg.png");
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-.theme-startrek-borg-field-cell-state-1 {
-    .theme-startrek-borg-field-cell-image-1;
-    background-color: #ffffff;
-    background-size: @cell_width @cell_heigth
-}
-.theme-startrek-borg-field-cell-state-2 {
-    .theme-startrek-borg-field-cell-image-2;
-    background-color: #ffffff;
-    background-size: @cell_width @cell_heigth
-}
-.theme-startrek-borg-field-cell-state-e {
-    // empty field - use table background color
-}
-.theme-startrek-borg-stat-cell-1 {
-    .theme-startrek-borg-field-cell-image-1;
-    background-size: 40px;
-    background-position: left center;
-}
-.theme-startrek-borg-stat-cell-2 {
-    .theme-startrek-borg-field-cell-image-2;
-    background-size: 40px;
-    background-position: left center;
-}
-.theme-startrek-borg-selected {
-    background-color: #8e8e8e;
-}
-
-/*
-  THEME: STARTREK-KLINGON
-*/
-@startrek-klingon_heads_bg : rgba(255, 255, 255, 0);
-
-.theme-startrek-klingon-heads-bg {
-    background-color: @startrek-klingon_heads_bg !important;
-}
-
-.theme-startrek-klingon-field-head {
-    .field_head;
-    .theme-startrek-klingon-heads-bg;
-}
-.theme-startrek-klingon-row-head {
-    .row_head;
-    .theme-startrek-klingon-heads-bg;
-}
-
-
-.theme-startrek-klingon-game-field-background {
-    background: #000;
-    td {
-        color: #fff;
-    }
-}
-.theme-startrek-klingon-field-cell {
-    border: @cell_border_size solid #fff;
-}
-.theme-startrek-klingon-field-cell-state-v {
-    // valid field
-    background: #CCC;
-    cursor: pointer;
-}
-.theme-startrek-klingon-field-cell-image-1 {
-    background-image: url("/static/img/startrek-klingon/federation.png");
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-.theme-startrek-klingon-field-cell-image-2 {
-    background-image: url("/static/img/startrek-klingon/klingon.png");
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-.theme-startrek-klingon-field-cell-state-1 {
-    .theme-startrek-klingon-field-cell-image-1;
-    background-color: #ffffff;
-    background-size: @cell_width @cell_heigth
-}
-.theme-startrek-klingon-field-cell-state-2 {
-    .theme-startrek-klingon-field-cell-image-2;
-    background-color: #ffffff;
-    background-size: @cell_width @cell_heigth
-}
-.theme-startrek-klingon-field-cell-state-e {
-    // empty field - use table background color
-}
-.theme-startrek-klingon-stat-cell-1 {
-    .theme-startrek-klingon-field-cell-image-1;
-    background-size: 40px;
-    background-position: left center;
-}
-.theme-startrek-klingon-stat-cell-2 {
-    .theme-startrek-klingon-field-cell-image-2;
-    background-size: 40px;
-    background-position: left center;
-}
-.theme-startrek-klingon-selected {
-    background-color: #8e8e8e;
-}
 
 /*
   THEME: CHILDREN
@@ -361,7 +229,7 @@
 
 .theme-children-heads-bg {
     //!important priorizes this color when selected
-    background-color: @children_heads_bg !important;
+    background-color: @children_heads_bg;
 }
 
 .theme-children-field-head {
