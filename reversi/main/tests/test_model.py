@@ -350,7 +350,7 @@ class GameTest(TestCase):
             E, E, E, E, E, E, E, E,
         ]
         Move.objects.create(game=self.game, player=self.player2, field=_(F))
-        self.assertTrue(self.game.ai_ramscher(me=self.player1, enemy=self.player2) in [(2, 4), (3, 5), (4, 2), (5, 3)])
+        self.assertTrue(self.game.ai_ramscher(me=self.player1, opponent=self.player2) in [(2, 4), (3, 5), (4, 2), (5, 3)])
 
         F = [
             E, E, E, E, E, E, E, E,
@@ -363,7 +363,7 @@ class GameTest(TestCase):
             E, E, E, E, E, E, E, E,
         ]
         Move.objects.create(game=self.game, player=self.player1, field=_(F))
-        self.assertTrue(self.game.ai_ramscher(me=self.player2, enemy=self.player2) in [(2, 5)])
+        self.assertTrue(self.game.ai_ramscher(me=self.player2, opponent=self.player2) in [(2, 5)])
 
         F = [
             E, E, C, C, C, E, E, E,
@@ -376,7 +376,23 @@ class GameTest(TestCase):
             M, E, M, E, C, E, E, E,
         ]
         Move.objects.create(game=self.game, player=self.player2, field=_(F))
-        self.assertTrue(self.game.ai_ramscher(me=self.player1, enemy=self.player2) in [(5, 4)])
+        self.assertTrue(self.game.ai_ramscher(me=self.player1, opponent=self.player2) in [(5, 4)])
+
+    def test_ai_minimax(self):
+        C = self.player1.color
+        M = self.player2.color
+        F = [
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, C, M, E, E, E,
+            E, E, E, M, C, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+            E, E, E, E, E, E, E, E,
+        ]
+        Move.objects.create(game=self.game, player=self.player2, field=_(F))
+        self.assertTrue(self.game.ai_minimax(me=self.player1, opponent=self.player2) in [(2, 4), (3, 5), (4, 2), (5, 3)])
 
 
 class MoveTest(TestCase):

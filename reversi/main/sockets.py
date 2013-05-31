@@ -214,12 +214,12 @@ class GameNamespace(BaseNamespace, BroadcastMixin):
                 level = AI_HARD
 
             if self.game.player1 == self.game.next_player:
-                enemy = self.game.player2
+                opponent = self.game.player2
             else:
-                enemy = self.game.player1
+                opponent = self.game.player1
 
             # let the AI 'think' about the next move
-            gevent.spawn_later(2, self.game.ai, level=level, me=me, enemy=enemy, callback=self.ai_callback)
+            gevent.spawn_later(2, self.game.ai, level=level, me=me, opponent=opponent, callback=self.ai_callback)
 
         current_grid = move.grid()
 

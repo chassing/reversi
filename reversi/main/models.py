@@ -17,6 +17,9 @@ CELL_PLAYER2 = "2"
 AI_EASY = "easy"
 AI_MEDIUM = "medium"
 AI_HARD = "hard"
+AI_DEPTH = 3
+
+INFINITY = 999999999
 
 FIELD_SCORES = [
     [9999, 5, 500, 200, 200, 500, 5, 9999],
@@ -129,16 +132,16 @@ class Game(models.Model):
             return False
         return True
 
-    def ai(self, level, me, enemy, callback):
+    def ai(self, level, me, opponent, callback):
         """ call the AI and make a move
         """
         try:
             if level == AI_EASY:
                 row, col = self.ai_random(me)
             elif level == AI_MEDIUM:
-                row, col = self.ai_ramscher(me, enemy)
+                row, col = self.ai_ramscher(me, opponent)
             elif level == AI_HARD:
-                row, col = self.ai_minimax(me, enemy)
+                row, col = self.ai_minimax(me, opponent)
             move = Move(
                 game=self,
                 player=me,
@@ -159,8 +162,15 @@ class Game(models.Model):
         # computer is done
         callback(row, col, me)
 
-    def score_cell(self, row, col):
-        return FIELD_SCORES[row][col]
+    def score_move(self, move, me, opponent=None):
+        score = 0
+        for row in xrange(0, self.size):
+            for col in xrange(0, self.size):
+                if move.get_cell(row, col) == me.color:
+                    score += FIELD_SCORES[row][col]
+                elif opponent and move.get_cell(row, col) == opponent.color:
+                    score -= FIELD_SCORES[row][col]
+        return score
 
     def ai_random(self, me):
         """ AI easy - random
@@ -171,51 +181,59 @@ class Game(models.Model):
         cell = valid_cells[randint(0, len(valid_cells) - 1)]
         return cell[0], cell[1]
 
-    def ai_ramscher(self, me, enemy):
+    def ai_ramscher(self, me, opponent, with_score=False):
         """ AI medium - something like greedy algorithm
         """
-        valid_cells = self.last_move.valid_cells(color=me.color)
-        log.debug("valid cells: {}".format(valid_cells))
-        if not valid_cells:
+        if not self.last_move.valid_cells(color=me.color):
             raise NoValidMoveException()
 
-        move = Move(game=self, player=me)
         max_score = -999999
         best_moves = defaultdict(list)
-        for row, col in valid_cells:
-            log.debug("scoring {}, {}".format(row, col))
-            # reset field
-            move.field = self.last_move.field
+        for child in self.last_move.next_states(me):
+            log.debug("scoring {0}".format(child))
 
-            # try this move
-            move.set_cell(row=row, col=col, color=me.color)
+            # now score this move
+            score = self.score_move(child, me, opponent)
 
-            # know score this move
-            score = 0
-            for r in xrange(0, self.size):
-                for c in xrange(0, self.size):
-                    if move.get_cell(r, c) == me.color:
-                        score += self.score_cell(r, c)
-                    elif move.get_cell(r, c) == enemy.color:
-                        score -= self.score_cell(r, c)
-
-            log.debug("{}, {} with {}".format(row, col, score))
+            log.debug("{} with {}".format(child, score))
             if score >= max_score:
                 log.debug("{} >= {}".format(score, max_score))
-                best_moves[score].append((row, col))
+                best_moves[score].append((child.row, child.col))
                 max_score = score
+
+        if with_score:
+            return (max_score, best_moves[max_score][randint(0, len(best_moves[max_score]) - 1)])
 
         # get a random move from all with max_score
         return best_moves[max_score][randint(0, len(best_moves[max_score]) - 1)]
 
-    def ai_minimax(self, me, enemy):
+    def ai_minimax(self, me, opponent):
         """ AI hard - minimax algorithm
         """
         valid_cells = self.last_move.valid_cells(color=me.color)
         if not valid_cells:
             raise NoValidMoveException()
-        raise NotImplemented()
-        #return cell[0], cell[1]
+
+        score, move = self.minimax(self.last_move, depth=AI_DEPTH, me=me, opponent=opponent)
+        log.debug("AI: {}, {} with {}".format(move.row, move.col, score))
+        return move.row, move.col
+
+    def minimax(self, move, depth, me, opponent, alfa=-INFINITY, beta=INFINITY):
+        if depth == 0:
+            return (self.score_move(move, me), move)
+
+        best_move = move
+
+        for child in move.next_states(me):
+            score, _ = self.minimax(child, depth-1, opponent, me, -beta, -alfa)
+            score = -score
+            if score > alfa:
+                log.debug("depth: {} new best score {}".format(depth, score))
+                alfa = score
+                best_move = child
+            if beta <= alfa:
+                break
+        return (self.score_move(move, me), best_move)
 
     def __unicode__(self):
         return "{0.pk} - {0.name}".format(self)
@@ -248,6 +266,8 @@ class Player(models.Model):
 
 class Move(models.Model):
     field = models.TextField()
+    row = models.IntegerField(default=0)
+    col = models.IntegerField(default=0)
     player = models.ForeignKey(Player, related_name="moves", null=True)
     game = models.ForeignKey(Game, related_name="moves")
     date = models.DateTimeField(auto_now=True, auto_now_add=True)
@@ -284,9 +304,12 @@ class Move(models.Model):
             grid.append(_get_row(row, field_part))
         return grid
 
-    def set_cell(self, row, col, color, turn_cells=True):
+    def set_cell(self, row, col, color, turn_cells=True, update_row_col=True):
         """ place a 'tile'
         """
+        if update_row_col:
+            self.row = row
+            self.col = col
         field_list = list(self.field.split(","))
         field_list[row*self.game.size+col] = color
         self.field = ",".join(field_list)
@@ -334,7 +357,7 @@ class Move(models.Model):
             r = row + dy
             while self.in_game_field(r, c) and self.get_cell(r, c) not in (color, CELL_EMPTY):
                 #log.debug("Flipping {},{}".format(r, c))
-                self.set_cell(r, c, color, turn_cells=False)
+                self.set_cell(r, c, color, turn_cells=False, update_row_col=False)
                 c += dx
                 r += dy
 
@@ -397,6 +420,16 @@ class Move(models.Model):
                     vc.append((row, col))
         return vc
 
+    def next_states(self, player):
+        """ return a list of possible completed moves and their coordinates
+        """
+        moves = []
+        for row, col in self.valid_cells(player.color):
+            move = Move(game=self.game, player=player, field=self.field)
+            move.set_cell(row, col, player.color)
+            moves.append(move)
+        return moves
+
     def tiles_count(self, color):
         return self.field.count(color)
 
@@ -439,7 +472,7 @@ class Move(models.Model):
             print " ".join(row)
 
     def __unicode__(self):
-        return "{0.pk} ({0.game})".format(self)
+        return "{0.row}, {0.col} ({0.game})".format(self)
 
 
 class Socket(models.Model):
