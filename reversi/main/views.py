@@ -12,7 +12,7 @@ from registration.backends.default.views import RegistrationView as Registration
 
 from .models import ReversiUser
 from .models import Game
-from .models import Player
+from .models import Player, CELL_PLAYER1, CELL_PLAYER2
 
 from .forms import MultiplayerGameForm
 from .forms import ProfileForm
@@ -51,33 +51,48 @@ class NewGameView(TemplateView):
     def get(self, request, enemy, form=None):
         tmpl = RequestContext(request)
         if not form:
-            tmpl["form"] = MultiplayerGameForm(
-                user=request.user,
-                user2=get_object_or_404(ReversiUser, pk=enemy),
-            )
+            tmpl["form"] = MultiplayerGameForm(user=request.user)
         else:
             tmpl["form"] = form
         return self.render_to_response(tmpl)
 
     @method_decorator(login_required)
     def post(self, request, enemy):
-        form = MultiplayerGameForm(
-            user=request.user,
-            user2=get_object_or_404(ReversiUser, pk=enemy),
-            data=request.POST
-        )
+        form = MultiplayerGameForm(user=request.user, data=request.POST)
         if form.is_valid():
             game = Game(name=form.cleaned_data['name'])
             game.save()
+            user2 = get_object_or_404(ReversiUser, pk=enemy)
+            if form.cleaned_data['player'] == CELL_PLAYER1:
+                # i'm player1
+                player1 = request.user
+                player2 = user2
+                if form.cleaned_data['color'] == CELL_PLAYER1:
+                    player1_color = CELL_PLAYER1
+                    player2_color = CELL_PLAYER2
+                else:
+                    player1_color = CELL_PLAYER2
+                    player2_color = CELL_PLAYER1
+            else:
+                # i'm player2
+                player1 = user2
+                player2 = request.user
+                if form.cleaned_data['color'] == CELL_PLAYER1:
+                    player1_color = CELL_PLAYER2
+                    player2_color = CELL_PLAYER1
+                else:
+                    player1_color = CELL_PLAYER1
+                    player2_color = CELL_PLAYER2
+
             Player.objects.create(
                 game=game,
-                user=form.cleaned_data['player1'],
-                color=form.cleaned_data['color_player1'],
+                user=player1,
+                color=player1_color,
             )
             Player.objects.create(
                 game=game,
-                user=form.cleaned_data['player2'],
-                color=form.cleaned_data['color_player2'],
+                user=player2,
+                color=player2_color,
             )
             return redirect("main:game", id=game.pk)
         return self.get(request, enemy, form)
