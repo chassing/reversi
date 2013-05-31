@@ -1,11 +1,8 @@
-You (or someone pretending to be you) have asked to register an account at
-{{ site.name }}.  If this wasn't you, please ignore this email
-and your address will be removed from our records.
+Du (oder jemand, der sich für Dich ausgibt), hat einen Account bei {{ site.name }} erstellt.
+Falls das nicht Du bist, ignoriere diese Email. Deine Adresse wird in diesem Fall aus unserer Datenbank gelöscht.
 
-To activate this account, please click the following link within the next
-{{ expiration_days }} days:
+Um den Account zu aktivieren, klicke innerhalb der nächsten {{ expiration_days }} Tage auf folgenden Link oder kopiere ihn in deinen Browser:
 
 http://{{site.domain}}/accounts/activate/{{ activation_key }}
 
-Sincerely,
-{{ site.name }} Team
+Das {{ site.name }} Team

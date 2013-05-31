@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 {% load url from future %}
 
-{% block title %}{% if account %}Activation complete{% else %}Activation problem{% endif %}{% endblock %}
+{% block title %}{% if account %}Aktivierung erfolgreich!{% else %}Aktivierungsproblem{% endif %}{% endblock %}
 
 
 {% block headline %}
     <div class="alert alert-info text-huge">
-        Aktivierung erfolgreich
+        Aktivierung erfolgreich!
     </div>
 {% endblock headline %}
 
 
 {% block content %}
     <div class="alert alert-success">
-        Thanks you, activation complete! <br/>
+        Die Aktivierung wurde erfolgreich abgeschlossen! <br/>
         <br/>
-        You may now <a href='{% url "auth_login" %}'> Login </a> using you username and password you set at registration or
-        <a href='{% url "auth_password_reset" %}'>Reset</a> your password.
+        Du kannst dich nun mit deinem Benutzernamen und Passwort <a href='{% url "auth_login" %}'> einloggen </a> oder dein
+        <a href='{% url "auth_password_reset" %}'>Passwort zurücksetzen</a>.
     </div>
 {% endblock %}
 
