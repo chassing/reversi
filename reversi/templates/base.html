@@ -41,7 +41,13 @@
             <div class="navbar-inner">
                 <div class="container">
                     <ul class="nav">
-                        <li><a href="{% url 'main:index' %}" class="brand">Lobby</a></li>
+                        <li><a href="{% url 'main:index' %}" class="brand">
+                                {% if user.is_authenticated %}
+                                    Lobby
+                                {% else %}
+                                    Reversi
+                                {% endif %}
+                            </a></li>
                         {% if user.is_authenticated %}
                             <li style="margin-left: 15px"><a href="{% url 'main:list-games' %}" class="brand">Meine Spiele</a></li>
                             <li><a href="{% url 'main:help' %}">Hilfe</a></li>
